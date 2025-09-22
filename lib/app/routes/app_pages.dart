@@ -1,9 +1,10 @@
 import 'package:Vetted/app/modules/auth/views/phone_number_screen.dart';
 import 'package:Vetted/app/modules/onboarding/views/onboarding_screen.dart';
+import 'package:Vetted/app/modules/profile/views/date_of_birth_screen.dart';
 import 'package:Vetted/app/modules/profile/views/input_name_screen.dart';
+import 'package:Vetted/app/modules/profile/views/relationship_status_screen.dart';
 import 'package:Vetted/app/modules/splash/views/splash_screen.dart';
 import 'package:Vetted/app/routes/app_routes.dart';
-import 'package:Vetted/screens/date_of_birth_screen.dart';
 import 'package:Vetted/screens/otp_login_screen.dart';
 import 'package:get/get.dart';
 
@@ -32,6 +33,10 @@ class AppPages {
     GetPage(
       name: AppRoutes.dateOfBirthScreen,
       page: () => const DateOfBirthScreen(),
+    ),
+    GetPage(
+      name: AppRoutes.relationshipStatusScreen,
+      page: () => const RelationshipStatusScreen(),
     ),
   ];
 }

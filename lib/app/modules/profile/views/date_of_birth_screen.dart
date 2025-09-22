@@ -1,5 +1,9 @@
-import 'package:Vetted/screens/relationship_status_screen.dart';
+import 'package:Vetted/app/controller/user_controller.dart';
+import 'package:Vetted/app/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart'; // For formatting month
 
 class DateOfBirthScreen extends StatefulWidget {
@@ -11,6 +15,7 @@ class DateOfBirthScreen extends StatefulWidget {
 
 class _DateOfBirthScreenState extends State<DateOfBirthScreen> {
   DateTime _selectedDate = DateTime.now();
+  final userController = Get.find<UserController>();
 
   void _onDaySelected(int day) {
     setState(() {
@@ -137,32 +142,20 @@ class _DateOfBirthScreenState extends State<DateOfBirthScreen> {
                 ),
               ),
               const SizedBox(height: 16),
-              SizedBox(
-                width: double.infinity,
-                height: 52,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const RelationshipStatusScreen(),
-                      ),
-                    );
-                  },
-
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red.shade700,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: const Text(
-                    'Continue',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white, // ✅ White text (#fff)
-                    ),
+              CustomButton(
+                ontap: () async {
+                  HapticFeedback.lightImpact();
+                  if (userController.isloading.value) return;
+                  await userController.updateDob(dateOfBirth: _selectedDate);
+                },
+                isLoading: userController.isloading,
+                loaderColor: Colors.white,
+                child: Text(
+                  'Continue',
+                  style: GoogleFonts.poppins(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
                   ),
                 ),
               ),

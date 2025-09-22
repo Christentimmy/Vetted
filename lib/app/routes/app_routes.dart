@@ -7,4 +7,5 @@ class AppRoutes {
   static const String phoneNumberScreen = '/phoneNumberScreen';
   static const String inputNameScreen = '/inputNameScreen';
   static const String dateOfBirthScreen = '/dateOfBirthScreen';
+  static const String relationshipStatusScreen = '/relationshipStatusScreen';
 }

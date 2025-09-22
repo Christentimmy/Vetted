@@ -3,6 +3,7 @@ import 'package:Vetted/app/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class InputNameScreen extends StatelessWidget {
   InputNameScreen({super.key});
@@ -68,9 +69,9 @@ class InputNameScreen extends StatelessWidget {
                 ontap: updateName,
                 isLoading: userController.isloading,
                 loaderColor: Colors.white,
-                child: const Text(
+                child: Text(
                   'Continue',
-                  style: TextStyle(
+                  style: GoogleFonts.poppins(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                     color: Colors.white,

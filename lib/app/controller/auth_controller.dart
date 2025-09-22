@@ -112,4 +112,5 @@ class AuthController extends GetxController {
       isGoogleLoading.value = false;
     }
   }
+
 }

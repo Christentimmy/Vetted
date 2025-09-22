@@ -35,6 +35,33 @@ class UserService {
     return null;
   }
 
+  Future<http.Response?> updateDob({
+    required String token,
+    required DateTime dateOfBirth,
+  }) async {
+    try {
+      final url = Uri.parse("$baseUrl/user/update-dob");
+      final response = await client
+          .post(
+            url,
+            headers: {
+              "Authorization": "Bearer $token",
+              "Content-Type": "application/json",
+            },
+            body: jsonEncode({"dateOfBirth": dateOfBirth.toUtc().toString()}),
+          )
+          .timeout(const Duration(seconds: 60));
+      return response;
+    } on SocketException catch (e) {
+      debugPrint("No internet connection $e");
+    } on TimeoutException {
+      debugPrint("Request timeout");
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
+
   Future<http.Response?> getUserDetails({required String token}) async {
     try {
       final response = await client
@@ -76,4 +103,5 @@ class UserService {
     }
     return null;
   }
+
 }
