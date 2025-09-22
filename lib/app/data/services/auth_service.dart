@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:Vetted/app/utils/base_url.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -21,13 +20,11 @@ class AuthService {
     );
   }
 
-  Future<String?> signInWithGoogle() async {
+  Future<GoogleSignInAccount?> signInWithGoogle() async {
     try {
       await _initializeSignIn();
       final googleUser = await _googleSignIn.authenticate();
-      final GoogleSignInAuthentication googleAuth = googleUser.authentication;
-      final String? idToken = googleAuth.idToken;
-      return idToken;
+      return googleUser;
     } catch (e) {
       debugPrint("Google Sign-In error: $e");
     }

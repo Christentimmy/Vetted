@@ -144,7 +144,7 @@ class OnboardingScreen extends StatelessWidget {
                   const SizedBox(height: 14),
                   CustomButton(
                     ontap: () async {
-                      await authController.googleAuthSignUp();
+                      await authController.googleLoginOrSignUp();
                     },
                     isLoading: authController.isGoogleLoading,
                     bgColor: Colors.white,

@@ -1,28 +1,15 @@
-import 'package:Vetted/screens/date_of_birth_screen.dart';
+import 'package:Vetted/app/controller/user_controller.dart';
+import 'package:Vetted/app/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 
-class InputNameScreen extends StatefulWidget {
-  const InputNameScreen({super.key});
+class InputNameScreen extends StatelessWidget {
+  InputNameScreen({super.key});
 
-  @override
-  State<InputNameScreen> createState() => _InputNameScreenState();
-}
-
-class _InputNameScreenState extends State<InputNameScreen> {
-  final TextEditingController _nameController = TextEditingController();
-  bool _isFilled = false;
-
-  void _onTextChanged(String value) {
-    setState(() {
-      _isFilled = value.trim().isNotEmpty;
-    });
-  }
-
-  @override
-  void dispose() {
-    _nameController.dispose();
-    super.dispose();
-  }
+  final userController = Get.find<UserController>();
+  final _nameController = TextEditingController();
+  final formKey = GlobalKey<FormState>().obs;
 
   @override
   Widget build(BuildContext context) {
@@ -47,50 +34,46 @@ class _InputNameScreenState extends State<InputNameScreen> {
                 style: TextStyle(fontSize: 14, color: Colors.black54),
               ),
               const SizedBox(height: 32),
-              TextField(
-                controller: _nameController,
-                onChanged: _onTextChanged,
-                decoration: const InputDecoration(
-                  hintText: "Full name",
-                  contentPadding: EdgeInsets.symmetric(vertical: 12),
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black26),
-                  ),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black87),
+              Form(
+                key: formKey.value,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                child: TextFormField(
+                  controller: _nameController,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your name';
+                    }
+                    if (value.startsWith(' ')) {
+                      return 'Name cannot start with a space';
+                    }
+                    if (value.split(' ').length < 2) {
+                      return 'Full Name Required';
+                    }
+                    return null;
+                  },
+                  decoration: const InputDecoration(
+                    hintText: "Full name",
+                    contentPadding: EdgeInsets.symmetric(vertical: 12),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black26),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black87),
+                    ),
                   ),
                 ),
               ),
               const SizedBox(height: 32),
-              SizedBox(
-                width: double.infinity,
-                height: 52,
-                child: ElevatedButton(
-                  onPressed:
-                      _isFilled
-                          ? () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const DateOfBirthScreen(),
-                              ),
-                            );
-                          }
-                          : null,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        _isFilled ? Colors.red.shade700 : Colors.red.shade200,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: const Text(
-                    'Continue',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                    ),
+              CustomButton(
+                ontap: updateName,
+                isLoading: userController.isloading,
+                loaderColor: Colors.white,
+                child: const Text(
+                  'Continue',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
                   ),
                 ),
               ),
@@ -124,5 +107,11 @@ class _InputNameScreenState extends State<InputNameScreen> {
         ),
       ),
     );
+  }
+
+  void updateName() {
+    HapticFeedback.lightImpact();
+    if (!formKey.value.currentState!.validate()) return;
+    userController.updateName(name: _nameController.text);
   }
 }

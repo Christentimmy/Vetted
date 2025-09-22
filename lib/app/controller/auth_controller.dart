@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:Vetted/app/controller/storage_controller.dart';
 import 'package:Vetted/app/data/services/auth_service.dart';
+import 'package:Vetted/app/data/services/user_service.dart';
 import 'package:Vetted/app/routes/app_routes.dart';
 // import 'package:Vetted/app/routes/app_routes.dart';
 import 'package:Vetted/app/widgets/snack_bar.dart';
@@ -8,19 +9,41 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class AuthController extends GetxController {
- final RxBool isLoading = false.obs;
- final RxBool isGoogleLoading = false.obs;
+  final RxBool isLoading = false.obs;
+  final RxBool isGoogleLoading = false.obs;
   final RxBool isOtpVerifyLoading = false.obs;
   final _authService = AuthService();
+  final _userService = UserService();
   final _storageController = Get.find<StorageController>();
 
-  Future<void> googleAuthSignUp() async {
+  Future<void> googleLoginOrSignUp() async {
     isGoogleLoading.value = true;
     try {
-      final idToken = await _authService.signInWithGoogle();
-      if (idToken == null) {
+      final googleUser = await _authService.signInWithGoogle();
+      if (googleUser == null) {
         return;
       }
+      final googleAuth = googleUser.authentication;
+      final String? idToken = googleAuth.idToken;
+      if (idToken == null) return;
+      final response = await _userService.userExist(email: googleUser.email);
+      if (response == null) return;
+      print(response.statusCode);
+      if (response.statusCode != 200) {
+       await googleAuthSignUp(idToken: idToken);
+        return;
+      }
+      await googleAuthSignIn(idToken: idToken);
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      isGoogleLoading.value = false;
+    }
+  }
+
+  Future<void> googleAuthSignUp({required String idToken}) async {
+    isGoogleLoading.value = true;
+    try {
       final response = await _authService.sendGoogleToken(
         token: idToken,
         isRegister: true,
@@ -46,14 +69,9 @@ class AuthController extends GetxController {
     }
   }
 
-  Future<void> googleAuthSignIn() async {
+  Future<void> googleAuthSignIn({required String idToken}) async {
     isGoogleLoading.value = true;
     try {
-      final idToken = await _authService.signInWithGoogle();
-      if (idToken == null) {
-        CustomSnackbar.showErrorToast("Failed to sign in with Google");
-        return;
-      }
       final response = await _authService.sendGoogleToken(
         token: idToken,
         isRegister: false,
@@ -93,6 +111,5 @@ class AuthController extends GetxController {
     } finally {
       isGoogleLoading.value = false;
     }
-  } 
-
+  }
 }
