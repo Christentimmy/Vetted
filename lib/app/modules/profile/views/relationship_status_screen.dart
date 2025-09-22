@@ -1,5 +1,8 @@
-import 'package:Vetted/screens/religion_screen.dart';
+import 'package:Vetted/app/controller/user_controller.dart';
+import 'package:Vetted/app/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class RelationshipStatusScreen extends StatefulWidget {
   const RelationshipStatusScreen({super.key});
@@ -10,6 +13,7 @@ class RelationshipStatusScreen extends StatefulWidget {
 }
 
 class _RelationshipStatusScreenState extends State<RelationshipStatusScreen> {
+  final userController = Get.find<UserController>();
   String? _selectedStatus;
 
   final List<String> _statuses = [
@@ -83,41 +87,26 @@ class _RelationshipStatusScreenState extends State<RelationshipStatusScreen> {
                 ),
               ),
               const SizedBox(height: 16),
-              SizedBox(
-                width: double.infinity,
-                height: 52,
-                child: ElevatedButton(
-                  onPressed:
-                      _selectedStatus != null
-                          ? () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const ReligionScreen(),
-                              ),
-                            );
-                          }
-                          : null,
-
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        _selectedStatus != null
-                            ? Colors.red.shade700
-                            : Colors.red.shade200,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: const Text(
-                    'Continue',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
+              CustomButton(
+                ontap: () async {
+                  if (_selectedStatus == null) return;
+                  await userController.updateRelationStatus(
+                    relationStatus: _selectedStatus!,
+                  );
+                },
+                text: "Single",
+                isLoading: userController.isloading,
+                loaderColor: Colors.white,
+                child: Text(
+                  'Continue',
+                  style: GoogleFonts.poppins(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ),
+
               const SizedBox(height: 24),
             ],
           ),

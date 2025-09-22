@@ -76,7 +76,10 @@ class UserController extends GetxController {
       final storageController = Get.find<StorageController>();
       String? token = await storageController.getToken();
       if (token == null || token.isEmpty) return;
-      final response = await _userService.updateDob(token: token, dateOfBirth: dateOfBirth);
+      final response = await _userService.updateDob(
+        token: token,
+        dateOfBirth: dateOfBirth,
+      );
       if (response == null) return;
       final decoded = json.decode(response.body);
       String message = decoded["message"] ?? "";
@@ -91,4 +94,30 @@ class UserController extends GetxController {
       isloading.value = false;
     }
   }
+
+  Future<void> updateRelationStatus({required String relationStatus}) async {
+    isloading.value = true;
+    try {
+      final storageController = Get.find<StorageController>();
+      String? token = await storageController.getToken();
+      if (token == null || token.isEmpty) return;
+      final response = await _userService.updateRelationStatus(
+        token: token,
+        relationStatus: relationStatus,
+      );
+      if (response == null) return;
+      final decoded = json.decode(response.body);
+      String message = decoded["message"] ?? "";
+      if (response.statusCode != 200) {
+        CustomSnackbar.showErrorToast(message);
+        return;
+      }
+      Get.toNamed(AppRoutes.religionScreen);
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      isloading.value = false;
+    }
+  }
+
 }

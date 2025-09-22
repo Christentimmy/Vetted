@@ -3,6 +3,7 @@ import 'package:Vetted/app/modules/onboarding/views/onboarding_screen.dart';
 import 'package:Vetted/app/modules/profile/views/date_of_birth_screen.dart';
 import 'package:Vetted/app/modules/profile/views/input_name_screen.dart';
 import 'package:Vetted/app/modules/profile/views/relationship_status_screen.dart';
+import 'package:Vetted/app/modules/profile/views/religion_screen.dart';
 import 'package:Vetted/app/modules/splash/views/splash_screen.dart';
 import 'package:Vetted/app/routes/app_routes.dart';
 import 'package:Vetted/screens/otp_login_screen.dart';
@@ -37,6 +38,10 @@ class AppPages {
     GetPage(
       name: AppRoutes.relationshipStatusScreen,
       page: () => const RelationshipStatusScreen(),
+    ),
+    GetPage(
+      name: AppRoutes.religionScreen,
+      page: () => const ReligionScreen(),
     ),
   ];
 }

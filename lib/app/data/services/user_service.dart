@@ -62,6 +62,33 @@ class UserService {
     return null;
   }
 
+  Future<http.Response?> updateRelationStatus({
+    required String token,
+    required String relationStatus,
+  }) async {
+    try {
+      final url = Uri.parse("$baseUrl/user/update-relation-status");
+      final response = await client
+          .patch(
+            url,
+            headers: {
+              "Authorization": "Bearer $token",
+              "Content-Type": "application/json",
+            },
+            body: jsonEncode({"relationStatus": relationStatus}),
+          )
+          .timeout(const Duration(seconds: 60));
+      return response;
+    } on SocketException catch (e) {
+      debugPrint("No internet connection $e");
+    } on TimeoutException {
+      debugPrint("Request timeout");
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
+
   Future<http.Response?> getUserDetails({required String token}) async {
     try {
       final response = await client
@@ -103,5 +130,7 @@ class UserService {
     }
     return null;
   }
+
+  
 
 }
