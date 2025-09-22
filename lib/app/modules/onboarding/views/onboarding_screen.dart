@@ -1,13 +1,17 @@
-
-
+import 'package:Vetted/app/controller/auth_controller.dart';
+import 'package:Vetted/app/routes/app_routes.dart';
+import 'package:Vetted/app/widgets/custom_button.dart';
 import 'package:Vetted/screens/phone_number_login_screen.dart';
-import 'package:Vetted/screens/phone_number_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class OnboardingScreen extends StatelessWidget {
-  const OnboardingScreen({super.key});
+  OnboardingScreen({super.key});
+
+  final authController = Get.find<AuthController>();
 
   @override
   Widget build(BuildContext context) {
@@ -71,14 +75,7 @@ class OnboardingScreen extends StatelessWidget {
 
                   GestureDetector(
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder:
-                              (context) =>
-                                  const PhoneNumberScreen(), // <- make sure this class exists
-                        ),
-                      );
+                      Get.toNamed(AppRoutes.phoneNumberScreen);
                     },
                     child: const Text(
                       'Let’s get started',
@@ -86,8 +83,7 @@ class OnboardingScreen extends StatelessWidget {
                         color: Colors.white,
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
-                        decoration:
-                            TextDecoration.underline, // optional for feedback
+                        decoration: TextDecoration.underline,
                       ),
                     ),
                   ),
@@ -145,12 +141,36 @@ class OnboardingScreen extends StatelessWidget {
                     iconColor: Colors.purple,
                     onPressed: () {},
                   ),
+                  const SizedBox(height: 14),
+                  CustomButton(
+                    ontap: () async {
+                      await authController.googleAuthSignUp();
+                    },
+                    isLoading: authController.isGoogleLoading,
+                    bgColor: Colors.white,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        FaIcon(FontAwesomeIcons.google),
+                        SizedBox(width: 5),
+                        Text(
+                          'Continue with Google',
+                          style: GoogleFonts.poppins(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
 
                   const SizedBox(height: 14),
 
                   // Google Button
-                  _buildWideSignInButton(Buttons.Google, onPressed: () {}),
-
+                  // _buildWideSignInButton(
+                  //   Buttons.Google,
+                  //   onPressed: () async {},
+                  // ),
                   const SizedBox(height: 40),
                 ],
               ),

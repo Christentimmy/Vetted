@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:Vetted/app/controller/storage_controller.dart';
 import 'package:Vetted/app/data/services/auth_service.dart';
+import 'package:Vetted/app/routes/app_routes.dart';
 // import 'package:Vetted/app/routes/app_routes.dart';
 import 'package:Vetted/app/widgets/snack_bar.dart';
 import 'package:flutter/material.dart';
@@ -8,12 +9,13 @@ import 'package:get/get.dart';
 
 class AuthController extends GetxController {
  final RxBool isLoading = false.obs;
+ final RxBool isGoogleLoading = false.obs;
   final RxBool isOtpVerifyLoading = false.obs;
   final _authService = AuthService();
   final _storageController = Get.find<StorageController>();
 
   Future<void> googleAuthSignUp() async {
-    isLoading.value = true;
+    isGoogleLoading.value = true;
     try {
       final idToken = await _authService.signInWithGoogle();
       if (idToken == null) {
@@ -36,16 +38,16 @@ class AuthController extends GetxController {
       // final socketController = Get.find<SocketController>();
       // socketController.initializeSocket();
       // await userController.getUserDetails();
-      // Get.toNamed(AppRoutes.completeProfile);
+      Get.toNamed(AppRoutes.inputNameScreen);
     } catch (e) {
       debugPrint(e.toString());
     } finally {
-      isLoading.value = false;
+      isGoogleLoading.value = false;
     }
   }
 
   Future<void> googleAuthSignIn() async {
-    isLoading.value = true;
+    isGoogleLoading.value = true;
     try {
       final idToken = await _authService.signInWithGoogle();
       if (idToken == null) {
@@ -89,7 +91,7 @@ class AuthController extends GetxController {
     } catch (e) {
       debugPrint(e.toString());
     } finally {
-      isLoading.value = false;
+      isGoogleLoading.value = false;
     }
   } 
 

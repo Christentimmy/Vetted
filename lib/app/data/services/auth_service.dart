@@ -11,7 +11,7 @@ class AuthService {
 
   Future<void> _initializeSignIn() async {
     final clientId =
-        "423296603409-16vqq4rnphhhkb43v81q1088e56jp08f.apps.googleusercontent.com";
+        "423296603409-hsm4l97oob8tdkrtk2avn77cal1d7cm3.apps.googleusercontent.com";
     final serverClientId =
         "423296603409-lechplsgug2dtpsa9r6hrkptihsl6tdn.apps.googleusercontent.com";
 
@@ -41,8 +41,8 @@ class AuthService {
     try {
       final authUrl =
           isRegister
-              ? "$baseUrl/auth/google-auth-signup"
-              : "$baseUrl/auth/google-auth-signin";
+              ? "$baseUrl/auth/google-sign-up"
+              : "$baseUrl/auth/google-login";
       final response = await http.post(
         Uri.parse(authUrl),
         headers: {"Content-Type": "application/json"},
@@ -58,4 +58,5 @@ class AuthService {
   Future<void> signOutGoogle() async {
     await _googleSignIn.disconnect();
   }
+
 }
