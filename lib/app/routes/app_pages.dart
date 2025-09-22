@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 
 class AppPages {
   static final routes = [
-    GetPage(name: AppRoutes.splash, page: () => const SplashScreen()),
+    GetPage(name: AppRoutes.splash, page: () => SplashScreen()),
     GetPage(
       name: AppRoutes.onboardingScreen,
       page: () => const OnboardingScreen(),

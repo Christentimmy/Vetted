@@ -1,52 +1,11 @@
-import 'package:Vetted/app/routes/app_routes.dart';
+import 'package:Vetted/app/modules/splash/controller/splash_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key});
+class SplashScreen extends StatelessWidget {
+  SplashScreen({super.key});
 
-  @override
-  State<SplashScreen> createState() => _SplashScreenState();
-}
-
-class _SplashScreenState extends State<SplashScreen>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _fadeAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 3),
-    );
-
-    _fadeAnimation = Tween<double>(
-      begin: 0,
-      end: 1,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeIn));
-
-    _controller.forward();
-
-    // After animation finishes, delay then navigate safely
-    _controller.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        Future.delayed(const Duration(seconds: 1), () {
-          if (mounted) {
-            Get.offAllNamed(AppRoutes.onboardingScreen);
-          }
-        });
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
+  final splashController = Get.put(SplashController());
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +22,7 @@ class _SplashScreenState extends State<SplashScreen>
         ),
         child: Center(
           child: FadeTransition(
-            opacity: _fadeAnimation,
+            opacity: splashController.fadeAnimation,
             child: Image.asset(
               'assets/images/v_logo_1.png',
               width: 100,
