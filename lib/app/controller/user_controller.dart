@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:io'; 
+import 'dart:io';
 import 'package:Vetted/app/controller/storage_controller.dart';
 import 'package:Vetted/app/data/models/user_model.dart';
 import 'package:Vetted/app/data/services/user_service.dart';
@@ -7,6 +7,7 @@ import 'package:Vetted/app/routes/app_routes.dart';
 import 'package:Vetted/app/widgets/snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 class UserController extends GetxController {
   final _userService = UserService();
@@ -314,10 +315,53 @@ class UserController extends GetxController {
     }
   }
 
-  void clean(){
+  Future<void> saveUserOneSignalId() async {
+    isloading.value = true;
+    try {
+      final storageController = Get.find<StorageController>();
+      String? token = await storageController.getToken();
+      if (token == null || token.isEmpty) return;
+      print("Here 1");
+      bool isPermission = OneSignal.Notifications.permission;
+      if (!isPermission) {
+        OneSignal.Notifications.requestPermission(true);
+      }
+      print("Here 2");
+
+      final userId = userModel.value?.id;
+      final subId = OneSignal.User.pushSubscription.id;
+      if (userId == null || subId == null) return;
+
+      final lastSaved = await storageController.getLastPushId(userId);
+      if (lastSaved == subId) {
+        return;
+      }
+      final response = await _userService.saveUserOneSignalId(
+        token: token,
+        id: subId,
+      );
+      if (response == null) return;
+      final decoded = json.decode(response.body);
+      String message = decoded["message"] ?? "";
+      if (response.statusCode != 200) {
+        CustomSnackbar.showErrorToast(message);
+        return;
+      }
+      await storageController.saveLastPushId(
+        userId: userId,
+        oneSignalId: subId,
+      );
+      Get.offAllNamed(AppRoutes.inputNameScreen);
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      isloading.value = false;
+    }
+  }
+
+  void clean() {
     userModel.value = null;
     isUserDetailsFetched.value = false;
     isloading.value = false;
   }
-
 }

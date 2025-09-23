@@ -1,7 +1,12 @@
+import 'dart:ui';
+
 import 'package:Vetted/app/modules/auth/views/otp_screen.dart';
 import 'package:Vetted/app/modules/auth/views/phone_number_screen.dart';
 import 'package:Vetted/app/modules/home/views/home_screen.dart';
+import 'package:Vetted/app/modules/notificaton/views/allow_notification_screen.dart';
+import 'package:Vetted/app/modules/onboarding/views/how_it_work_screen.dart';
 import 'package:Vetted/app/modules/onboarding/views/onboarding_screen.dart';
+import 'package:Vetted/app/modules/onboarding/views/our_safety_tools_screen.dart';
 import 'package:Vetted/app/modules/profile/views/date_of_birth_screen.dart';
 import 'package:Vetted/app/modules/profile/views/input_name_screen.dart';
 import 'package:Vetted/app/modules/profile/views/relationship_status_screen.dart';
@@ -31,37 +36,37 @@ class AppPages {
     ),
     GetPage(
       name: AppRoutes.phoneNumberScreen,
-      page: () => const PhoneNumberScreen(),
+      page: () => PhoneNumberScreen(),
     ),
     GetPage(
       name: AppRoutes.inputNameScreen,
       page: () {
-        final arguments = Get.arguments;
-        final whatNext = arguments['whatNext'];
+        final arguments = Get.arguments as Map<String, dynamic>? ?? {};
+        final whatNext = arguments['whatNext'] as VoidCallback?;
         return InputNameScreen(whatNext: whatNext);
       },
     ),
     GetPage(
       name: AppRoutes.dateOfBirthScreen,
       page: () {
-        final arguments = Get.arguments;
-        final whatNext = arguments['whatNext'];
+        final arguments = Get.arguments as Map<String, dynamic>? ?? {};
+        final whatNext = arguments['whatNext'] as VoidCallback?;
         return DateOfBirthScreen(whatNext: whatNext);
       },
     ),
     GetPage(
       name: AppRoutes.relationshipStatusScreen,
       page: () {
-        final arguments = Get.arguments;
-        final whatNext = arguments['whatNext'];
+        final arguments = Get.arguments as Map<String, dynamic>? ?? {};
+        final whatNext = arguments['whatNext'] as VoidCallback?;
         return RelationshipStatusScreen(whatNext: whatNext);
       },
     ),
     GetPage(
       name: AppRoutes.setLocationScreen,
       page: () {
-        final arguments = Get.arguments;
-        final whatNext = arguments['whatNext'];
+        final arguments = Get.arguments as Map<String, dynamic>? ?? {};
+        final whatNext = arguments['whatNext'] as VoidCallback?;
         return SetLocationScreen(whatNext: whatNext);
       },
     ),
@@ -79,5 +84,14 @@ class AppPages {
       page: () => FloatingBottomNavigationWidget(),
     ),
     GetPage(name: AppRoutes.settingScreen, page: () => SettingScreen()),
+    GetPage(
+      name: AppRoutes.allowNotificationScreen,
+      page: () => AllowNotificationScreen(),
+    ),
+    GetPage(name: AppRoutes.howItWorksScreen, page: () => HowItWorksScreen()),
+    GetPage(
+      name: AppRoutes.ourSafetyToolsScreen,
+      page: () => OurSafetyToolsScreen(),
+    ),
   ];
 }

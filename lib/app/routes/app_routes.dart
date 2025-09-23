@@ -14,4 +14,7 @@ class AppRoutes {
   static const String homeScreen = '/homeScreen';
   static const String bottomNavigationWidget = '/bottomNavigationWidget';
   static const String settingScreen = '/settingScreen';
+  static const String allowNotificationScreen = '/allowNotificationScreen';
+  static const String howItWorksScreen = '/howItWorksScreen';
+  static const String ourSafetyToolsScreen = '/ourSafetyToolsScreen';
 }

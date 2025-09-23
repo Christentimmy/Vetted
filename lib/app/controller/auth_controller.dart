@@ -7,6 +7,7 @@ import 'package:Vetted/app/routes/app_routes.dart';
 // import 'package:Vetted/app/routes/app_routes.dart';
 import 'package:Vetted/app/widgets/snack_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class AuthController extends GetxController {
@@ -50,6 +51,7 @@ class AuthController extends GetxController {
       );
       if (response == null) return;
       final decoded = json.decode(response.body);
+      debugPrint(decoded.toString());
       String message = decoded["message"] ?? "";
       if (response.statusCode != 201) {
         CustomSnackbar.showErrorToast(message);
@@ -61,7 +63,7 @@ class AuthController extends GetxController {
       // final socketController = Get.find<SocketController>();
       // socketController.initializeSocket();
       await userController.getUserDetails();
-      Get.toNamed(AppRoutes.inputNameScreen);
+      Get.toNamed(AppRoutes.howItWorksScreen);
     } catch (e) {
       debugPrint(e.toString());
     } finally {
@@ -115,6 +117,82 @@ class AuthController extends GetxController {
       Get.find<UserController>().clean();
     } catch (e) {
       debugPrint(e.toString());
+    }
+  }
+
+  Future<void> registerWithNumber({required String phoneNumber}) async {
+    isLoading.value = true;
+    try {
+      HapticFeedback.lightImpact();
+      if (phoneNumber.isEmpty) return;
+      final reponse = await _authService.registerWithNumber(
+        phoneNumber: phoneNumber,
+      );
+      if (reponse == null) return;
+      final decoded = json.decode(reponse.body);
+      String message = decoded["message"] ?? "";
+      if (reponse.statusCode != 200) {
+        CustomSnackbar.showErrorToast(message);
+        return;
+      }
+      Get.toNamed(AppRoutes.otp, arguments: {
+        'phoneNumber': phoneNumber,
+        'onTap': () {
+          Get.toNamed(AppRoutes.howItWorksScreen);
+        },
+      });
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> sendNumberOtp({required String phoneNumber}) async {
+    try {
+      final response = await _authService.sendNumberOtp(
+        phoneNumber: phoneNumber,
+      );
+      if (response == null) return;
+      final decoded = json.decode(response.body);
+      String message = decoded["message"] ?? "";
+      if (response.statusCode != 200) {
+        CustomSnackbar.showErrorToast(message);
+        return;
+      }
+      CustomSnackbar.showSuccessToast(message);
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  Future<void> verifyNumberOtp({
+    required String phoneNumber,
+    required String otp,
+    VoidCallback? whatNext,
+  }) async {
+    isOtpVerifyLoading.value = true;
+    try {
+      final response = await _authService.verifyNumberOtp(
+        phoneNumber: phoneNumber,
+        otp: otp,
+      );
+      if (response == null) return;
+      final decoded = json.decode(response.body);
+      String message = decoded["message"] ?? "";
+      if (response.statusCode != 200) {
+        CustomSnackbar.showErrorToast(message);
+        return;
+      }
+      if (whatNext != null) {
+        whatNext();
+        return;
+      }
+      Get.toNamed(AppRoutes.inputNameScreen);
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      isOtpVerifyLoading.value = false;
     }
   }
 }

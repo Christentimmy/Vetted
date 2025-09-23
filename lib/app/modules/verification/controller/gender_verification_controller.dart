@@ -87,8 +87,7 @@ class GenderVerificationController extends GetxController {
 
       cameraController = CameraController(
         frontCamera,
-        ResolutionPreset.high,
-        enableAudio: true, // Enable audio for video recording
+        ResolutionPreset.ultraHigh,
       );
 
       await cameraController!.initialize();

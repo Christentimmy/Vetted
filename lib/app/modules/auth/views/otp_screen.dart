@@ -1,5 +1,8 @@
-import 'package:Vetted/screens/how_it_work_screen.dart';
+import 'package:Vetted/app/controller/auth_controller.dart';
+import 'package:Vetted/app/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:flutter/gestures.dart';
 
@@ -14,13 +17,11 @@ class OTPScreen extends StatefulWidget {
 }
 
 class _OTPScreenState extends State<OTPScreen> {
-  String otpCode = '';
-  bool _isLoading = false;
+  final authController = Get.find<AuthController>();
+  final otpController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    bool isOtpFilled = otpCode.length == 5;
-
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -81,14 +82,17 @@ class _OTPScreenState extends State<OTPScreen> {
               // OTP Input
               PinCodeTextField(
                 appContext: context,
-                length: 5,
-                onChanged: (value) {
-                  setState(() {
-                    otpCode = value;
-                  });
-                },
+                length: 4,
+                controller: otpController,
                 keyboardType: TextInputType.number,
                 animationType: AnimationType.fade,
+                onCompleted: (v) {
+                  authController.verifyNumberOtp(
+                    phoneNumber: widget.phoneNumber,
+                    otp: v,
+                    whatNext: widget.onTap,
+                  );
+                },
                 pinTheme: PinTheme(
                   shape: PinCodeFieldShape.underline,
                   activeFillColor: Colors.transparent,
@@ -98,7 +102,7 @@ class _OTPScreenState extends State<OTPScreen> {
                   selectedColor: Colors.black87,
                   activeColor: Colors.black,
                 ),
-                textStyle: const TextStyle(
+                textStyle: GoogleFonts.poppins(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
@@ -107,80 +111,25 @@ class _OTPScreenState extends State<OTPScreen> {
               const SizedBox(height: 24),
 
               // Continue Button
-              SizedBox(
-                width: double.infinity,
-                height: 52,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        (isOtpFilled && !_isLoading)
-                            ? Colors.red.shade700
-                            : Colors.red.shade200,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-
-                  onPressed:
-                      isOtpFilled
-                          ? () async {
-                            setState(() {
-                              _isLoading = true;
-                            });
-
-                            // Simulate API/OTP verification delay
-                            await Future.delayed(const Duration(seconds: 2));
-
-                            setState(() {
-                              _isLoading = false;
-                            });
-
-                            if (widget.onTap != null) {
-                              widget.onTap!();
-                              return;
-                            }
-
-                            // Navigate to How It Works screen
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => const HowItWorksScreen(),
-                              ),
-                            );
-
-                            // Navigate to next screen or show success
-                            print('Verifying OTP: $otpCode');
-                          }
-                          : null,
-
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      if (_isLoading)
-                        Container(
-                          width: 18,
-                          height: 18,
-                          margin: const EdgeInsets.only(right: 12),
-                          child: const CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: Colors.white,
-                          ),
-                        ),
-                      const Text(
-                        'Continue',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
+              CustomButton(
+                ontap: () {
+                  if (otpController.text.isEmpty) return;
+                  authController.verifyNumberOtp(
+                    phoneNumber: widget.phoneNumber,
+                    otp: otpController.text,
+                    whatNext: widget.onTap,
+                  );
+                },
+                isLoading: authController.isOtpVerifyLoading,
+                child: const Text(
+                  'Continue',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
                   ),
                 ),
               ),
-
-              const SizedBox(height: 16),
 
               // Terms and Privacy
               const Text.rich(

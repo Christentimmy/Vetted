@@ -1,6 +1,8 @@
 class UserModel {
   final String? id;
   final String? phone;
+  final String? email;
+  final bool? isPremium;
   final String? role;
   final String? bio;
   final String? accountStatus;
@@ -9,7 +11,7 @@ class UserModel {
   final String? relationshipStatus;
   final String? displayName;
   final DateTime? dateOfBirth;
-  final String? updatedAt;
+  final DateTime? updatedAt;
   final String? avatar;
   final int? followerCount;
   final int? followingCount;
@@ -18,6 +20,8 @@ class UserModel {
   UserModel({
     this.id,
     this.phone,
+    this.email,
+    this.isPremium,
     this.role,
     this.bio,
     this.accountStatus,
@@ -37,6 +41,8 @@ class UserModel {
     return UserModel(
       id: json['_id'] ?? '',
       phone: json['phone'] ?? '',
+      email: json['email'] ?? '',
+      isPremium: (json['subscription']?["status"] ?? "") == "active",
       role: json['role'] ?? '',
       bio: json['bio'] ?? '',
       accountStatus: json['accountStatus'] ?? '',
@@ -44,35 +50,18 @@ class UserModel {
       isProfileCompleted: json['isProfileCompleted'] ?? false,
       relationshipStatus: json['relationshipStatus'] ?? '',
       displayName: json['displayName'] ?? '',
-      dateOfBirth: json['dateOfBirth'] ?? '',
-      updatedAt: json['updatedAt'] ?? '',
+      dateOfBirth:
+          DateTime.tryParse(json['dateOfBirth'].toString()) ?? DateTime.now(),
+      updatedAt:
+          DateTime.tryParse(json['updatedAt'].toString()) ?? DateTime.now(),
       avatar: json['avatar'] ?? '',
       followerCount: json['followerCount'] ?? 0,
       followingCount: json['followingCount'] ?? 0,
-      location: json['location'] != null
-          ? LocationModel.fromJson(json['location'])
-          : null,
+      location:
+          json['location'] != null
+              ? LocationModel.fromJson(json['location'])
+              : null,
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      '_id': id,
-      'phone': phone,
-      'role': role,
-      'bio': bio,
-      'accountStatus': accountStatus,
-      'isPhoneVerified': isPhoneVerified,
-      'isProfileCompleted': isProfileCompleted,
-      'relationshipStatus': relationshipStatus,
-      'displayName': displayName,
-      'dateOfBirth': dateOfBirth,
-      'updatedAt': updatedAt,
-      'avatar': avatar,
-      'followerCount': followerCount,
-      'followingCount': followingCount,
-      'location': location?.toJson(),
-    };
   }
 
   @override
@@ -86,17 +75,14 @@ class LocationModel {
   final String? address;
   final List<double>? coordinates;
 
-  LocationModel({
-    this.type,
-    this.address,
-    this.coordinates,
-  });
+  LocationModel({this.type, this.address, this.coordinates});
 
   factory LocationModel.fromJson(Map<String, dynamic> json) {
     return LocationModel(
       type: json['type'] ?? '',
       address: json['address'] ?? '',
-      coordinates: (json['coordinates'] as List<dynamic>?)
+      coordinates:
+          (json['coordinates'] as List<dynamic>?)
               ?.map((e) => (e as num).toDouble())
               .toList() ??
           [],
@@ -104,11 +90,7 @@ class LocationModel {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'type': type,
-      'address': address,
-      'coordinates': coordinates,
-    };
+    return {'type': type, 'address': address, 'coordinates': coordinates};
   }
 
   @override

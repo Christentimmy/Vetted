@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:Vetted/app/utils/base_url.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -68,6 +70,71 @@ class AuthService {
           )
           .timeout(const Duration(seconds: 20));
       return response;
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
+
+  Future<http.Response?> registerWithNumber({
+    required String phoneNumber,
+  }) async {
+    try {
+      final response = await http
+          .post(
+            Uri.parse("$baseUrl/auth/register-with-phoneNumber"),
+            headers: {"Content-Type": "application/json"},
+            body: json.encode({"phone": phoneNumber}),
+          )
+          .timeout(const Duration(seconds: 20));
+      return response;
+    } on SocketException catch (e) {
+      debugPrint("No internet connection $e");
+    } on TimeoutException {
+      debugPrint("Request timeout");
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
+
+  Future<http.Response?> sendNumberOtp({required String phoneNumber}) async {
+    try {
+      final response = await http
+          .post(
+            Uri.parse("$baseUrl/auth/send-number-otp"),
+            headers: {"Content-Type": "application/json"},
+            body: json.encode({"phone": phoneNumber}),
+          )
+          .timeout(const Duration(seconds: 20));
+      return response;
+    } on SocketException catch (e) {
+      debugPrint("No internet connection $e");
+    } on TimeoutException {
+      debugPrint("Request timeout");
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
+
+  Future<http.Response?> verifyNumberOtp({
+    required String phoneNumber,
+    required String otp,
+  }) async {
+    try {
+      final response = await http
+          .post(
+            Uri.parse("$baseUrl/auth/verify-number-otp"),
+            headers: {"Content-Type": "application/json"},
+            body: json.encode({"phone": phoneNumber, "otp": otp}),
+          )
+          .timeout(const Duration(seconds: 20));
+      return response;
+    } on SocketException catch (e) {
+      debugPrint("No internet connection $e");
+    } on TimeoutException {
+      debugPrint("Request timeout");
     } catch (e) {
       debugPrint(e.toString());
     }

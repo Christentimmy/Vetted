@@ -1,6 +1,9 @@
+import 'package:Vetted/app/modules/app_services/views/background_check_screen.dart';
+import 'package:Vetted/app/modules/community/views/community_screen.dart';
 import 'package:Vetted/app/modules/home/views/home_screen.dart';
 import 'package:Vetted/app/resources/colors.dart';
 import 'package:Vetted/app/modules/settings/views/setting_screen.dart';
+import 'package:Vetted/screens/message_list_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -11,8 +14,9 @@ class FloatingBottomNavigationWidget extends StatelessWidget {
 
   final List<Widget> items = [
     HomeScreen(),
-    Container(color: Colors.red),
-    Container(color: Colors.green),
+    CommunityScreen(),
+    BackgroundCheckScreen(),
+    MessageListScreen(),
     SettingScreen(),
   ];
 
@@ -23,6 +27,10 @@ class FloatingBottomNavigationWidget extends StatelessWidget {
     ),
     BottomNavItem(
       icon: Icons.group,
+      label: '',
+    ),
+    BottomNavItem(
+      icon: Icons.article_rounded,
       label: '',
     ),
     BottomNavItem(
