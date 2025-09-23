@@ -1,8 +1,10 @@
+
 import 'package:Vetted/screens/create_post_screen.dart';
 import 'package:Vetted/screens/message_list_screen.dart';
 import 'package:Vetted/screens/notification_screen.dart';
 import 'package:Vetted/screens/post_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -125,8 +127,20 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: const [
-                          Icon(Icons.edit, color: Colors.white, size: 20),
+                        children: [
+                          Container(
+                            height: 30,
+                            width: 30,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              color: Colors.white,
+                            ),
+                            child: const Icon(
+                              Icons.edit_square,
+                              color: Colors.red,
+                              size: 20,
+                            ),
+                          ),
                           Icon(
                             Icons.arrow_forward_ios,
                             color: Colors.white,
@@ -139,6 +153,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           Icon(
                             Icons.arrow_forward_ios,
+                            color: Colors.white54,
+                            size: 14,
+                          ),
+                          Icon(
+                            Icons.arrow_forward_ios,
                             color: Colors.white38,
                             size: 14,
                           ),
@@ -146,6 +165,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                   ),
+
                   const Spacer(),
 
                   // Send button
@@ -161,14 +181,17 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Container(
                       height: 48,
                       width: 48,
+                      alignment: Alignment.center,
                       decoration: BoxDecoration(
                         color: Colors.red.shade700,
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: Center(
-                        child: Image.asset(
-                          'assets/images/icons/send.png',
-                          height: 20,
+                      child: Transform.rotate(
+                        angle: 12.5,
+                        child: Icon(
+                          FontAwesomeIcons.paperPlane,
+                          color: Colors.white,
+                          size: 20,
                         ),
                       ),
                     ),
