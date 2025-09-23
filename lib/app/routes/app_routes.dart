@@ -17,4 +17,8 @@ class AppRoutes {
   static const String allowNotificationScreen = '/allowNotificationScreen';
   static const String howItWorksScreen = '/howItWorksScreen';
   static const String ourSafetyToolsScreen = '/ourSafetyToolsScreen';
+  static const String communityScreen = '/communityScreen';
+  static const String createPostScreen = '/createPostScreen';
+  static const String womanPostScreen = '/womanPostScreen';
+  static const String pollPostScreen = '/pollPostScreen';
 }

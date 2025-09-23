@@ -2,11 +2,15 @@ import 'dart:ui';
 
 import 'package:Vetted/app/modules/auth/views/otp_screen.dart';
 import 'package:Vetted/app/modules/auth/views/phone_number_screen.dart';
+import 'package:Vetted/app/modules/community/views/community_screen.dart';
 import 'package:Vetted/app/modules/home/views/home_screen.dart';
 import 'package:Vetted/app/modules/notificaton/views/allow_notification_screen.dart';
 import 'package:Vetted/app/modules/onboarding/views/how_it_work_screen.dart';
 import 'package:Vetted/app/modules/onboarding/views/onboarding_screen.dart';
 import 'package:Vetted/app/modules/onboarding/views/our_safety_tools_screen.dart';
+import 'package:Vetted/app/modules/post/views/create_post_screen.dart';
+import 'package:Vetted/app/modules/post/views/poll_post_screen.dart';
+import 'package:Vetted/app/modules/post/views/woman_post_screen.dart';
 import 'package:Vetted/app/modules/profile/views/date_of_birth_screen.dart';
 import 'package:Vetted/app/modules/profile/views/input_name_screen.dart';
 import 'package:Vetted/app/modules/profile/views/relationship_status_screen.dart';
@@ -93,5 +97,9 @@ class AppPages {
       name: AppRoutes.ourSafetyToolsScreen,
       page: () => OurSafetyToolsScreen(),
     ),
+    GetPage(name: AppRoutes.communityScreen, page: () => CommunityScreen()),
+    GetPage(name: AppRoutes.createPostScreen, page: () => CreatePostScreen()),
+    GetPage(name: AppRoutes.womanPostScreen, page: () => WomanPostScreen()),
+    GetPage(name: AppRoutes.pollPostScreen, page: () => PollPostScreen()),
   ];
 }

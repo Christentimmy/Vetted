@@ -1,5 +1,4 @@
-
-import 'package:Vetted/screens/create_post_screen.dart';
+import 'package:Vetted/app/routes/app_routes.dart';
 import 'package:Vetted/screens/message_list_screen.dart';
 import 'package:Vetted/screens/notification_screen.dart';
 import 'package:Vetted/screens/post_screen.dart';
@@ -109,12 +108,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     onHorizontalDragEnd: (details) {
                       if (details.primaryVelocity != null &&
                           details.primaryVelocity! > 0) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const CreatePostScreen(),
-                          ),
-                        );
+                        Get.toNamed(AppRoutes.createPostScreen);
                       }
                     },
                     child: Container(
