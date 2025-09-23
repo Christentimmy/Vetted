@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:Vetted/app/data/models/user_model.dart';
 import 'package:Vetted/app/utils/base_url.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -49,6 +50,37 @@ class UserService {
               "Content-Type": "application/json",
             },
             body: jsonEncode({"dateOfBirth": dateOfBirth.toUtc().toString()}),
+          )
+          .timeout(const Duration(seconds: 60));
+      return response;
+    } on SocketException catch (e) {
+      debugPrint("No internet connection $e");
+    } on TimeoutException {
+      debugPrint("Request timeout");
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
+
+  Future<http.Response?> updateLocation({
+    required String token,
+    required LocationModel location,
+  }) async {
+    try {
+      final url = Uri.parse("$baseUrl/user/update-location");
+      final response = await client
+          .post(
+            url,
+            headers: {
+              "Authorization": "Bearer $token",
+              "Content-Type": "application/json",
+            },
+            body: jsonEncode({
+              "address": location.address,
+              "lat": location.coordinates?.first,
+              "lng": location.coordinates?.last,
+            }),
           )
           .timeout(const Duration(seconds: 60));
       return response;
@@ -115,7 +147,7 @@ class UserService {
     try {
       final response = await client
           .post(
-            Uri.parse("$baseUrl/user/exist"),
+            Uri.parse("$baseUrl/user/user-exist"),
             headers: {"Content-Type": "application/json"},
             body: jsonEncode({"email": email}),
           )
@@ -130,7 +162,4 @@ class UserService {
     }
     return null;
   }
-
-  
-
 }

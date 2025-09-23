@@ -112,7 +112,32 @@ class UserController extends GetxController {
         CustomSnackbar.showErrorToast(message);
         return;
       }
-      Get.toNamed(AppRoutes.religionScreen);
+      Get.toNamed(AppRoutes.setLocationScreen);
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      isloading.value = false;
+    }
+  }
+
+  Future<void> updateLocation({required LocationModel location}) async {
+    isloading.value = true;
+    try {
+      final storageController = Get.find<StorageController>();
+      String? token = await storageController.getToken();
+      if (token == null || token.isEmpty) return;
+      final response = await _userService.updateLocation(
+        token: token,
+        location: location,
+      );
+      if (response == null) return;
+      final decoded = json.decode(response.body);
+      String message = decoded["message"] ?? "";
+      if (response.statusCode != 200) {
+        CustomSnackbar.showErrorToast(message);
+        return;
+      }
+      Get.toNamed(AppRoutes.selfieVerificationScreen);
     } catch (e) {
       debugPrint(e.toString());
     } finally {

@@ -28,9 +28,8 @@ class AuthController extends GetxController {
       if (idToken == null) return;
       final response = await _userService.userExist(email: googleUser.email);
       if (response == null) return;
-      print(response.statusCode);
       if (response.statusCode != 200) {
-       await googleAuthSignUp(idToken: idToken);
+        await googleAuthSignUp(idToken: idToken);
         return;
       }
       await googleAuthSignIn(idToken: idToken);
@@ -112,5 +111,4 @@ class AuthController extends GetxController {
       isGoogleLoading.value = false;
     }
   }
-
 }
