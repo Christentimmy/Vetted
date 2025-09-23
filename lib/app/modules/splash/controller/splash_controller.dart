@@ -1,4 +1,4 @@
-import 'package:Vetted/app/routes/app_routes.dart';
+import 'package:Vetted/app/controller/user_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -27,7 +27,8 @@ class SplashController extends GetxController with GetTickerProviderStateMixin {
 
     controller.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        Get.offAllNamed(AppRoutes.onboardingScreen);
+        final userController = Get.find<UserController>();
+        userController.getUserStatus();
       }
     });
   }

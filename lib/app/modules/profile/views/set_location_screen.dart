@@ -7,7 +7,8 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class SetLocationScreen extends StatelessWidget {
-  SetLocationScreen({super.key});
+  final VoidCallback? whatNext;
+  SetLocationScreen({super.key, this.whatNext});
 
   final locationModel = Rx<LocationModel?>(null);
   final locationController = Get.find<LocationController>();

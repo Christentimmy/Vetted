@@ -6,7 +6,8 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class InputNameScreen extends StatelessWidget {
-  InputNameScreen({super.key});
+  final VoidCallback? whatNext;
+  InputNameScreen({super.key, this.whatNext});
 
   final userController = Get.find<UserController>();
   final _nameController = TextEditingController();
@@ -113,6 +114,6 @@ class InputNameScreen extends StatelessWidget {
   void updateName() {
     HapticFeedback.lightImpact();
     if (!formKey.value.currentState!.validate()) return;
-    userController.updateName(name: _nameController.text);
+    userController.updateName(name: _nameController.text, whatNext: whatNext);
   }
 }

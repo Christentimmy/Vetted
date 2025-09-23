@@ -7,7 +7,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart'; // For formatting month
 
 class DateOfBirthScreen extends StatefulWidget {
-  const DateOfBirthScreen({super.key});
+  final VoidCallback? whatNext;
+  const DateOfBirthScreen({super.key, this.whatNext});
 
   @override
   State<DateOfBirthScreen> createState() => _DateOfBirthScreenState();
@@ -146,7 +147,10 @@ class _DateOfBirthScreenState extends State<DateOfBirthScreen> {
                 ontap: () async {
                   HapticFeedback.lightImpact();
                   if (userController.isloading.value) return;
-                  await userController.updateDob(dateOfBirth: _selectedDate);
+                  await userController.updateDob(
+                    dateOfBirth: _selectedDate,
+                    whatNext: widget.whatNext,
+                  );
                 },
                 isLoading: userController.isloading,
                 loaderColor: Colors.white,

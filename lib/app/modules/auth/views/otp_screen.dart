@@ -5,8 +5,9 @@ import 'package:flutter/gestures.dart';
 
 class OTPScreen extends StatefulWidget {
   final String phoneNumber;
+  final VoidCallback? onTap;
 
-  const OTPScreen({super.key, required this.phoneNumber});
+  const OTPScreen({super.key, required this.phoneNumber, this.onTap});
 
   @override
   State<OTPScreen> createState() => _OTPScreenState();
@@ -133,6 +134,11 @@ class _OTPScreenState extends State<OTPScreen> {
                             setState(() {
                               _isLoading = false;
                             });
+
+                            if (widget.onTap != null) {
+                              widget.onTap!();
+                              return;
+                            }
 
                             // Navigate to How It Works screen
                             Navigator.pushReplacement(

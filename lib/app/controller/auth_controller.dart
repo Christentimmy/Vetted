@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:Vetted/app/controller/storage_controller.dart';
+import 'package:Vetted/app/controller/user_controller.dart';
 import 'package:Vetted/app/data/services/auth_service.dart';
 import 'package:Vetted/app/data/services/user_service.dart';
 import 'package:Vetted/app/routes/app_routes.dart';
@@ -54,12 +55,12 @@ class AuthController extends GetxController {
         CustomSnackbar.showErrorToast(message);
         return;
       }
-      // final userController = Get.find<UserController>();
+      final userController = Get.find<UserController>();
       String token = decoded["token"];
       await _storageController.storeToken(token);
       // final socketController = Get.find<SocketController>();
       // socketController.initializeSocket();
-      // await userController.getUserDetails();
+      await userController.getUserDetails();
       Get.toNamed(AppRoutes.inputNameScreen);
     } catch (e) {
       debugPrint(e.toString());
@@ -81,34 +82,39 @@ class AuthController extends GetxController {
       String token = decoded["token"] ?? "";
       final storageController = Get.find<StorageController>();
       await storageController.storeToken(token);
-      if (response.statusCode == 404) {
-        CustomSnackbar.showErrorToast(message);
-        return;
-      }
-      if (response.statusCode == 402) {
-        CustomSnackbar.showErrorToast(message);
-        // Get.offAllNamed(AppRoutes.signup);
-        return;
-      }
-      // final socketController = Get.find<SocketController>();
-      // await socketController.initializeSocket();
 
-      if (response.statusCode == 400) {
+      if (response.statusCode == 405) {
         CustomSnackbar.showErrorToast(message);
-        // Get.offAllNamed(AppRoutes.completeProfile);
+        Get.offAllNamed(AppRoutes.selfieDisclaimer);
         return;
       }
+
       if (response.statusCode != 200) {
         CustomSnackbar.showErrorToast(message);
         return;
       }
-      // final userController = Get.find<UserController>();
-      // await userController.getUserDetails();
-      // Get.offAllNamed(AppRoutes.bottomNavigation);
+
+      final userController = Get.find<UserController>();
+      await userController.getUserDetails();
+      Get.offAllNamed(AppRoutes.bottomNavigationWidget);
     } catch (e) {
       debugPrint(e.toString());
     } finally {
       isGoogleLoading.value = false;
+    }
+  }
+
+  Future<void> logout() async {
+    try {
+      final token = await _storageController.getToken();
+      if (token == null) return;
+      final response = await _authService.logout(token: token);
+      if (response == null) return;
+      if (response.statusCode != 200) return;
+      await _storageController.deleteToken();
+      Get.find<UserController>().clean();
+    } catch (e) {
+      debugPrint(e.toString());
     }
   }
 }

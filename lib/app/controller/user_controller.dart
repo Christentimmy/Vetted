@@ -1,6 +1,5 @@
 import 'dart:convert';
-import 'dart:io';
-
+import 'dart:io'; 
 import 'package:Vetted/app/controller/storage_controller.dart';
 import 'package:Vetted/app/data/models/user_model.dart';
 import 'package:Vetted/app/data/services/user_service.dart';
@@ -49,7 +48,10 @@ class UserController extends GetxController {
     }
   }
 
-  Future<void> updateName({required String name}) async {
+  Future<void> updateName({
+    required String name,
+    VoidCallback? whatNext,
+  }) async {
     isloading.value = true;
     try {
       final storageController = Get.find<StorageController>();
@@ -63,6 +65,10 @@ class UserController extends GetxController {
         CustomSnackbar.showErrorToast(message);
         return;
       }
+      if (whatNext != null) {
+        whatNext();
+        return;
+      }
       Get.toNamed(AppRoutes.dateOfBirthScreen);
     } catch (e) {
       debugPrint(e.toString());
@@ -71,7 +77,10 @@ class UserController extends GetxController {
     }
   }
 
-  Future<void> updateDob({required DateTime dateOfBirth}) async {
+  Future<void> updateDob({
+    required DateTime dateOfBirth,
+    VoidCallback? whatNext,
+  }) async {
     isloading.value = true;
     try {
       final storageController = Get.find<StorageController>();
@@ -88,6 +97,10 @@ class UserController extends GetxController {
         CustomSnackbar.showErrorToast(message);
         return;
       }
+      if (whatNext != null) {
+        whatNext();
+        return;
+      }
       Get.toNamed(AppRoutes.relationshipStatusScreen);
     } catch (e) {
       debugPrint(e.toString());
@@ -96,7 +109,10 @@ class UserController extends GetxController {
     }
   }
 
-  Future<void> updateRelationStatus({required String relationStatus}) async {
+  Future<void> updateRelationStatus({
+    required String relationStatus,
+    VoidCallback? whatNext,
+  }) async {
     isloading.value = true;
     try {
       final storageController = Get.find<StorageController>();
@@ -113,6 +129,10 @@ class UserController extends GetxController {
         CustomSnackbar.showErrorToast(message);
         return;
       }
+      if (whatNext != null) {
+        whatNext();
+        return;
+      }
       Get.toNamed(AppRoutes.setLocationScreen);
     } catch (e) {
       debugPrint(e.toString());
@@ -121,7 +141,10 @@ class UserController extends GetxController {
     }
   }
 
-  Future<void> updateLocation({required LocationModel location}) async {
+  Future<void> updateLocation({
+    required LocationModel location,
+    VoidCallback? whatNext,
+  }) async {
     isloading.value = true;
     try {
       final storageController = Get.find<StorageController>();
@@ -136,6 +159,10 @@ class UserController extends GetxController {
       String message = decoded["message"] ?? "";
       if (response.statusCode != 200) {
         CustomSnackbar.showErrorToast(message);
+        return;
+      }
+      if (whatNext != null) {
+        whatNext();
         return;
       }
       Get.toNamed(AppRoutes.selfieDisclaimer);
@@ -168,6 +195,129 @@ class UserController extends GetxController {
       debugPrint(e.toString());
     }
     return null;
+  }
+
+  Future<void> getUserStatus() async {
+    isloading.value = true;
+    try {
+      final storageController = Get.find<StorageController>();
+      String? token = await storageController.getToken();
+      if (token == null || token.isEmpty) {
+        Get.offAllNamed(AppRoutes.onboardingScreen);
+        return;
+      }
+
+      final response = await _userService.getUserStatus(token: token);
+      if (response == null) {
+        Get.offAllNamed(AppRoutes.onboardingScreen);
+        return;
+      }
+      final decoded = json.decode(response.body);
+      String message = decoded["message"];
+
+      if (response.statusCode != 200 || message == "Token has expired.") {
+        Get.offAllNamed(AppRoutes.onboardingScreen);
+        return;
+      }
+
+      var userData = decoded["data"];
+      if (userData == null) {
+        Get.offAllNamed(AppRoutes.onboardingScreen);
+        return;
+      }
+
+      String accountStatus = userData["accountStatus"] ?? "";
+      String phone = userData["phone"] ?? "";
+
+      bool isPhoneVerified = userData["isPhoneVerified"] ?? false;
+      if (accountStatus.isEmpty || accountStatus != "active") {
+        Get.offAllNamed(AppRoutes.onboardingScreen);
+        return;
+      }
+
+      if (!isPhoneVerified && phone.isNotEmpty) {
+        Get.offAllNamed(
+          AppRoutes.otp,
+          arguments: {
+            "phoneNumber": userData["phone"],
+            "onTap": () async {
+              await getUserStatus();
+            },
+          },
+        );
+        return;
+      }
+
+      String relationStatus = userData["relationshipStatus"] ?? "";
+      if (relationStatus.isEmpty) {
+        Get.offAllNamed(
+          AppRoutes.relationshipStatusScreen,
+          arguments: {
+            "whatNext": () async {
+              await getUserStatus();
+            },
+          },
+        );
+        return;
+      }
+
+      String displayName = userData["displayName"] ?? "";
+      if (displayName.isEmpty) {
+        Get.offAllNamed(
+          AppRoutes.inputNameScreen,
+          arguments: {
+            "whatNext": () async {
+              await getUserStatus();
+            },
+          },
+        );
+        return;
+      }
+
+      String dob = userData["dateOfBirth"] ?? "";
+      if (dob.isEmpty) {
+        Get.offAllNamed(
+          AppRoutes.dateOfBirthScreen,
+          arguments: {
+            "whatNext": () async {
+              await getUserStatus();
+            },
+          },
+        );
+        return;
+      }
+
+      String location = userData["location"]["address"] ?? "";
+      if (location.isEmpty) {
+        Get.offAllNamed(
+          AppRoutes.setLocationScreen,
+          arguments: {
+            "whatNext": () async {
+              await getUserStatus();
+            },
+          },
+        );
+        return;
+      }
+
+      bool isProfileCompleted = userData["isProfileCompleted"] ?? false;
+      if (!isProfileCompleted) {
+        Get.offAllNamed(AppRoutes.selfieDisclaimer);
+        return;
+      }
+
+      Get.offAllNamed(AppRoutes.bottomNavigationWidget);
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      isloading.value = false;
+    }
+  }
+
+  void clean(){
+    userModel.value = null;
+    isUserDetailsFetched.value = false;
+    isloading.value = false;
   }
 
 }

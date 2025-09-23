@@ -11,4 +11,7 @@ class AppRoutes {
   static const String setLocationScreen = '/setLocationScreen';
   static const String selfieDisclaimer = '/selfieDisclaimer';
   static const String genderVerificationScreen = '/genderVerificationScreen';
+  static const String homeScreen = '/homeScreen';
+  static const String bottomNavigationWidget = '/bottomNavigationWidget';
+  static const String settingScreen = '/settingScreen';
 }

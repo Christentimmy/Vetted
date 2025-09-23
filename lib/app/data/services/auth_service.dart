@@ -56,6 +56,22 @@ class AuthService {
     await _googleSignIn.disconnect();
   }
 
-  
+  Future<http.Response?> logout({required String token}) async {
+    try {
+      final response = await http
+          .post(
+            Uri.parse("$baseUrl/auth/logout"),
+            headers: {
+              "Authorization": "Bearer $token",
+              "Content-Type": "application/json",
+            },
+          )
+          .timeout(const Duration(seconds: 20));
+      return response;
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
 
 }

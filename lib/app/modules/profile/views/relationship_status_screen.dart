@@ -5,7 +5,8 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class RelationshipStatusScreen extends StatefulWidget {
-  const RelationshipStatusScreen({super.key});
+  final VoidCallback? whatNext;
+  const RelationshipStatusScreen({super.key, this.whatNext});
 
   @override
   State<RelationshipStatusScreen> createState() =>
@@ -92,6 +93,7 @@ class _RelationshipStatusScreenState extends State<RelationshipStatusScreen> {
                   if (_selectedStatus == null) return;
                   await userController.updateRelationStatus(
                     relationStatus: _selectedStatus!,
+                    whatNext: widget.whatNext,
                   );
                 },
                 text: "Single",

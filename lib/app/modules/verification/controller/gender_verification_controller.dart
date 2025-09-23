@@ -1,4 +1,5 @@
 import 'package:Vetted/app/controller/user_controller.dart';
+import 'package:Vetted/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:camera/camera.dart';
@@ -36,6 +37,7 @@ class GenderVerificationController extends GetxController {
   @override
   void onClose() {
     cameraController?.dispose();
+    _disposeCamera();
     super.onClose();
   }
 
@@ -151,7 +153,7 @@ class GenderVerificationController extends GetxController {
           colorText: Colors.white,
         );
         // Navigate to main app
-        // Get.offAllNamed('/main');
+        Get.offAllNamed(AppRoutes.bottomNavigationWidget);
       } else {
         isAccessGranted.value = false;
         Get.dialog(
@@ -196,5 +198,12 @@ class GenderVerificationController extends GetxController {
 
   void retryCamera() {
     initializeCamera();
+  }
+
+  Future<void> _disposeCamera() async {
+    if (cameraController != null) {
+      await cameraController!.dispose();
+      cameraController = null;
+    }
   }
 }
