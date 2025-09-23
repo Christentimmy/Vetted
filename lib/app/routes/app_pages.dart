@@ -5,7 +5,8 @@ import 'package:Vetted/app/modules/profile/views/input_name_screen.dart';
 import 'package:Vetted/app/modules/profile/views/relationship_status_screen.dart';
 import 'package:Vetted/app/modules/profile/views/set_location_screen.dart';
 import 'package:Vetted/app/modules/splash/views/splash_screen.dart';
-import 'package:Vetted/app/modules/verification/views/selfie_verification_screen.dart';
+import 'package:Vetted/app/modules/verification/views/gender_verification_screen.dart';
+import 'package:Vetted/app/modules/verification/views/selfie_disclaimer_screen.dart';
 import 'package:Vetted/app/routes/app_routes.dart';
 import 'package:Vetted/screens/otp_login_screen.dart';
 import 'package:get/get.dart';
@@ -39,8 +40,12 @@ class AppPages {
     ),
     GetPage(name: AppRoutes.setLocationScreen, page: () => SetLocationScreen()),
     GetPage(
-      name: AppRoutes.selfieVerificationScreen,
-      page: () => const SelfieVerificationScreen(),
+      name: AppRoutes.selfieDisclaimer,
+      page: () => const SelfieDisclaimerScreen(),
+    ),
+    GetPage(
+      name: AppRoutes.genderVerificationScreen,
+      page: () => GenderVerificationScreen(),
     ),
   ];
 }

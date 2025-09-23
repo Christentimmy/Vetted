@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:Vetted/app/controller/storage_controller.dart';
 import 'package:Vetted/app/data/models/user_model.dart';
@@ -137,12 +138,36 @@ class UserController extends GetxController {
         CustomSnackbar.showErrorToast(message);
         return;
       }
-      Get.toNamed(AppRoutes.selfieVerificationScreen);
+      Get.toNamed(AppRoutes.selfieDisclaimer);
     } catch (e) {
       debugPrint(e.toString());
     } finally {
       isloading.value = false;
     }
+  }
+
+  Future<String?> verifyGender({required File file}) async {
+    try {
+      final storageController = Get.find<StorageController>();
+      String? token = await storageController.getToken();
+      if (token == null || token.isEmpty) return null;
+      final response = await _userService.verifyGender(
+        token: token,
+        videoFile: file,
+      );
+      if (response == null) return null;
+      final decoded = json.decode(response.body);
+      String message = decoded["message"] ?? "";
+      String gender = decoded["data"] ?? "";
+      if (response.statusCode != 200) {
+        CustomSnackbar.showErrorToast(message);
+        return null;
+      }
+      return gender.toLowerCase();
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
   }
 
 }

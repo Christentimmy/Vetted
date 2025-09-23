@@ -5,6 +5,7 @@ import 'package:Vetted/app/data/models/user_model.dart';
 import 'package:Vetted/app/utils/base_url.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 
 class UserService {
   final http.Client client = http.Client();
@@ -157,6 +158,39 @@ class UserService {
       debugPrint("No internet connection $e");
     } on TimeoutException {
       debugPrint("Request timeout");
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
+
+  Future<http.Response?> verifyGender({
+    required File videoFile,
+    required String token,
+  }) async {
+    try {
+      final uri = Uri.parse('$baseUrl/user/verify-gender');
+      final headers = {
+        "Authorization": "Bearer $token",
+        "Content-Type": "application/json",
+      };
+      final request = http.MultipartRequest('POST', uri);
+      request.headers.addAll(headers);
+      // Attach video file
+      request.files.add(
+        await http.MultipartFile.fromPath(
+          'video',
+          videoFile.path,
+          contentType: MediaType('video', 'mp4'),
+        ),
+      );
+
+      // Send request
+      final streamedResponse = await request.send();
+
+      // Convert to regular Response
+      final response = await http.Response.fromStream(streamedResponse);
+      return response;
     } catch (e) {
       debugPrint(e.toString());
     }

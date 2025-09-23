@@ -9,5 +9,6 @@ class AppRoutes {
   static const String dateOfBirthScreen = '/dateOfBirthScreen';
   static const String relationshipStatusScreen = '/relationshipStatusScreen';
   static const String setLocationScreen = '/setLocationScreen';
-  static const String selfieVerificationScreen = '/selfieVerificationScreen';
+  static const String selfieDisclaimer = '/selfieDisclaimer';
+  static const String genderVerificationScreen = '/genderVerificationScreen';
 }

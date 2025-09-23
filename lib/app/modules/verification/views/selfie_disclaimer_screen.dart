@@ -1,7 +1,9 @@
+import 'package:Vetted/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-class SelfieVerificationScreen extends StatelessWidget {
-  const SelfieVerificationScreen({super.key});
+class SelfieDisclaimerScreen extends StatelessWidget {
+  const SelfieDisclaimerScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -59,13 +61,7 @@ class SelfieVerificationScreen extends StatelessWidget {
                 height: 52,
                 child: ElevatedButton(
                   onPressed: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder:
-                    //         (context) => const SelfieVerificationMainScreen(),
-                    //   ),
-                    // );
+                    Get.toNamed(AppRoutes.genderVerificationScreen);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.red.shade700,
