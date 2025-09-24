@@ -38,10 +38,7 @@ class AppPages {
         return OTPScreen(phoneNumber: phoneNumber, onTap: onTap);
       },
     ),
-    GetPage(
-      name: AppRoutes.phoneNumberScreen,
-      page: () => PhoneNumberScreen(),
-    ),
+    GetPage(name: AppRoutes.phoneNumberScreen, page: () => PhoneNumberScreen()),
     GetPage(
       name: AppRoutes.inputNameScreen,
       page: () {
@@ -85,7 +82,11 @@ class AppPages {
     GetPage(name: AppRoutes.homeScreen, page: () => HomeScreen()),
     GetPage(
       name: AppRoutes.bottomNavigationWidget,
-      page: () => FloatingBottomNavigationWidget(),
+      page: () {
+        final arguments = Get.arguments as Map<String, dynamic>? ?? {};
+        final index = arguments['index'];
+        return FloatingBottomNavigationWidget(index: index);
+      },
     ),
     GetPage(name: AppRoutes.settingScreen, page: () => SettingScreen()),
     GetPage(

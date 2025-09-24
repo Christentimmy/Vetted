@@ -154,6 +154,7 @@ class PostController extends GetxController {
         postsCommunity.addAll(
           postsList.map((e) => PostModel.fromJson(e)).toList(),
         );
+        postsCommunity.refresh();
       }
       hasNextPageCommunity.value =
           decoded["data"]?["pagination"]?["hasMore"] ?? false;

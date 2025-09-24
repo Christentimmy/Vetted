@@ -139,9 +139,7 @@ final Map<String, String> emojiMap = {
   "😡": "angry",
 };
 
-
-
-PopupMenuButton buildOptionAboutPost({
+Widget buildOptionAboutPost({
   required PostModel postModel,
   required bool isProfilePost,
   RxInt? index,
@@ -153,103 +151,113 @@ PopupMenuButton buildOptionAboutPost({
   final userModel = userController.userModel.value;
   final isAuthor = userModel?.id == postModel.author?.id;
   final isMediaAvailable = postModel.media?.isNotEmpty ?? false;
-  return PopupMenuButton(
-    icon: Icon(Icons.more_vert_outlined, color: iconColor),
-    itemBuilder: (context) {
-      return [
-        PopupMenuItem(
-          child: Text(
-            "Report",
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
-              color: Colors.red,
+
+  return InkWell(
+    onTap: () async {
+      final selected = await showMenu<String>(
+        context: Get.context!, // or pass `context` if available directly
+        position: const RelativeRect.fromLTRB(100, 100, 0, 0),
+        items: [
+          PopupMenuItem(
+            value: "report",
+            child: Text(
+              "Report",
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+                color: Colors.red,
+              ),
             ),
           ),
-          onTap: () {
-            showModalBottomSheet(
-              context: context,
-              builder: (context) {
-                return ReportBottomSheet(
+          if (isMediaAvailable)
+            PopupMenuItem(
+              value: "copy",
+              child: Text(
+                "Copy",
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black87,
+                ),
+              ),
+            ),
+          if (!isAuthor)
+            PopupMenuItem(
+              value: "block",
+              child: Text(
+                "Block",
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black87,
+                ),
+              ),
+            ),
+          if (isAuthor)
+            PopupMenuItem(
+              value: "delete",
+              child: Text(
+                "Delete",
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black87,
+                ),
+              ),
+            ),
+          PopupMenuItem(
+            value: "save",
+            child: Obx(
+              () => Text(
+                postModel.isBookmarked!.value ? "Unsave" : "Save",
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black87,
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
+
+      switch (selected) {
+        case "report":
+          showModalBottomSheet(
+            context: Get.context!,
+            builder:
+                (context) => ReportBottomSheet(
                   reportUser: postModel.author?.id ?? "",
                   type: ReportType.post,
                   referenceId: postModel.id,
-                );
-              },
+                ),
+          );
+          break;
+        case "copy":
+          if (postModel.media != null) {
+            Clipboard.setData(
+              ClipboardData(text: postModel.media![index?.value ?? 0].url!),
             );
-          },
-        ),
-        if (isMediaAvailable)
-          PopupMenuItem(
-            child: Text(
-              "Copy",
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-                color: Colors.black87,
-              ),
-            ),
-            onTap: () {
-              if (postModel.media == null) return;
-
-              Clipboard.setData(
-                ClipboardData(text: postModel.media![index?.value ?? 0].url!),
-              );
-              // CustomSnackbar.showSuccessToast("Copied to clipboard");
-            },
-          ),
-        if (!isAuthor)
-          PopupMenuItem(
-            child: Text(
-              "Block",
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-                color: Colors.black87,
-              ),
-            ),
-            onTap: () async {
-              if (postModel.author == null) return;
-              await userController.toggleBlock(blockId: postModel.author!.id!);
-            },
-          ),
-        if (isAuthor)
-          PopupMenuItem(
-            child: Text(
-              "Delete",
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-                color: Colors.black87,
-              ),
-            ),
-            onTap: () async {
-              if (onDelete != null) {
-                onDelete.call();
-              }
-
-              await postController.deletePost(
-                postId: postModel.id!,
-                isProfilePost: isProfilePost,
-              );
-            },
-          ),
-        PopupMenuItem(
-          child: Obx(
-            () => Text(
-              postModel.isBookmarked!.value ? "Unsave" : "Save",
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-                color: Colors.black87,
-              ),
-            ),
-          ),
-          onTap: () async {
-            await postController.toggleSavePost(postId: postModel.id!);
-          },
-        ),
-      ];
+            // CustomSnackbar.showSuccessToast("Copied to clipboard");
+          }
+          break;
+        case "block":
+          if (postModel.author != null) {
+            await userController.toggleBlock(blockId: postModel.author!.id!);
+          }
+          break;
+        case "delete":
+          if (onDelete != null) onDelete.call();
+          await postController.deletePost(
+            postId: postModel.id!,
+            isProfilePost: isProfilePost,
+          );
+          break;
+        case "save":
+          await postController.toggleSavePost(postId: postModel.id!);
+          break;
+      }
     },
+    child: Icon(Icons.more_vert_outlined, size: 20, color: iconColor),
   );
 }

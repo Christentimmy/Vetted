@@ -7,6 +7,7 @@ import 'package:Vetted/app/widgets/loaders.dart';
 import 'package:flutter/material.dart';
 import 'package:Vetted/screens/notification_screen.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CommunityScreen extends StatefulWidget {
   const CommunityScreen({super.key});
@@ -171,18 +172,19 @@ class _CommunityScreenState extends State<CommunityScreen> {
                 ),
               ),
             ),
-            const Icon(Icons.more_vert, size: 20), // Save icon
+            // const Icon(Icons.more_vert, size: 20), // Save icon
+            buildOptionAboutPost(postModel: post, isProfilePost: false),
           ],
         ),
-        const SizedBox(height: 4),
         Text(
           timeAgo(post.createdAt),
-          style: const TextStyle(color: Colors.black54),
+          style: GoogleFonts.fredoka(color: Colors.black54, fontSize: 12),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 5),
         ClipRRect(
           borderRadius: BorderRadius.circular(12),
           child: Container(
+            width: Get.width,
             color: const Color(0xFFD9A827),
             padding: const EdgeInsets.all(16),
             child: Text(
@@ -193,24 +195,12 @@ class _CommunityScreenState extends State<CommunityScreen> {
         ),
         const SizedBox(height: 8),
         buildPostActionRowWidget(postModel: post),
-        // Row(
-        //   children: const [
-        //     Icon(Icons.favorite_border, size: 18),
-        //     SizedBox(width: 4),
-        //     Text('102'),
-        //     SizedBox(width: 12),
-        //     Text("🙁", style: TextStyle(fontSize: 16)),
-        //     SizedBox(width: 4),
-        //     Text('21'),
-        //     Spacer(),
-        //     Text(
-        //       "Anonymous",
-        //       style: TextStyle(color: Colors.black54, fontSize: 12),
-        //     ),
-        //     SizedBox(width: 4),
-        //     Text("1m", style: TextStyle(color: Colors.black54, fontSize: 12)),
-        //   ],
-        // ),
+        const SizedBox(height: 8),
+        Divider(
+          color: Colors.grey.shade300,
+          thickness: 1,
+        ),
+        const SizedBox(height: 8),
       ],
     );
   }

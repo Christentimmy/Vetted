@@ -7,10 +7,24 @@ import 'package:Vetted/screens/message_list_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class FloatingBottomNavigationWidget extends StatelessWidget {
-  FloatingBottomNavigationWidget({super.key});
+class FloatingBottomNavigationWidget extends StatefulWidget {
+  final int? index;
+  const FloatingBottomNavigationWidget({super.key, this.index});
 
+  @override
+  State<FloatingBottomNavigationWidget> createState() =>
+      _FloatingBottomNavigationWidgetState();
+}
+
+class _FloatingBottomNavigationWidgetState
+    extends State<FloatingBottomNavigationWidget> {
   final RxInt currentIndex = 0.obs;
+
+  @override
+  void initState() {
+    super.initState();
+    currentIndex.value = widget.index ?? 0;
+  }
 
   final List<Widget> items = [
     HomeScreen(),
@@ -21,26 +35,11 @@ class FloatingBottomNavigationWidget extends StatelessWidget {
   ];
 
   final List<BottomNavItem> navItems = [
-    BottomNavItem(
-      icon: Icons.home,
-      label: '',
-    ),
-    BottomNavItem(
-      icon: Icons.group,
-      label: '',
-    ),
-    BottomNavItem(
-      icon: Icons.article_rounded,
-      label: '',
-    ),
-    BottomNavItem(
-      icon: Icons.message,
-      label: '',
-    ),
-    BottomNavItem(
-      icon: Icons.person,
-      label: '',
-    ),
+    BottomNavItem(icon: Icons.home, label: ''),
+    BottomNavItem(icon: Icons.group, label: ''),
+    BottomNavItem(icon: Icons.article_rounded, label: ''),
+    BottomNavItem(icon: Icons.message, label: ''),
+    BottomNavItem(icon: Icons.person, label: ''),
   ];
 
   @override
@@ -164,8 +163,5 @@ class BottomNavItem {
   final IconData icon;
   final String label;
 
-  BottomNavItem({
-    required this.icon,
-    required this.label,
-  });
+  BottomNavItem({required this.icon, required this.label});
 }

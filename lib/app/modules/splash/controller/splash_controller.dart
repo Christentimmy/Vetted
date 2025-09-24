@@ -28,6 +28,7 @@ class SplashController extends GetxController with GetTickerProviderStateMixin {
     controller.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         final userController = Get.find<UserController>();
+        userController.getUserDetails();
         userController.getUserStatus();
       }
     });

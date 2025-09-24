@@ -62,6 +62,11 @@ class CreatePostController extends GetxController {
         ),
       );
       await postController.createPost(postModel: postModel);
+      await Get.find<PostController>().getFeedCommunity(showLoader: false);
+      Get.offAllNamed(
+        AppRoutes.bottomNavigationWidget,
+        arguments: {"index": 1},
+      );
     } catch (e) {
       debugPrint(e.toString());
     } finally {
@@ -95,6 +100,7 @@ class CreatePostController extends GetxController {
       );
       await postController.createPost(postModel: postModel, files: images);
       Get.offAllNamed(AppRoutes.bottomNavigationWidget);
+      Get.find<PostController>().getFeed(showLoader: false, type: "woman");
     } catch (e) {
       debugPrint(e.toString());
     } finally {
