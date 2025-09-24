@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:get/get.dart';
+
 class PostModel {
   String? id;
   Content? content;
@@ -12,9 +14,10 @@ class PostModel {
   Stats? stats;
   bool? isFollowing;
   DateTime? createdAt;
-  String? reactedEmoji;
+  final RxString? reactedEmoji;
   bool? hasVoted;
   String? votedColor;
+  RxBool? isBookmarked;
 
   PostModel({
     this.id,
@@ -31,6 +34,7 @@ class PostModel {
     this.reactedEmoji,
     this.hasVoted,
     this.votedColor,
+    this.isBookmarked,
   });
 
   factory PostModel.fromJson(Map<String, dynamic> json) {
@@ -54,9 +58,10 @@ class PostModel {
           json["createdAt"] != null
               ? DateTime.parse(json["createdAt"].toString())
               : DateTime.now(),
-      reactedEmoji: json["reactedEmoji"] ?? "",
+      reactedEmoji: RxString(json['reactedEmoji'] ?? ""),
       hasVoted: json['hasVoted'] ?? false,
       votedColor: json['votedColor'],
+      isBookmarked: RxBool(json['isBookmarked'] ?? false),
     );
   }
 
@@ -97,8 +102,8 @@ class Author {
 }
 
 class Stats {
-  int? reactionCount;
-  int? comments;
+  final RxInt? reactionCount;
+  final RxInt? comments;
   int? views;
   int? totalFlagVote;
   String? leadingFlag;
@@ -117,8 +122,8 @@ class Stats {
 
   factory Stats.fromJson(Map<String, dynamic> json) {
     return Stats(
-      reactionCount: json["reactionCount"] ?? 0,
-      comments: json["comments"] ?? 0,
+      reactionCount: RxInt(json['reactionCount'] ?? 0),
+      comments: RxInt(json['comments'] ?? 0),
       views: json["views"] ?? 0,
       totalFlagVote: json["totalFlagVote"] ?? 0,
       leadingFlag: json["leadingFlag"] ?? "",

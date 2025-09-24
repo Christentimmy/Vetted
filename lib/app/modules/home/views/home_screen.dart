@@ -23,6 +23,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final Set<int> likedProfiles = {};
   final postController = Get.find<PostController>();
+  RxBool isLoadingMore = false.obs;
+  ScrollController scrollController = ScrollController();
 
   @override
   void initState() {
@@ -30,6 +32,15 @@ class _HomeScreenState extends State<HomeScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (postController.posts.isEmpty) {
         postController.getFeed();
+      }
+    });
+    scrollController.addListener(() async {
+      if (isLoadingMore.value) return;
+      if (scrollController.position.pixels >=
+          scrollController.position.maxScrollExtent - 1000) {
+        isLoadingMore.value = true;
+        await postController.getFeed(loadMore: true, showLoader: false);
+        isLoadingMore.value = false;
       }
     });
   }
@@ -53,6 +64,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 buildActionRow(context),
                 const SizedBox(height: 20),
                 buildFeed(),
+                SizedBox(height: 12),
+                Obx(() {
+                  if (isLoadingMore.value && postController.posts.isNotEmpty) {
+                    return Loader1();
+                  }
+                  return const SizedBox.shrink();
+                }),
                 SizedBox(height: Get.height * 0.12),
               ],
             ),

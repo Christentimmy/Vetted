@@ -1,90 +1,162 @@
+import 'package:Vetted/app/controller/post_controller.dart';
+import 'package:Vetted/app/data/models/post_model.dart';
+import 'package:Vetted/app/modules/post/widgets/post_widgets.dart';
+import 'package:Vetted/app/resources/colors.dart';
+import 'package:Vetted/app/utils/timeago.dart';
+import 'package:Vetted/app/widgets/loaders.dart';
 import 'package:flutter/material.dart';
 import 'package:Vetted/screens/notification_screen.dart';
+import 'package:get/get.dart';
 
-class CommunityScreen extends StatelessWidget {
+class CommunityScreen extends StatefulWidget {
   const CommunityScreen({super.key});
+
+  @override
+  State<CommunityScreen> createState() => _CommunityScreenState();
+}
+
+class _CommunityScreenState extends State<CommunityScreen> {
+  RxBool isLoadingMore = false.obs;
+  ScrollController scrollController = ScrollController();
+  final postController = Get.find<PostController>();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (postController.postsCommunity.isEmpty) {
+        postController.getFeedCommunity();
+      }
+    });
+
+    scrollController.addListener(() async {
+      if (isLoadingMore.value) return;
+      if (scrollController.position.pixels >=
+          scrollController.position.maxScrollExtent - 1000) {
+        isLoadingMore.value = true;
+        await postController.getFeedCommunity(
+          loadMore: true,
+          showLoader: false,
+        );
+        isLoadingMore.value = false;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          children: [
-            // 🔹 Header
-            Row(
-              children: [
-                Image.asset('assets/images/logo_black.png', height: 28),
-                const SizedBox(width: 8),
-                const Text(
-                  "Vetted",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
-                ),
-                const Spacer(),
-                Container(
-                  height: 36,
-                  width: 160,
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade200,
-                    borderRadius: BorderRadius.circular(8),
+        child: RefreshIndicator(
+          color: AppColors.primaryColor,
+          onRefresh: () => postController.getFeedCommunity(showLoader: false),
+          child: ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+            children: [
+              // 🔹 Header
+              Row(
+                children: [
+                  Image.asset('assets/images/logo_black.png', height: 28),
+                  const SizedBox(width: 8),
+                  const Text(
+                    "Vetted",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
                   ),
-                  child: Row(
-                    children: [
-                      const Icon(Icons.search, size: 18, color: Colors.grey),
-                      const SizedBox(width: 6),
-                      const Expanded(
-                        child: TextField(
-                          decoration: InputDecoration(
-                            hintText: 'Search',
-                            border: InputBorder.none,
-                            isCollapsed: true,
+                  const Spacer(),
+                  Container(
+                    height: 36,
+                    width: 160,
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade200,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.search, size: 18, color: Colors.grey),
+                        const SizedBox(width: 6),
+                        const Expanded(
+                          child: TextField(
+                            decoration: InputDecoration(
+                              hintText: 'Search',
+                              border: InputBorder.none,
+                              isCollapsed: true,
+                            ),
+                            style: TextStyle(fontSize: 14),
                           ),
-                          style: TextStyle(fontSize: 14),
                         ),
-                      ),
-                      GestureDetector(
-                        onTap: () => _showFilterPopup(context),
-                        child: const Icon(
-                          Icons.filter_list,
-                          size: 18,
-                          color: Colors.grey,
+                        GestureDetector(
+                          onTap: () => _showFilterPopup(context),
+                          child: const Icon(
+                            Icons.filter_list,
+                            size: 18,
+                            color: Colors.grey,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                const SizedBox(width: 12),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => const NotificationScreen(),
-                      ),
-                    );
+                  const SizedBox(width: 12),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const NotificationScreen(),
+                        ),
+                      );
+                    },
+                    child: const Icon(Icons.notifications_none),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 24),
+
+              Obx(() {
+                if (postController.isloading.value) {
+                  return SizedBox(
+                    width: Get.width,
+                    height: Get.height * 0.65,
+                    child: const Center(child: Loader2()),
+                  );
+                }
+                if (postController.postsCommunity.isEmpty) {
+                  return SizedBox(
+                    width: Get.width,
+                    height: Get.height * 0.65,
+                    child: const Center(child: Text("No posts found")),
+                  );
+                }
+                return ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: postController.postsCommunity.length,
+                  itemBuilder: (context, index) {
+                    final post = postController.postsCommunity[index];
+                    return _buildPostItem(post: post);
                   },
-                  child: const Icon(Icons.notifications_none),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 24),
-
-            // 🔸 Posts
-            _buildPostItem("Something we all need to learn", "Los Angeles, US"),
-            const SizedBox(height: 16),
-            _buildPostItem("The Real Truth", "Austin, TX"),
-            const SizedBox(height: 16),
-            _buildPostItem("Did anyone notice?", "New York, NY"),
-          ],
+                );
+              }),
+              SizedBox(height: 12),
+              Obx(() {
+                if (isLoadingMore.value &&
+                    postController.postsCommunity.isNotEmpty) {
+                  return Loader1();
+                }
+                return const SizedBox.shrink();
+              }),
+              SizedBox(height: Get.height * 0.12),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildPostItem(String title, String location) {
+  Widget _buildPostItem({required PostModel post}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -92,50 +164,53 @@ class CommunityScreen extends StatelessWidget {
           children: [
             Expanded(
               child: Text(
-                title,
+                post.content?.title ?? "",
                 style: const TextStyle(
                   fontWeight: FontWeight.w600,
                   fontSize: 16,
                 ),
               ),
             ),
-            const Icon(Icons.bookmark_border, size: 20), // Save icon
+            const Icon(Icons.more_vert, size: 20), // Save icon
           ],
         ),
         const SizedBox(height: 4),
-        Text(location, style: const TextStyle(color: Colors.black54)),
+        Text(
+          timeAgo(post.createdAt),
+          style: const TextStyle(color: Colors.black54),
+        ),
         const SizedBox(height: 12),
         ClipRRect(
           borderRadius: BorderRadius.circular(12),
           child: Container(
             color: const Color(0xFFD9A827),
             padding: const EdgeInsets.all(16),
-            child: const Text(
-              "“Talk to a female coworker? You're cheating. Laugh at your phone? You're cheating. "
-              "Pet a dog? Probably cheating. Expect hourly location updates and daily interrogations.”",
-              style: TextStyle(fontSize: 14, color: Colors.white),
+            child: Text(
+              post.content?.text ?? "",
+              style: const TextStyle(fontSize: 14, color: Colors.white),
             ),
           ),
         ),
         const SizedBox(height: 8),
-        Row(
-          children: const [
-            Icon(Icons.favorite_border, size: 18),
-            SizedBox(width: 4),
-            Text('102'),
-            SizedBox(width: 12),
-            Text("🙁", style: TextStyle(fontSize: 16)),
-            SizedBox(width: 4),
-            Text('21'),
-            Spacer(),
-            Text(
-              "Anonymous",
-              style: TextStyle(color: Colors.black54, fontSize: 12),
-            ),
-            SizedBox(width: 4),
-            Text("1m", style: TextStyle(color: Colors.black54, fontSize: 12)),
-          ],
-        ),
+        buildPostActionRowWidget(postModel: post),
+        // Row(
+        //   children: const [
+        //     Icon(Icons.favorite_border, size: 18),
+        //     SizedBox(width: 4),
+        //     Text('102'),
+        //     SizedBox(width: 12),
+        //     Text("🙁", style: TextStyle(fontSize: 16)),
+        //     SizedBox(width: 4),
+        //     Text('21'),
+        //     Spacer(),
+        //     Text(
+        //       "Anonymous",
+        //       style: TextStyle(color: Colors.black54, fontSize: 12),
+        //     ),
+        //     SizedBox(width: 4),
+        //     Text("1m", style: TextStyle(color: Colors.black54, fontSize: 12)),
+        //   ],
+        // ),
       ],
     );
   }

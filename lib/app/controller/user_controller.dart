@@ -321,12 +321,10 @@ class UserController extends GetxController {
       final storageController = Get.find<StorageController>();
       String? token = await storageController.getToken();
       if (token == null || token.isEmpty) return;
-      print("Here 1");
       bool isPermission = OneSignal.Notifications.permission;
       if (!isPermission) {
         OneSignal.Notifications.requestPermission(true);
       }
-      print("Here 2");
 
       final userId = userModel.value?.id;
       final subId = OneSignal.User.pushSubscription.id;
@@ -352,6 +350,66 @@ class UserController extends GetxController {
         oneSignalId: subId,
       );
       Get.offAllNamed(AppRoutes.inputNameScreen);
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      isloading.value = false;
+    }
+  }
+
+  Future<void> reportUser({
+    required String type,
+    required String reason,
+    required String reportedUser,
+    required String referenceId,
+  }) async {
+    isloading.value = true;
+    try {
+      final storageController = Get.find<StorageController>();
+      String? token = await storageController.getToken();
+      if (token == null) return;
+      final response = await _userService.reportUser(
+        token: token,
+        type: type,
+        reason: reason,
+        reportedUser: reportedUser,
+        referenceId: referenceId,
+      );
+      if (response == null) return;
+      var responseBody = json.decode(response.body);
+      String message = responseBody["message"] ?? "";
+      if (response.statusCode != 201) {
+        CustomSnackbar.showErrorToast(message);
+        return;
+      }
+      Navigator.pop(Get.context!);
+      CustomSnackbar.showSuccessToast("Report submitted successfully");
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      isloading.value = false;
+    }
+  }
+
+  Future<void> toggleBlock({required String blockId}) async {
+    isloading.value = true;
+    try {
+      final storageController = Get.find<StorageController>();
+      final String? token = await storageController.getToken();
+      if (token == null) return;
+      final response = await _userService.toggleBlock(
+        token: token,
+        blockId: blockId,
+      );
+      if (response == null) return;
+      final decoded = json.decode(response.body);
+      String message = decoded["message"] ?? "";
+      if (response.statusCode != 200) {
+        CustomSnackbar.showErrorToast(message);
+        return;
+      }
+      CustomSnackbar.showSuccessToast(message);
+      // await getBlockedUsers(showLoader: false);
     } catch (e) {
       debugPrint(e.toString());
     } finally {

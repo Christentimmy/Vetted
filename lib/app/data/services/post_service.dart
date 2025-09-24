@@ -121,4 +121,300 @@ class PostService {
     }
     return null;
   }
+
+  Future<http.Response?> toggleSavePost({
+    required String token,
+    required String postId,
+  }) async {
+    try {
+      var uri = Uri.parse("$baseUrl/post/toggle-save-post");
+      var response = await http
+          .post(
+            uri,
+            headers: {
+              "Authorization": "Bearer $token",
+              "Content-Type": "application/json",
+            },
+            body: jsonEncode({"postId": postId}),
+          )
+          .timeout(const Duration(seconds: 60));
+      return response;
+    } on SocketException catch (e) {
+      debugPrint("No internet connection $e");
+    } on TimeoutException {
+      debugPrint("Request timeout");
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
+
+  Future<http.Response?> reactToPost({
+    required String token,
+    required String postId,
+    required String emoji,
+    required String reactedEmoji,
+  }) async {
+    try {
+      var uri = Uri.parse("$baseUrl/post/react-to-post");
+      var response = await http
+          .patch(
+            uri,
+            headers: {
+              "Authorization": "Bearer $token",
+              "Content-Type": "application/json",
+            },
+            body: jsonEncode({
+              "postId": postId,
+              "emoji": emoji,
+              "reactionType": reactedEmoji,
+            }),
+          )
+          .timeout(const Duration(seconds: 60));
+      return response;
+    } on SocketException catch (e) {
+      debugPrint("No internet connection $e");
+    } on TimeoutException {
+      debugPrint("Request timeout");
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
+
+  Future<http.Response?> deletePostReaction({
+    required String token,
+    required String postId,
+  }) async {
+    try {
+      var uri = Uri.parse("$baseUrl/post/delete-post-reaction");
+      var response = await http
+          .patch(
+            uri,
+            headers: {
+              "Authorization": "Bearer $token",
+              "Content-Type": "application/json",
+            },
+            body: jsonEncode({"postId": postId}),
+          )
+          .timeout(const Duration(seconds: 60));
+      return response;
+    } on SocketException catch (e) {
+      debugPrint("No internet connection $e");
+    } on TimeoutException {
+      debugPrint("Request timeout");
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
+
+  Future<http.Response?> commentOnPost({
+    required String token,
+    required String postId,
+    required String comment,
+    required String clientId,
+  }) async {
+    try {
+      var uri = Uri.parse("$baseUrl/post/comment-on-post");
+      var response = await http
+          .post(
+            uri,
+            headers: {
+              "Authorization": "Bearer $token",
+              "Content-Type": "application/json",
+            },
+            body: jsonEncode({
+              "postId": postId,
+              "text": comment,
+              "clientId": clientId,
+            }),
+          )
+          .timeout(const Duration(seconds: 60));
+      return response;
+    } on SocketException catch (e) {
+      debugPrint("No internet connection $e");
+    } on TimeoutException {
+      debugPrint("Request timeout");
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
+
+  Future<http.Response?> reactToComment({
+    required String token,
+    required String postId,
+    required String commentId,
+    required String emoji,
+  }) async {
+    try {
+      var uri = Uri.parse("$baseUrl/post/react-to-comment");
+      var response = await http
+          .post(
+            uri,
+            headers: {
+              "Authorization": "Bearer $token",
+              "Content-Type": "application/json",
+            },
+            body: jsonEncode({
+              "postId": postId,
+              "emoji": emoji,
+              "reactionType": "love",
+              "commentId": commentId,
+            }),
+          )
+          .timeout(const Duration(seconds: 60));
+      return response;
+    } on SocketException catch (e) {
+      debugPrint("No internet connection $e");
+    } on TimeoutException {
+      debugPrint("Request timeout");
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
+
+  Future<http.Response?> getAllCommentReplies({
+    required String token,
+    required String parentId,
+    required int currentPage,
+  }) async {
+    try {
+      var uri = Uri.parse(
+        "$baseUrl/post/get-all-comment-replies?parentId=$parentId&page=${currentPage.toString()}",
+      );
+      var response = await http
+          .get(
+            uri,
+            headers: {
+              "Authorization": "Bearer $token",
+              "Content-Type": "application/json",
+            },
+          )
+          .timeout(const Duration(seconds: 60));
+      return response;
+    } on SocketException catch (e) {
+      debugPrint("No internet connection $e");
+    } on TimeoutException {
+      debugPrint("Request timeout");
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
+
+  Future<http.Response?> getPostComments({
+    required String token,
+    required String postId,
+  }) async {
+    try {
+      var uri = Uri.parse("$baseUrl/post/comments?postId=$postId");
+      var response = await http
+          .get(
+            uri,
+            headers: {
+              "Authorization": "Bearer $token",
+              "Content-Type": "application/json",
+            },
+          )
+          .timeout(const Duration(seconds: 60));
+      return response;
+    } on SocketException catch (e) {
+      debugPrint("No internet connection $e");
+    } on TimeoutException {
+      debugPrint("Request timeout");
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
+
+  Future<http.Response?> deleteComment({
+    required String token,
+    required String commentId,
+  }) async {
+    try {
+      var uri = Uri.parse("$baseUrl/post/delete-comment");
+      var response = await http
+          .delete(
+            uri,
+            headers: {
+              "Authorization": "Bearer $token",
+              "Content-Type": "application/json",
+            },
+            body: jsonEncode({"commentId": commentId}),
+          )
+          .timeout(const Duration(seconds: 60));
+      return response;
+    } on SocketException catch (e) {
+      debugPrint("No internet connection $e");
+    } on TimeoutException {
+      debugPrint("Request timeout");
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
+
+  Future<http.Response?> replyComment({
+    required String token,
+    required String commentId,
+    required String comment,
+    required String clientId,
+  }) async {
+    try {
+      var uri = Uri.parse("$baseUrl/post/reply-to-comment");
+      var response = await http
+          .post(
+            uri,
+            headers: {
+              "Authorization": "Bearer $token",
+              "Content-Type": "application/json",
+            },
+            body: jsonEncode({
+              "commentId": commentId,
+              "text": comment,
+              "clientId": clientId,
+            }),
+          )
+          .timeout(const Duration(seconds: 60));
+      return response;
+    } on SocketException catch (e) {
+      debugPrint("No internet connection $e");
+    } on TimeoutException {
+      debugPrint("Request timeout");
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
+
+  Future<http.Response?> deletePost({
+    required String token,
+    required String postId,
+  }) async {
+    try {
+      var uri = Uri.parse("$baseUrl/post/delete-post");
+      var response = await http
+          .delete(
+            uri,
+            headers: {
+              "Authorization": "Bearer $token",
+              "Content-Type": "application/json",
+            },
+            body: jsonEncode({"postId": postId}),
+          )
+          .timeout(const Duration(seconds: 60));
+      return response;
+    } on SocketException catch (e) {
+      debugPrint("No internet connection $e");
+    } on TimeoutException {
+      debugPrint("Request timeout");
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
 }

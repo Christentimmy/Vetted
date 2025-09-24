@@ -244,4 +244,66 @@ class UserService {
     }
     return null;
   }
+
+  Future<http.Response?> reportUser({
+    required String token,
+    required String type,
+    required String reason,
+    required String reportedUser,
+    required String referenceId,
+  }) async {
+    try {
+      final url = Uri.parse("$baseUrl/user/create-report");
+      final response = await http
+          .post(
+            url,
+            headers: {
+              "Authorization": "Bearer $token",
+              "Content-Type": "application/json",
+            },
+            body: jsonEncode({
+              "type": type.toLowerCase(),
+              "description": reason,
+              "reportedUser": reportedUser,
+              "referenceId": referenceId,
+            }),
+          )
+          .timeout(const Duration(seconds: 60));
+      return response;
+    } on SocketException catch (e) {
+      debugPrint("No internet connection $e");
+    } on TimeoutException {
+      debugPrint("Request timeout");
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
+
+  Future<http.Response?> toggleBlock({
+    required String token,
+    required String blockId,
+  }) async {
+    try {
+      final response = await client
+          .patch(
+            Uri.parse("$baseUrl/user/toggle-block"),
+            headers: {
+              "Authorization": "Bearer $token",
+              "Content-Type": "application/json",
+            },
+            body: jsonEncode({"blockId": blockId}),
+          )
+          .timeout(const Duration(seconds: 30));
+      return response;
+    } on SocketException catch (e) {
+      debugPrint("No internet connection $e");
+    } on TimeoutException {
+      debugPrint("Request timeout");
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
+
 }
