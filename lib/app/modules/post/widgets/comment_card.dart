@@ -4,12 +4,10 @@ import 'package:Vetted/app/data/models/comment_model.dart';
 import 'package:Vetted/app/resources/colors.dart';
 import 'package:Vetted/app/utils/timeago.dart';
 import 'package:Vetted/app/widgets/loaders.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shimmer/shimmer.dart';
 
 // ignore: must_be_immutable
 class CommentCard extends StatelessWidget {
@@ -58,36 +56,13 @@ class CommentCard extends StatelessWidget {
 
   /// Builds the comment author's avatar
   Widget _buildAvatar() {
-    if (isGhostCard == true) {
-      return CircleAvatar(
-        radius: 20,
-        backgroundColor: AppColors.primaryColor,
-        child: const FaIcon(FontAwesomeIcons.ghost, color: Colors.white),
-      );
-    }
-
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(30),
-      child: CachedNetworkImage(
-        imageUrl: comment.authorId?.avatar ?? "",
-        height: 40,
-        width: 40,
-        fit: BoxFit.cover,
-        placeholder: (context, url) => _buildShimmerPlaceholder(),
-        errorWidget:
-            (context, error, stackTrace) => const Icon(Icons.person, size: 40),
-      ),
+    return CircleAvatar(
+      radius: 20,
+      backgroundColor: AppColors.primaryColor,
+      child: const FaIcon(FontAwesomeIcons.ghost, color: Colors.white),
     );
   }
 
-  /// Creates a shimmer loading effect for the avatar
-  Widget _buildShimmerPlaceholder() {
-    return Shimmer.fromColors(
-      baseColor: Colors.grey,
-      highlightColor: Colors.white,
-      child: Container(height: 40, width: 40, color: Colors.grey),
-    );
-  }
 
   /// Displays the comment author's name
   Widget _buildAuthorName() {

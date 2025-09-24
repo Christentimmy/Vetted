@@ -95,6 +95,7 @@ class CreatePostController extends GetxController {
       final postModel = PostModel(
         personName: firstNameController.text,
         personLocation: selectedCity.value,
+        personAge: ageController.text,
         postType: "woman",
         content: Content(text: captionController.text),
       );

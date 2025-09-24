@@ -306,4 +306,30 @@ class UserService {
     return null;
   }
 
+  Future<http.Response?> toggleFollow({
+    required String token,
+    required String userId,
+  }) async {
+    try {
+      final response = await client
+          .patch(
+            Uri.parse("$baseUrl/user/toggle-follow"),
+            headers: {
+              "Authorization": "Bearer $token",
+              "Content-Type": "application/json",
+            },
+            body: jsonEncode({"followId": userId}),
+          )
+          .timeout(const Duration(seconds: 30));
+      return response;
+    } on SocketException catch (e) {
+      debugPrint("No internet connection $e");
+    } on TimeoutException {
+      debugPrint("Request timeout");
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
+
 }

@@ -417,6 +417,31 @@ class UserController extends GetxController {
     }
   }
 
+  Future<void> toggleFollow({required String userId}) async {
+    isloading.value = true;
+    try {
+      final storageController = Get.find<StorageController>();
+      final String? token = await storageController.getToken();
+      if (token == null) return;
+      final response = await _userService.toggleFollow(
+        token: token,
+        userId: userId,
+      );
+      if (response == null) return;
+      final decoded = json.decode(response.body);
+      String message = decoded["message"] ?? "";
+      if (response.statusCode != 200) {
+        CustomSnackbar.showErrorToast(message);
+        return;
+      }
+      CustomSnackbar.showSuccessToast(message);
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      isloading.value = false;
+    }
+  }
+
   void clean() {
     userModel.value = null;
     isUserDetailsFetched.value = false;

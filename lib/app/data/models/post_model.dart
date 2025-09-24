@@ -10,6 +10,7 @@ class PostModel {
   String? postType;
   Author? author;
   String? personName;
+  String? personAge;
   String? personLocation;
   Stats? stats;
   bool? isFollowing;
@@ -18,6 +19,7 @@ class PostModel {
   bool? hasVoted;
   String? votedColor;
   RxBool? isBookmarked;
+  RxBool isFollow = false.obs;
 
   PostModel({
     this.id,
@@ -27,6 +29,7 @@ class PostModel {
     this.postType,
     this.author,
     this.personName,
+    this.personAge,
     this.personLocation,
     this.stats,
     this.isFollowing,
@@ -51,6 +54,7 @@ class PostModel {
       author:
           json["author"] != null ? Author.fromJson(json["author"]) : Author(),
       personName: json["personName"] ?? "",
+      personAge: json["personAge"] ?? "",
       personLocation: json["personLocation"] ?? "",
       stats: json["stats"] != null ? Stats.fromJson(json["stats"]) : Stats(),
       isFollowing: json["isFollowing"] ?? false,
@@ -77,6 +81,9 @@ class PostModel {
     }
     if (personName != null) {
       data['personName'] = personName;
+    }
+    if (personAge != null) {
+      data['personAge'] = personAge;
     }
     if (personLocation != null) {
       data['personLocation'] = personLocation;

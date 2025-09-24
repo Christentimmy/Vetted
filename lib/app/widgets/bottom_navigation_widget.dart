@@ -37,7 +37,7 @@ class _FloatingBottomNavigationWidgetState
   final List<BottomNavItem> navItems = [
     BottomNavItem(icon: Icons.home, label: ''),
     BottomNavItem(icon: Icons.group, label: ''),
-    BottomNavItem(icon: Icons.article_rounded, label: ''),
+    BottomNavItem(icon: Icons.work_rounded, label: ''),
     BottomNavItem(icon: Icons.message, label: ''),
     BottomNavItem(icon: Icons.person, label: ''),
   ];

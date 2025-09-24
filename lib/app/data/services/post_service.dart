@@ -310,7 +310,7 @@ class PostService {
     required String postId,
   }) async {
     try {
-      var uri = Uri.parse("$baseUrl/post/comments?postId=$postId");
+      var uri = Uri.parse("$baseUrl/post/get-all-comments?postId=$postId");
       var response = await http
           .get(
             uri,

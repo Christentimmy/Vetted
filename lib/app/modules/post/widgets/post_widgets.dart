@@ -160,6 +160,18 @@ Widget buildOptionAboutPost({
         items: [
           PopupMenuItem(
             value: "report",
+            onTap: () {
+              showModalBottomSheet(
+                context: Get.context!,
+                builder: (context) {
+                  return ReportBottomSheet(
+                    reportUser: postModel.author?.id ?? "",
+                    type: ReportType.post,
+                    referenceId: postModel.id,
+                  );
+                },
+              );
+            },
             child: Text(
               "Report",
               style: TextStyle(

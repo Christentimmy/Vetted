@@ -21,4 +21,5 @@ class AppRoutes {
   static const String createPostScreen = '/createPostScreen';
   static const String womanPostScreen = '/womanPostScreen';
   static const String pollPostScreen = '/pollPostScreen';
+  static const String postScreen = '/postScreen';
 }
