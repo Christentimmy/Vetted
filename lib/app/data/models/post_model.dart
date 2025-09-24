@@ -1,0 +1,322 @@
+import 'dart:ui';
+
+class PostModel {
+  String? id;
+  Content? content;
+  List<Media>? media;
+  Poll? poll;
+  String? postType;
+  Author? author;
+  String? personName;
+  String? personLocation;
+  Stats? stats;
+  bool? isFollowing;
+  DateTime? createdAt;
+  String? reactedEmoji;
+  bool? hasVoted;
+  String? votedColor;
+
+  PostModel({
+    this.id,
+    this.content,
+    this.media,
+    this.poll,
+    this.postType,
+    this.author,
+    this.personName,
+    this.personLocation,
+    this.stats,
+    this.isFollowing,
+    this.createdAt,
+    this.reactedEmoji,
+    this.hasVoted,
+    this.votedColor,
+  });
+
+  factory PostModel.fromJson(Map<String, dynamic> json) {
+    return PostModel(
+      id: json["id"] ?? "",
+      content:
+          json['content'] != null ? Content.fromJson(json['content']) : null,
+      media:
+          json['media'] != null
+              ? (json['media'] as List).map((e) => Media.fromJson(e)).toList()
+              : [],
+      poll: json['poll'] != null ? Poll.fromJson(json['poll']) : null,
+      postType: json["postType"] ?? "",
+      author:
+          json["author"] != null ? Author.fromJson(json["author"]) : Author(),
+      personName: json["personName"] ?? "",
+      personLocation: json["personLocation"] ?? "",
+      stats: json["stats"] != null ? Stats.fromJson(json["stats"]) : Stats(),
+      isFollowing: json["isFollowing"] ?? false,
+      createdAt:
+          json["createdAt"] != null
+              ? DateTime.parse(json["createdAt"].toString())
+              : DateTime.now(),
+      reactedEmoji: json["reactedEmoji"] ?? "",
+      hasVoted: json['hasVoted'] ?? false,
+      votedColor: json['votedColor'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    final data = <String, dynamic>{};
+    if (content != null) {
+      data['title'] = content?.title;
+      data['text'] = content?.text;
+    }
+    data['postType'] = postType;
+    if (poll != null) {
+      data['poll'] = poll?.toJson();
+    }
+    if (personName != null) {
+      data['personName'] = personName;
+    }
+    if (personLocation != null) {
+      data['personLocation'] = personLocation;
+    }
+    return data;
+  }
+}
+
+class Author {
+  final String? id;
+  final String? displayName;
+  final String? avatar;
+
+  Author({this.id, this.displayName, this.avatar});
+
+  factory Author.fromJson(Map<String, dynamic> json) {
+    return Author(
+      id: json["id"] ?? "",
+      displayName: json["displayName"] ?? "",
+      avatar: json["avatar"] ?? "",
+    );
+  }
+}
+
+class Stats {
+  int? reactionCount;
+  int? comments;
+  int? views;
+  int? totalFlagVote;
+  String? leadingFlag;
+  int? greenVotes;
+  int? redVotes;
+
+  Stats({
+    this.reactionCount,
+    this.comments,
+    this.views,
+    this.totalFlagVote,
+    this.leadingFlag,
+    this.greenVotes,
+    this.redVotes,
+  });
+
+  factory Stats.fromJson(Map<String, dynamic> json) {
+    return Stats(
+      reactionCount: json["reactionCount"] ?? 0,
+      comments: json["comments"] ?? 0,
+      views: json["views"] ?? 0,
+      totalFlagVote: json["totalFlagVote"] ?? 0,
+      leadingFlag: json["leadingFlag"] ?? "",
+      greenVotes: json["greenVotes"] ?? 0,
+      redVotes: json["redVotes"] ?? 0,
+    );
+  }
+}
+
+class Media {
+  final String? type; // "image" | "video" | "audio"
+  final String? url;
+  final String? thumbnailUrl;
+  final double? duration; // seconds
+  final int? size; // bytes
+  final Dimensions? dimensions;
+  final Metadata? metadata;
+
+  Media({
+    this.type,
+    this.url,
+    this.thumbnailUrl,
+    this.duration,
+    this.size,
+    this.dimensions,
+    this.metadata,
+  });
+
+  factory Media.fromJson(json) {
+    return Media(
+      type: json['type'] ?? "",
+      url: json['url'] ?? "",
+      thumbnailUrl: json['thumbnailUrl'] ?? "",
+      duration:
+          (json['duration'] != null)
+              ? (json['duration'] as num).toDouble()
+              : null,
+      size: json['size'] ?? 0,
+      dimensions:
+          json['dimensions'] != null
+              ? Dimensions.fromJson(json['dimensions'])
+              : null,
+      metadata:
+          json['metadata'] != null ? Metadata.fromJson(json['metadata']) : null,
+    );
+  }
+}
+
+class Dimensions {
+  final int width;
+  final int height;
+
+  Dimensions({required this.width, required this.height});
+
+  factory Dimensions.fromJson(Map<String, dynamic> json) {
+    return Dimensions(
+      width: json['width'] as int,
+      height: json['height'] as int,
+    );
+  }
+}
+
+class Metadata {
+  final String? format;
+  final String? quality;
+  final bool? isProcessed;
+
+  Metadata({this.format, this.quality, this.isProcessed});
+
+  factory Metadata.fromJson(Map<String, dynamic> json) {
+    return Metadata(
+      format: json['format'] as String?,
+      quality: json['quality'] as String?,
+      isProcessed: json['isProcessed'] as bool?,
+    );
+  }
+}
+
+class Poll {
+  final String? question;
+  final List<PollOptions>? options;
+  final bool? allowMultipleChoices;
+  final int? totalVotes;
+  final bool? isActive;
+  final DateTime? expiresAt;
+  final bool? hasVoted;
+  final String? selectedOptionId;
+
+  Poll({
+    this.question,
+    this.allowMultipleChoices = false,
+    this.totalVotes,
+    this.isActive,
+    this.options,
+    this.expiresAt,
+    this.hasVoted,
+    this.selectedOptionId,
+  });
+
+  factory Poll.fromJson(Map<String, dynamic> json) {
+    return Poll(
+      question: json['question'] ?? "",
+      totalVotes: json['totalVotes'] ?? 0,
+      options:
+          json['options'] != null
+              ? List<PollOptions>.from(
+                json['options'].map((x) => PollOptions.fromJson(x)),
+              )
+              : [],
+      allowMultipleChoices: json['allowMultipleChoices'] ?? false,
+      isActive: json['isActive'] ?? false,
+      expiresAt:
+          json['expiresAt'] != null ? DateTime.parse(json['expiresAt']) : null,
+      hasVoted: json['hasVoted'] ?? false,
+      selectedOptionId: json['selectedOptionId'] ?? "",
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    final data = <String, dynamic>{};
+    if (question != null) {
+      data['question'] = question;
+    }
+    if (options != null) {
+      data['options'] = options?.map((x) => x.text).toList();
+    }
+    if (allowMultipleChoices != null) {
+      data['allowMultipleChoices'] = allowMultipleChoices;
+    }
+    if (isActive != null) {
+      data['isActive'] = isActive;
+    }
+    if (expiresAt != null) {
+      data['expiresAt'] = expiresAt;
+    }
+    return data;
+  }
+}
+
+class PollOptions {
+  final String? id;
+  final String? text;
+  final int? voteCount;
+  final List? voters;
+  final Color? color;
+
+  PollOptions({this.id, this.text, this.voteCount, this.voters, this.color});
+
+  factory PollOptions.fromJson(Map<String, dynamic> json) {
+    return PollOptions(
+      id: json['id'] ?? "",
+      text: json['text'] ?? "",
+      voteCount: json['voteCount'] ?? 0,
+      voters: json['voters'] != null ? List<dynamic>.from(json['voters']) : [],
+    );
+  }
+
+  double getPercentage(double totalVotes) {
+    if (totalVotes == 0) return 0.0;
+    return (voteCount! / totalVotes) * 100;
+  }
+}
+
+class Content {
+  final String? title;
+  final String? text;
+  final Formatting? formatting;
+
+  Content({this.title, this.text, this.formatting});
+
+  Map<String, dynamic> toJson() {
+    return {'title': title, 'text': text};
+  }
+
+  factory Content.fromJson(json) {
+    return Content(
+      title: json['title'] ?? "",
+      text: json['text'] ?? "",
+      formatting:
+          json['formatting'] != null
+              ? Formatting.fromJson(json['formatting'])
+              : Formatting(),
+    );
+  }
+}
+
+class Formatting {
+  final String? alignment;
+  final bool? isBold;
+  final String? font;
+
+  Formatting({this.alignment, this.isBold, this.font});
+
+  factory Formatting.fromJson(json) {
+    return Formatting(
+      alignment: json['alignment'] ?? "",
+      isBold: json['isBold'] ?? false,
+      font: json['font'] ?? "",
+    );
+  }
+}

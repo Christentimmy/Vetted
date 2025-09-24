@@ -1,10 +1,17 @@
+import 'package:Vetted/app/controller/post_controller.dart';
+import 'package:Vetted/app/data/models/post_model.dart';
+import 'package:Vetted/app/modules/post/widgets/vote_widget.dart';
+import 'package:Vetted/app/resources/colors.dart';
 import 'package:Vetted/app/routes/app_routes.dart';
+import 'package:Vetted/app/widgets/loaders.dart';
 import 'package:Vetted/screens/message_list_screen.dart';
 import 'package:Vetted/screens/notification_screen.dart';
 import 'package:Vetted/screens/post_screen.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:shimmer/shimmer.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -15,15 +22,17 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final Set<int> likedProfiles = {};
+  final postController = Get.find<PostController>();
 
-  final List<Map<String, String>> profiles = [
-    {"name": "UK", "img": "assets/images/user1.png"},
-    {"name": "Ella", "img": "assets/images/user2.png"},
-    {"name": "", "img": "assets/images/user3.png"},
-    {"name": "Zo\nElla", "img": "assets/images/user4.png"},
-    {"name": "", "img": "assets/images/user5.png"},
-    {"name": "", "img": "assets/images/user6.png"},
-  ];
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (postController.posts.isEmpty) {
+        postController.getFeed();
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,266 +41,320 @@ class _HomeScreenState extends State<HomeScreen> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: Column(
-            children: [
-              const SizedBox(height: 12),
-
-              // Top Bar
-              Row(
-                children: [
-                  Image.asset('assets/images/logo_black.png', height: 28),
-                  const SizedBox(width: 8),
-                  const Text(
-                    "Vetted",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
-                  ),
-                  const Spacer(),
-
-                  // Search bar with filter
-                  Container(
-                    width: 160,
-                    height: 36,
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade200,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.search, size: 18, color: Colors.grey),
-                        const SizedBox(width: 6),
-                        const Expanded(
-                          child: TextField(
-                            decoration: InputDecoration(
-                              hintText: 'Search',
-                              border: InputBorder.none,
-                              isCollapsed: true,
-                            ),
-                            style: TextStyle(fontSize: 14),
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () => _showFilterPopup(context),
-                          child: const Icon(
-                            Icons.filter_list,
-                            size: 18,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  const SizedBox(width: 12),
-
-                  // Notifications
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const NotificationScreen(),
-                        ),
-                      );
-                    },
-                    child: const Icon(Icons.notifications_none),
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 20),
-
-              // Action Row with Swipeable Create Post
-              Row(
-                children: [
-                  GestureDetector(
-                    onHorizontalDragEnd: (details) {
-                      if (details.primaryVelocity != null &&
-                          details.primaryVelocity! > 0) {
-                        Get.toNamed(AppRoutes.createPostScreen);
-                      }
-                    },
-                    child: Container(
-                      height: 48,
-                      width: MediaQuery.of(context).size.width * 0.45,
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      decoration: BoxDecoration(
-                        color: Colors.red.shade700,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Container(
-                            height: 30,
-                            width: 30,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                              color: Colors.white,
-                            ),
-                            child: const Icon(
-                              Icons.edit_square,
-                              color: Colors.red,
-                              size: 20,
-                            ),
-                          ),
-                          Icon(
-                            Icons.arrow_forward_ios,
-                            color: Colors.white,
-                            size: 14,
-                          ),
-                          Icon(
-                            Icons.arrow_forward_ios,
-                            color: Colors.white70,
-                            size: 14,
-                          ),
-                          Icon(
-                            Icons.arrow_forward_ios,
-                            color: Colors.white54,
-                            size: 14,
-                          ),
-                          Icon(
-                            Icons.arrow_forward_ios,
-                            color: Colors.white38,
-                            size: 14,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-
-                  const Spacer(),
-
-                  // Send button
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const MessageListScreen(),
-                        ),
-                      );
-                    },
-                    child: Container(
-                      height: 48,
-                      width: 48,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: Colors.red.shade700,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Transform.rotate(
-                        angle: 12.5,
-                        child: Icon(
-                          FontAwesomeIcons.paperPlane,
-                          color: Colors.white,
-                          size: 20,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 20),
-
-              // Profile Grid
-              Expanded(
-                child: GridView.builder(
-                  itemCount: profiles.length,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 12,
-                    mainAxisSpacing: 12,
-                    childAspectRatio: 0.8,
-                  ),
-                  itemBuilder: (context, index) {
-                    final profile = profiles[index];
-                    final isRedFlag = index % 2 == 0;
-                    final flagColor = isRedFlag ? Colors.red : Colors.green;
-                    final flagCount = isRedFlag ? '40' : '15';
-
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (_) => const PostScreen()),
-                        );
-                      },
-                      child: Stack(
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
-                            child: Image.asset(
-                              profile['img']!,
-                              fit: BoxFit.cover,
-                              width: double.infinity,
-                              height: double.infinity,
-                            ),
-                          ),
-                          Positioned(
-                            top: 6,
-                            right: 6,
-                            child: GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  likedProfiles.contains(index)
-                                      ? likedProfiles.remove(index)
-                                      : likedProfiles.add(index);
-                                });
-                              },
-                              child: Icon(
-                                likedProfiles.contains(index)
-                                    ? Icons.favorite
-                                    : Icons.favorite_border,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            bottom: 8,
-                            left: 8,
-                            child: _singleFlagWithCount(
-                              icon: Icons.flag,
-                              color: flagColor,
-                              count: flagCount,
-                            ),
-                          ),
-                          if (profile['name']!.isNotEmpty)
-                            Positioned(
-                              bottom: 8,
-                              right: 8,
-                              child: Text(
-                                profile['name']!,
-                                textAlign: TextAlign.right,
-                                style: const TextStyle(
-                                  fontSize: 13,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  shadows: [
-                                    Shadow(blurRadius: 2, color: Colors.black),
-                                  ],
-                                ),
-                              ),
-                            ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-              ),
-              SizedBox(height: Get.height * 0.12),
-            ],
+          child: RefreshIndicator(
+            color: AppColors.primaryColor,
+            onRefresh: () => postController.getFeed(showLoader: false),
+            child: ListView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              children: [
+                const SizedBox(height: 12),
+                buildTopBar(context),
+                const SizedBox(height: 20),
+                buildActionRow(context),
+                const SizedBox(height: 20),
+                buildFeed(),
+                SizedBox(height: Get.height * 0.12),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _singleFlagWithCount({
+  Obx buildFeed() {
+    return Obx(() {
+      if (postController.isloading.value) {
+        return SizedBox(
+          width: Get.width,
+          height: Get.height * 0.65,
+          child: const Center(child: Loader2()),
+        );
+      }
+      if (postController.posts.isEmpty) {
+        return SizedBox(
+          width: Get.width,
+          height: Get.height * 0.65,
+          child: const Center(child: Text("No posts found")),
+        );
+      }
+      return GridView.builder(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: postController.posts.length,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 12,
+          mainAxisSpacing: 12,
+          childAspectRatio: 0.8,
+        ),
+        itemBuilder: (context, index) {
+          final post = postController.posts[index];
+          return buildDisplayCard(context, post, index);
+        },
+      );
+    });
+  }
+
+  GestureDetector buildDisplayCard(
+    BuildContext context,
+    PostModel post,
+    int index,
+  ) {
+    return GestureDetector(
+      onTap: () async {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const PostScreen()),
+        );
+      },
+      child: Stack(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: CachedNetworkImage(
+              imageUrl: post.media?[0].url ?? "",
+              fit: BoxFit.cover,
+              width: double.infinity,
+              height: double.infinity,
+              placeholder: (context, url) {
+                return Shimmer.fromColors(
+                  baseColor: Colors.grey[300]!,
+                  highlightColor: Colors.grey[100]!,
+                  child: Container(color: Colors.grey[300]),
+                );
+              },
+              errorWidget:
+                  (context, url, error) => const Icon(Icons.broken_image),
+            ),
+          ),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: Image.network(
+              post.media?[0].url ?? "",
+              fit: BoxFit.cover,
+              width: double.infinity,
+              height: double.infinity,
+            ),
+          ),
+          Container(
+            width: double.infinity,
+            height: double.infinity,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.transparent,
+                  Colors.black.withValues(alpha: 0.5),
+                ],
+              ),
+            ),
+          ),
+
+          Positioned(
+            top: 6,
+            right: 6,
+            child: GestureDetector(
+              onTap: () {
+                setState(() {
+                  likedProfiles.contains(index)
+                      ? likedProfiles.remove(index)
+                      : likedProfiles.add(index);
+                });
+              },
+              child: Icon(
+                likedProfiles.contains(index)
+                    ? Icons.favorite
+                    : Icons.favorite_border,
+                color: Colors.white,
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 8,
+            left: 8,
+            right: 8,
+            child: Center(
+              child: BidirectionalVoteSwitch(
+                leadingFlag: post.stats?.leadingFlag,
+                hasVoted: post.hasVoted,
+                votedColor: post.votedColor,
+                greenCount: post.stats?.greenVotes,
+                redCount: post.stats?.redVotes,
+                onVote: (String vote) async {
+                  // Update local state immediately for better UX
+                  updateUiVote(post: post, vote: vote);
+                  await postController.voteOnWoman(
+                    postId: post.id!,
+                    color: vote,
+                  );
+                },
+              ),
+            ),
+          ),
+
+          Positioned(
+            bottom: 8,
+            right: 8,
+            child: Text(
+              post.personName ?? "",
+              textAlign: TextAlign.right,
+              style: const TextStyle(
+                fontSize: 13,
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                shadows: [Shadow(blurRadius: 2, color: Colors.black)],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Row buildActionRow(BuildContext context) {
+    return Row(
+      children: [
+        GestureDetector(
+          onHorizontalDragEnd: (details) {
+            if (details.primaryVelocity != null &&
+                details.primaryVelocity! > 0) {
+              Get.toNamed(AppRoutes.createPostScreen);
+            }
+          },
+          child: Container(
+            height: 48,
+            width: MediaQuery.of(context).size.width * 0.45,
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            decoration: BoxDecoration(
+              color: Colors.red.shade700,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Container(
+                  height: 30,
+                  width: 30,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),
+                    color: Colors.white,
+                  ),
+                  child: const Icon(
+                    Icons.edit_square,
+                    color: Colors.red,
+                    size: 20,
+                  ),
+                ),
+                Icon(Icons.arrow_forward_ios, color: Colors.white, size: 14),
+                Icon(Icons.arrow_forward_ios, color: Colors.white70, size: 14),
+                Icon(Icons.arrow_forward_ios, color: Colors.white54, size: 14),
+                Icon(Icons.arrow_forward_ios, color: Colors.white38, size: 14),
+              ],
+            ),
+          ),
+        ),
+
+        const Spacer(),
+
+        // Send button
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const MessageListScreen()),
+            );
+          },
+          child: Container(
+            height: 48,
+            width: 48,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: Colors.red.shade700,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Transform.rotate(
+              angle: 12.5,
+              child: Icon(
+                FontAwesomeIcons.paperPlane,
+                color: Colors.white,
+                size: 20,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Row buildTopBar(BuildContext context) {
+    return Row(
+      children: [
+        Image.asset('assets/images/logo_black.png', height: 28),
+        const SizedBox(width: 8),
+        const Text(
+          "Vetted",
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+        ),
+        const Spacer(),
+
+        // Search bar with filter
+        Container(
+          width: 160,
+          height: 36,
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          decoration: BoxDecoration(
+            color: Colors.grey.shade200,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Row(
+            children: [
+              const Icon(Icons.search, size: 18, color: Colors.grey),
+              const SizedBox(width: 6),
+              const Expanded(
+                child: TextField(
+                  decoration: InputDecoration(
+                    hintText: 'Search',
+                    border: InputBorder.none,
+                    isCollapsed: true,
+                  ),
+                  style: TextStyle(fontSize: 14),
+                ),
+              ),
+              GestureDetector(
+                onTap: () => _showFilterPopup(context),
+                child: const Icon(
+                  Icons.filter_list,
+                  size: 18,
+                  color: Colors.grey,
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(width: 12),
+
+        // Notifications
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const NotificationScreen()),
+            );
+          },
+          child: const Icon(Icons.notifications_none),
+        ),
+      ],
+    );
+  }
+
+  Widget singleFlagWithCount({
     required IconData icon,
-    required Color color,
-    required String count,
+    required String leadingFlag,
+    required int? count,
   }) {
     return Row(
       children: [
@@ -301,9 +364,9 @@ class _HomeScreenState extends State<HomeScreen> {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: Colors.white,
-            border: Border.all(color: color),
+            border: Border.all(color: getColor(leadingFlag)),
           ),
-          child: Icon(icon, size: 14, color: color),
+          child: Icon(icon, size: 14, color: getColor(leadingFlag)),
         ),
         const SizedBox(width: 4),
         Container(
@@ -314,7 +377,7 @@ class _HomeScreenState extends State<HomeScreen> {
             border: Border.all(color: Colors.grey.shade300),
           ),
           child: Text(
-            count,
+            count.toString(),
             style: const TextStyle(
               fontSize: 12,
               color: Colors.black87,
@@ -325,6 +388,37 @@ class _HomeScreenState extends State<HomeScreen> {
       ],
     );
   }
+
+  void updateUiVote({required PostModel post, required String vote}) async {
+    setState(() {
+      if (post.stats?.leadingFlag != vote) {
+        // Remove previous vote count
+        if (post.stats?.leadingFlag == 'green') {
+          post.stats?.greenVotes = (post.stats?.greenVotes ?? 1) - 1;
+        } else if (post.stats?.leadingFlag == 'red') {
+          post.stats?.redVotes = (post.stats?.redVotes ?? 1) - 1;
+        }
+
+        // Add new vote count
+        if (vote == 'green') {
+          post.stats?.greenVotes = (post.stats?.greenVotes ?? 0) + 1;
+        } else {
+          post.stats?.redVotes = (post.stats?.redVotes ?? 0) + 1;
+        }
+
+        post.stats?.leadingFlag = vote;
+      }
+    });
+  }
+}
+
+getColor(String leadingFlag) {
+  if (leadingFlag == 'green') {
+    return Colors.green;
+  } else if (leadingFlag == 'red') {
+    return Colors.red;
+  }
+  return Colors.grey;
 }
 
 void _showFilterPopup(BuildContext context) {

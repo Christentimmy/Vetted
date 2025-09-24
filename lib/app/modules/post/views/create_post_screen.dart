@@ -1,7 +1,9 @@
-import 'package:Vetted/app/modules/community/views/community_screen.dart';
+import 'package:Vetted/app/modules/post/controller/create_post_controller.dart';
 import 'package:Vetted/app/routes/app_routes.dart';
+import 'package:Vetted/app/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CreatePostScreen extends StatefulWidget {
   const CreatePostScreen({super.key});
@@ -11,8 +13,11 @@ class CreatePostScreen extends StatefulWidget {
 }
 
 class _CreatePostScreenState extends State<CreatePostScreen> {
-  final TextEditingController _controller = TextEditingController();
-  final TextEditingController _titleController = TextEditingController();
+  // final TextEditingController _controller = TextEditingController();
+  // final TextEditingController _titleController = TextEditingController();
+
+  final formKey = GlobalKey<FormState>();
+  final createPostController = Get.put(CreatePostController());
 
   @override
   void initState() {
@@ -24,8 +29,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
 
   @override
   void dispose() {
-    _controller.dispose();
-    _titleController.dispose();
+    Get.delete<CreatePostController>();
     super.dispose();
   }
 
@@ -120,8 +124,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: ListView(
             children: [
               const SizedBox(height: 10),
 
@@ -152,44 +155,62 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
               ),
 
               const SizedBox(height: 12),
+              Form(
+                key: formKey,
+                child: Column(
+                  children: [
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black12),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: TextFormField(
+                        controller: createPostController.titleController,
+                        decoration: const InputDecoration(
+                          hintText: "Post Title",
+                          border: InputBorder.none,
+                        ),
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return "Please enter a value";
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+
+                    const SizedBox(height: 12),
+
+                    // Post Content field
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black12),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: TextFormField(
+                        controller: createPostController.textController,
+                        maxLines: 4,
+                        decoration: const InputDecoration(
+                          hintText: "What’s on your mind?",
+                          border: InputBorder.none,
+                        ),
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return "Please enter a value";
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
 
               // Post Title field
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.black12),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: TextField(
-                  controller: _titleController,
-                  decoration: const InputDecoration(
-                    hintText: "Post Title",
-                    border: InputBorder.none,
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 12),
-
-              // Post Content field
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.black12),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: TextField(
-                  controller: _controller,
-                  maxLines: 4,
-                  decoration: const InputDecoration(
-                    hintText: "What’s on your mind?",
-                    border: InputBorder.none,
-                  ),
-                ),
-              ),
-
               const SizedBox(height: 24),
 
               // Image Options
@@ -197,46 +218,29 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                 Get.toNamed(AppRoutes.womanPostScreen);
               }),
               const SizedBox(height: 12),
-              _buildPostOption(
-                "assets/images/icons/poll.png",
-                "Poll",
-                () {
-                  Get.toNamed(AppRoutes.pollPostScreen);
-                },
-              ),
+              _buildPostOption("assets/images/icons/poll.png", "Poll", () {
+                Get.toNamed(AppRoutes.pollPostScreen);
+              }),
 
-              const Spacer(),
+              SizedBox(height: Get.height * 0.15),
 
               // Post Button
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => const CommunityScreen(),
-                      ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromARGB(255, 146, 21, 21),
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+              CustomButton(
+                ontap:
+                    () => createPostController.createRegularPost(
+                      formKey: formKey,
                     ),
-                  ),
-                  child: const Text(
-                    'Post',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
+                isLoading: createPostController.isLoading,
+                loaderColor: Colors.white,
+                child: Text(
+                  'Post',
+                  style: GoogleFonts.poppins(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
                   ),
                 ),
               ),
-
               const SizedBox(height: 16),
             ],
           ),
