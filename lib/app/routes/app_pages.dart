@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:Vetted/app/modules/app_services/views/number_check_screen.dart';
+import 'package:Vetted/app/modules/app_services/views/reverse_image_screen.dart';
 import 'package:Vetted/app/modules/auth/views/otp_screen.dart';
 import 'package:Vetted/app/modules/auth/views/phone_number_screen.dart';
 import 'package:Vetted/app/modules/community/views/community_screen.dart';
@@ -104,5 +106,7 @@ class AppPages {
     GetPage(name: AppRoutes.womanPostScreen, page: () => WomanPostScreen()),
     GetPage(name: AppRoutes.pollPostScreen, page: () => PollPostScreen()),
     GetPage(name: AppRoutes.postScreen, page: () => PostScreen()),
+    GetPage(name: AppRoutes.numberCheckScreen, page: () => NumberCheckScreen()),
+    GetPage(name: AppRoutes.reverseImageScreen, page: () => ReverseImageScreen()),
   ];
 }

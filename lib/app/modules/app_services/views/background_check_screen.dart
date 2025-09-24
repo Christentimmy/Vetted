@@ -1,15 +1,21 @@
+import 'package:Vetted/app/controller/app_service_controller.dart';
+import 'package:Vetted/app/widgets/snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:Vetted/screens/notification_screen.dart';
-import 'package:Vetted/screens/number_check_screen.dart';
 import 'package:Vetted/screens/criminal_record_search_screen.dart';
 import 'package:Vetted/screens/reverse_image_screen.dart';
 import 'package:Vetted/screens/background_check_search_screen.dart';
 import 'package:Vetted/screens/sex_offenders_map_screen.dart';
 import 'package:Vetted/screens/court_search_resource_screen.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class BackgroundCheckScreen extends StatelessWidget {
-  const BackgroundCheckScreen({super.key});
+  BackgroundCheckScreen({super.key});
+
+  final appServiceController = Get.find<AppServiceController>();
+
+  final phoneNumberController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -93,6 +99,7 @@ class BackgroundCheckScreen extends StatelessWidget {
                   child: SizedBox(
                     height: 56,
                     child: TextField(
+                      controller: phoneNumberController,
                       decoration: InputDecoration(
                         hintText: "(353) 745-8736",
                         filled: true,
@@ -116,17 +123,35 @@ class BackgroundCheckScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const NumberCheckScreen(),
-                        ),
+                    onPressed: () async {
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (_) => const NumberCheckScreen(),
+                      //   ),
+                      // );
+                      if (phoneNumberController.text.isEmpty) {
+                        CustomSnackbar.showErrorToast(
+                          "Please enter a phone number",
+                        );
+                        return;
+                      }
+                      await appServiceController.getNumberInfo(
+                        number: phoneNumberController.text,
                       );
                     },
-                    child: const Text(
-                      "Search",
-                      style: TextStyle(color: Colors.white),
+                    child: Obx(
+                      () =>
+                          appServiceController.isloading.value
+                              ? const Center(
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                ),
+                              )
+                              : Text(
+                                "Search",
+                                style: GoogleFonts.poppins(color: Colors.white),
+                              ),
                     ),
                   ),
                 ),

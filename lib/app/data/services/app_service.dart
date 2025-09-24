@@ -1,0 +1,64 @@
+import 'dart:async';
+import 'dart:io';
+import 'package:Vetted/app/utils/base_url.dart';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
+
+class AppService {
+  final http.Client client = http.Client();
+
+  Future<http.Response?> imageSearch({
+    required File file,
+    required String token,
+  }) async {
+    try {
+      final uri = Uri.parse("$baseUrl/services/google-image-search");
+      final request = http.MultipartRequest('POST', uri);
+      request.files.add(
+        await http.MultipartFile.fromPath(
+          'file',
+          file.path,
+          contentType: MediaType('image', 'jpeg'),
+        ),
+      );
+      request.headers['Authorization'] = 'Bearer $token';
+
+      final response = await request.send();
+      return await http.Response.fromStream(response);
+    } on SocketException catch (e) {
+      debugPrint("No internet connection $e");
+    } on TimeoutException {
+      debugPrint("Request timeout");
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
+
+  Future<http.Response?> getNumberInfo({
+    required String phoneNumber,
+    required String token,
+  }) async {
+    try {
+      final uri = Uri.parse(
+        "$baseUrl/services/phone-lookup?phone=$phoneNumber",
+      );
+      final response = await client.get(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+      return response;
+    } on SocketException catch (e) {
+      debugPrint("No internet connection $e");
+    } on TimeoutException {
+      debugPrint("Request timeout");
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
+}

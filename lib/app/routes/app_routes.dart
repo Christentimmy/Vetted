@@ -22,4 +22,6 @@ class AppRoutes {
   static const String womanPostScreen = '/womanPostScreen';
   static const String pollPostScreen = '/pollPostScreen';
   static const String postScreen = '/postScreen';
+  static const String numberCheckScreen = '/numberCheckScreen';
+  static const String reverseImageScreen = '/reverseImageScreen';
 }

@@ -1,5 +1,6 @@
 
 
+import 'package:Vetted/app/controller/app_service_controller.dart';
 import 'package:Vetted/app/controller/auth_controller.dart';
 import 'package:Vetted/app/controller/location_controller.dart';
 import 'package:Vetted/app/controller/post_controller.dart';
@@ -14,6 +15,7 @@ class AppBindings implements Bindings {
     Get.put(AuthController());
     Get.put(UserController());
     Get.put(LocationController());
-    Get.put(PostController());
+    Get.put(PostController());  
+    Get.put(AppServiceController());
   }
 }
