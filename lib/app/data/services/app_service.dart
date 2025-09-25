@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'package:Vetted/app/utils/base_url.dart';
 import 'package:flutter/material.dart';
@@ -61,4 +62,39 @@ class AppService {
     }
     return null;
   }
+
+  Future<http.Response?> backgroundCheck({
+    required String token,
+    required String name,
+    required String street,
+    required String stateCode,
+    required String city,
+    required String zipCode,
+  }) async {
+    try {
+      final response = await client.post(
+        Uri.parse("$baseUrl/services/name-lookup"),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'name': name,
+          'street': street,
+          'stateCode': stateCode,
+          'city': city,
+          'zipCode': zipCode,
+        }),
+      );
+      return response;
+    } on SocketException catch (e) {
+      debugPrint("No internet connection $e");
+    } on TimeoutException {
+      debugPrint("Request timeout");
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
+
 }

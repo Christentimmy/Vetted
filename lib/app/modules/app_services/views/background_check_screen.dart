@@ -1,11 +1,11 @@
 import 'package:Vetted/app/controller/app_service_controller.dart';
+import 'package:Vetted/app/routes/app_routes.dart';
 import 'package:Vetted/app/utils/image_picker.dart';
 import 'package:Vetted/app/widgets/snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:Vetted/screens/notification_screen.dart';
 import 'package:Vetted/screens/criminal_record_search_screen.dart';
 // import 'package:Vetted/screens/reverse_image_screen.dart';
-import 'package:Vetted/screens/background_check_search_screen.dart';
 // import 'package:Vetted/screens/sex_offenders_map_screen.dart';
 import 'package:Vetted/screens/court_search_resource_screen.dart';
 import 'package:flutter/services.dart';
@@ -242,14 +242,12 @@ class BackgroundCheckScreen extends StatelessWidget {
             const SizedBox(height: 24),
 
             // ✅ Linked Buttons
-            _customButton("Background Check", "Get Started", Colors.green, () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => const BackgroundCheckSearchScreen(),
-                ),
-              );
-            }),
+            _customButton(
+              "Background Check",
+              "Get Started",
+              Colors.green,
+              () => Get.toNamed(AppRoutes.backgroundCheckSearchScreen),
+            ),
             _customButton(
               "Criminal Record Search",
               "Search Now",

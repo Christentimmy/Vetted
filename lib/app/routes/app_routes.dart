@@ -24,4 +24,7 @@ class AppRoutes {
   static const String postScreen = '/postScreen';
   static const String numberCheckScreen = '/numberCheckScreen';
   static const String reverseImageScreen = '/reverseImageScreen';
+  static const String backgroundCheckSearchScreen = '/backgroundCheckSearchScreen';
+  static const String backgroundCheckSearchResultScreen = '/backgroundCheckSearchResultScreen';
+  static const String backgroundResultMoreDetailsDoneScreen = '/backgroundResultMoreDetailsDoneScreen';
 }

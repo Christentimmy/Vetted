@@ -15,6 +15,7 @@ class AppServiceController extends GetxController {
   final AppService appService = AppService();
   RxList<PersonModel> persons = <PersonModel>[].obs;
   RxList<SearchImage> images = <SearchImage>[].obs;
+  RxList<PersonModel> personsBackground = <PersonModel>[].obs;
 
   Future<void> reverseImageSearch({required File file}) async {
     isloadingImage.value = true;
@@ -79,4 +80,49 @@ class AppServiceController extends GetxController {
     }
   }
 
+  Future<void> backgroundCheck({
+    required String name,
+    required String street,
+    required String stateCode,
+    required String city,
+    required String zipCode,
+  }) async {
+    isloading.value = true;
+    try {
+      final storageController = Get.find<StorageController>();
+      final String? token = await storageController.getToken();
+      if (token == null) return;
+      final response = await appService.backgroundCheck(
+        name: name,
+        street: street,
+        stateCode: stateCode,
+        city: city,
+        zipCode: zipCode,
+        token: token,
+      );
+      if (response == null) return;
+      final data = json.decode(response.body);
+      String message = data["message"] ?? "";
+      if (response.statusCode != 200) {
+        CustomSnackbar.showErrorToast(message);
+        return;
+      }
+      List result = data["data"] ?? [];
+      if (result.isEmpty) {
+        CustomSnackbar.showErrorToast("No data found");
+        return;
+      }
+      List<PersonModel> incomingPersons =
+          result.map((e) => PersonModel.fromJson(e)).toList();
+      personsBackground.value = incomingPersons;
+      Get.toNamed(
+        AppRoutes.backgroundCheckSearchResultScreen,
+        arguments: {"name": name},
+      );
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      isloading.value = false;
+    }
+  }
 }
