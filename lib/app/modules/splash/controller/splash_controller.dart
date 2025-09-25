@@ -1,3 +1,4 @@
+import 'package:Vetted/app/controller/socket_controller.dart';
 import 'package:Vetted/app/controller/user_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -30,6 +31,8 @@ class SplashController extends GetxController with GetTickerProviderStateMixin {
         final userController = Get.find<UserController>();
         userController.getUserDetails();
         userController.getUserStatus();
+        final socketController = Get.find<SocketController>();
+        socketController.initializeSocket();
       }
     });
   }

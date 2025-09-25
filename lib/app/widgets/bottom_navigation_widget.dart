@@ -1,3 +1,4 @@
+import 'package:Vetted/app/controller/socket_controller.dart';
 import 'package:Vetted/app/modules/app_services/views/background_check_screen.dart';
 import 'package:Vetted/app/modules/community/views/community_screen.dart';
 import 'package:Vetted/app/modules/home/views/home_screen.dart';
@@ -20,10 +21,15 @@ class _FloatingBottomNavigationWidgetState
     extends State<FloatingBottomNavigationWidget> {
   final RxInt currentIndex = 0.obs;
 
+  final socketController = Get.find<SocketController>();
+
   @override
   void initState() {
     super.initState();
     currentIndex.value = widget.index ?? 0;
+    if(socketController.socket == null){
+      socketController.initializeSocket();
+    }
   }
 
   final List<Widget> items = [
@@ -72,13 +78,13 @@ class _FloatingBottomNavigationWidgetState
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 20,
             offset: const Offset(0, 8),
             spreadRadius: 0,
           ),
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 40,
             offset: const Offset(0, 16),
             spreadRadius: 0,
