@@ -1,10 +1,11 @@
 import 'dart:convert';
+import 'package:Vetted/app/controller/post_controller.dart';
+import 'package:Vetted/app/controller/socket_controller.dart';
 import 'package:Vetted/app/controller/storage_controller.dart';
 import 'package:Vetted/app/controller/user_controller.dart';
 import 'package:Vetted/app/data/services/auth_service.dart';
 import 'package:Vetted/app/data/services/user_service.dart';
 import 'package:Vetted/app/routes/app_routes.dart';
-// import 'package:Vetted/app/routes/app_routes.dart';
 import 'package:Vetted/app/widgets/snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -60,8 +61,8 @@ class AuthController extends GetxController {
       final userController = Get.find<UserController>();
       String token = decoded["token"];
       await _storageController.storeToken(token);
-      // final socketController = Get.find<SocketController>();
-      // socketController.initializeSocket();
+      final socketController = Get.find<SocketController>();
+      socketController.initializeSocket();
       await userController.getUserDetails();
       Get.toNamed(AppRoutes.howItWorksScreen);
     } catch (e) {
@@ -98,6 +99,8 @@ class AuthController extends GetxController {
 
       final userController = Get.find<UserController>();
       await userController.getUserDetails();
+      final socketController = Get.find<SocketController>();
+      socketController.initializeSocket();
       Get.offAllNamed(AppRoutes.bottomNavigationWidget);
     } catch (e) {
       debugPrint(e.toString());
@@ -114,7 +117,9 @@ class AuthController extends GetxController {
       if (response == null) return;
       if (response.statusCode != 200) return;
       await _storageController.deleteToken();
+      Get.find<SocketController>().disconnectSocket();
       Get.find<UserController>().clean();
+      Get.find<PostController>().clean();
     } catch (e) {
       debugPrint(e.toString());
     }
@@ -195,4 +200,5 @@ class AuthController extends GetxController {
       isOtpVerifyLoading.value = false;
     }
   }
+
 }

@@ -490,9 +490,37 @@ class UserController extends GetxController {
     }
   }
 
+  Future<void> editProfile({required UserModel userModel}) async {
+    isloading.value = true;
+    try {
+      final storageController = Get.find<StorageController>();
+      final token = await storageController.getToken();
+      if (token == null) return;
+      final response = await _userService.editProfile(
+        token: token,
+        userModel: userModel,
+      );
+      if (response == null) return;
+      final decoded = json.decode(response.body);
+      String message = decoded["message"] ?? "";
+      if (response.statusCode != 200) {
+        CustomSnackbar.showErrorToast(message);
+        return;
+      }
+      await getUserDetails();
+      CustomSnackbar.showSuccessToast(message);
+      Get.back();
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      isloading.value = false;
+    }
+  }
+
   void clean() {
     userModel.value = null;
     isUserDetailsFetched.value = false;
+    notificationList.clear();
     isloading.value = false;
   }
 }

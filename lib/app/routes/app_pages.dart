@@ -22,6 +22,7 @@ import 'package:Vetted/app/modules/post/views/poll_post_screen.dart';
 import 'package:Vetted/app/modules/post/views/post_screen.dart';
 import 'package:Vetted/app/modules/post/views/woman_post_screen.dart';
 import 'package:Vetted/app/modules/profile/views/date_of_birth_screen.dart';
+import 'package:Vetted/app/modules/profile/views/edit_profile_screen.dart';
 import 'package:Vetted/app/modules/profile/views/input_name_screen.dart';
 import 'package:Vetted/app/modules/profile/views/relationship_status_screen.dart';
 import 'package:Vetted/app/modules/profile/views/set_location_screen.dart';
@@ -155,7 +156,10 @@ class AppPages {
         return ChatScreen(chatHead: chatHead);
       },
     ),
-    GetPage(name: AppRoutes.notificationScreen, page: () => NotificationScreen()),
-
+    GetPage(
+      name: AppRoutes.notificationScreen,
+      page: () => NotificationScreen(),
+    ),
+    GetPage(name: AppRoutes.editProfileScreen, page: () => EditProfileScreen()),
   ];
 }

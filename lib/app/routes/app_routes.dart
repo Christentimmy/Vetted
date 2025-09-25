@@ -29,4 +29,5 @@ class AppRoutes {
   static const String backgroundResultMoreDetailsDoneScreen = '/backgroundResultMoreDetailsDoneScreen';
   static const String chatScreen = '/chatScreen';
   static const String notificationScreen = '/notificationScreen';
+  static const String editProfileScreen = '/editProfileScreen';
 }

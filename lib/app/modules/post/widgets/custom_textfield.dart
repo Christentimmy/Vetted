@@ -2,6 +2,7 @@ import 'package:Vetted/app/resources/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 // ignore: must_be_immutable
 class CustomTextField extends StatelessWidget {
@@ -18,6 +19,7 @@ class CustomTextField extends StatelessWidget {
   VoidCallback? onSuffixTap;
   bool? isObscure;
   Color? bgColor;
+  Color? enabledBorderColor;
   String? Function(String?)? validator;
   double? fieldHeight;
   Function(String)? onChanged;
@@ -54,6 +56,7 @@ class CustomTextField extends StatelessWidget {
     this.prefixIcon,
     this.suffixIcon,
     this.bgColor,
+    this.enabledBorderColor,
     this.onSuffixTap,
     this.isObscure,
     this.hintText,
@@ -110,9 +113,19 @@ class CustomTextField extends StatelessWidget {
           filled: bgColor != null ? true : false,
           counterText: maxLength != null ? "" : null,
           hintText: hintText,
-          hintStyle: hintStyle ?? Get.textTheme.bodySmall,
+          hintStyle:
+              hintStyle ??
+              GoogleFonts.poppins(
+                color: Colors.grey,
+                fontWeight: FontWeight.w400,
+              ),
           label: label != null ? Text(label!) : null,
-          labelStyle: labelStyle ?? Get.textTheme.bodySmall,
+          labelStyle:
+              labelStyle ??
+              GoogleFonts.poppins(
+                color: Colors.grey,
+                fontWeight: FontWeight.w400,
+              ),
           floatingLabelBehavior: floatingLabelBehavior,
           prefix: prefix,
           prefixIcon:
@@ -135,7 +148,10 @@ class CustomTextField extends StatelessWidget {
               enabledBorder ??
               OutlineInputBorder(
                 borderRadius: BorderRadius.circular(9),
-                borderSide: BorderSide(width: 1, color: Colors.grey),
+                borderSide: BorderSide(
+                  width: 1,
+                  color: enabledBorderColor ?? Colors.grey,
+                ),
               ),
           focusedBorder:
               focusedBorder ??

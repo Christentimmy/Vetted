@@ -563,5 +563,22 @@ class PostController extends GetxController {
     viewedPostIds.add(postId);
   }
 
-  
+  void clean() {
+    posts.clear();
+    currentPage.value = 1;
+    hasNextPage.value = false;
+
+    currentPageCommunity.value = 1;
+    hasNextPageCommunity.value = false;
+    postsCommunity.clear();
+    commentController.clear();
+
+    allPersonalPost.clear();
+    viewedPostIds.clear();
+    comments.clear();
+
+    isFetchingComments.value = false;
+    isReplyingComments.value = false;
+    timer?.cancel();
+  }
 }

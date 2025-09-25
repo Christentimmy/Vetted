@@ -1,10 +1,17 @@
+import 'package:Vetted/app/controller/user_controller.dart';
+import 'package:Vetted/app/modules/post/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AccountDetailsScreen extends StatelessWidget {
-  const AccountDetailsScreen({super.key});
+  AccountDetailsScreen({super.key});
+
+  final userController = Get.find<UserController>();
 
   @override
   Widget build(BuildContext context) {
+
     final List<String> cities = [
       'New York',
       'Los Angeles',
@@ -18,15 +25,12 @@ class AccountDetailsScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {
-            Navigator.pop(context); // 👈 Go back to where it came from
-          },
-        ),
-        title: const Text(
+        title: Text(
           'Account',
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
+          style: GoogleFonts.poppins(
+            color: Colors.black,
+            fontWeight: FontWeight.w600,
+          ),
         ),
         centerTitle: true,
       ),
@@ -35,6 +39,10 @@ class AccountDetailsScreen extends StatelessWidget {
         child: Column(
           children: [
             // Username
+            CustomTextField(
+              controller: TextEditingController(),
+              hintText: 'Anonymous',
+            ),
             _textInputField(label: 'Anonymous'),
 
             const SizedBox(height: 12),

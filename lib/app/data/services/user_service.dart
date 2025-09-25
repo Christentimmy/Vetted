@@ -377,4 +377,35 @@ class UserService {
     }
     return null;
   }
+
+  Future<http.Response?> editProfile({
+    required String token,
+    required UserModel userModel,
+  }) async {
+    try {
+      final response = await client.patch(
+        Uri.parse("$baseUrl/user/edit-profile"),
+        headers: {
+          "Authorization": "Bearer $token",
+          "Content-Type": "application/json",
+        },
+        body: jsonEncode({
+          "displayName": userModel.displayName,
+          "phone": userModel.phone,
+          "email": userModel.email,
+          "location": {
+            "address": userModel.location?.address,
+            "lng": userModel.location?.coordinates?[0],
+            "lat": userModel.location?.coordinates?[1],
+          },
+        }),
+      );
+      return response;
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
+
+
 }
