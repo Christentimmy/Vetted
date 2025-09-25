@@ -12,6 +12,7 @@ import 'package:Vetted/app/modules/auth/views/phone_number_screen.dart';
 import 'package:Vetted/app/modules/chat/views/chat_screen.dart';
 import 'package:Vetted/app/modules/community/views/community_screen.dart';
 import 'package:Vetted/app/modules/home/views/home_screen.dart';
+import 'package:Vetted/app/modules/notification/views/notification_screen.dart';
 import 'package:Vetted/app/modules/notificaton/views/allow_notification_screen.dart';
 import 'package:Vetted/app/modules/onboarding/views/how_it_work_screen.dart';
 import 'package:Vetted/app/modules/onboarding/views/onboarding_screen.dart';
@@ -154,6 +155,7 @@ class AppPages {
         return ChatScreen(chatHead: chatHead);
       },
     ),
+    GetPage(name: AppRoutes.notificationScreen, page: () => NotificationScreen()),
 
   ];
 }

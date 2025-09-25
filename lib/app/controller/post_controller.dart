@@ -563,4 +563,5 @@ class PostController extends GetxController {
     viewedPostIds.add(postId);
   }
 
+  
 }

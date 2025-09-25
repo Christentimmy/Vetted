@@ -5,7 +5,7 @@ import 'package:Vetted/app/resources/colors.dart';
 import 'package:Vetted/app/routes/app_routes.dart';
 import 'package:Vetted/app/widgets/loaders.dart';
 import 'package:Vetted/screens/message_list_screen.dart';
-import 'package:Vetted/screens/notification_screen.dart';
+// import 'package:Vetted/screens/notification_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -367,10 +367,11 @@ class _HomeScreenState extends State<HomeScreen> {
         // Notifications
         GestureDetector(
           onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const NotificationScreen()),
-            );
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(builder: (_) => const NotificationScreen()),
+            // );
+            Get.toNamed(AppRoutes.notificationScreen);
           },
           child: const Icon(Icons.notifications_none),
         ),

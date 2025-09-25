@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:Vetted/app/controller/storage_controller.dart';
+import 'package:Vetted/app/data/models/notification_model.dart';
 import 'package:Vetted/app/data/models/user_model.dart';
 import 'package:Vetted/app/data/services/user_service.dart';
 import 'package:Vetted/app/routes/app_routes.dart';
@@ -14,6 +15,7 @@ class UserController extends GetxController {
   Rxn<UserModel> userModel = Rxn<UserModel>();
   RxBool isloading = false.obs;
   RxBool isUserDetailsFetched = false.obs;
+  RxList<NotificationModel> notificationList = <NotificationModel>[].obs;
 
   Future<void> getUserDetails() async {
     isloading.value = true;
@@ -439,6 +441,52 @@ class UserController extends GetxController {
       debugPrint(e.toString());
     } finally {
       isloading.value = false;
+    }
+  }
+
+  Future<void> getNotifications({bool showLoader = true}) async {
+    isloading.value = showLoader;
+    try {
+      final storageController = Get.find<StorageController>();
+      final token = await storageController.getToken();
+      if (token == null) return;
+      final response = await _userService.getNotification(token: token);
+      if (response == null) return;
+      final decoded = json.decode(response.body);
+      String message = decoded["message"] ?? "";
+      if (response.statusCode != 200) {
+        CustomSnackbar.showErrorToast(message);
+        return;
+      }
+      List<dynamic> data = decoded["data"] ?? [];
+      final notifications =
+          data.map((e) => NotificationModel.fromJson(e)).toList();
+      notificationList.value = notifications;
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      isloading.value = false;
+    }
+  }
+
+  Future<void> markNotificationAsRead({required String id}) async {
+    try {
+      final storageController = Get.find<StorageController>();
+      final token = await storageController.getToken();
+      if (token == null) return;
+      final response = await _userService.markNotificationAsRead(
+        token: token,
+        id: id,
+      );
+      if (response == null) return;
+      final decoded = json.decode(response.body);
+      String message = decoded["message"] ?? "";
+      if (response.statusCode != 200) {
+        CustomSnackbar.showErrorToast(message);
+        return;
+      }
+    } catch (e) {
+      debugPrint(e.toString());
     }
   }
 

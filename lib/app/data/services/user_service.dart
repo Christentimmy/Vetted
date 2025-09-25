@@ -332,4 +332,49 @@ class UserService {
     return null;
   }
 
+  Future<http.Response?> getNotification({required String token}) async {
+    try {
+      final response = await client
+          .get(
+            Uri.parse("$baseUrl/user/get-notifications"),
+            headers: {
+              "Authorization": "Bearer $token",
+              "Content-Type": "application/json",
+            },
+          )
+          .timeout(const Duration(seconds: 60));
+      return response;
+    } on SocketException catch (e) {
+      debugPrint("No internet connection $e");
+    } on TimeoutException {
+      debugPrint("Request timeout");
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
+
+  Future<http.Response?> markNotificationAsRead({
+    required String token,
+    required String id,
+  }) async {
+    try {
+      final response = await http.patch(
+        Uri.parse("$baseUrl/user/mark-notification-as-read"),
+        headers: {
+          "Authorization": "Bearer $token",
+          "Content-Type": "application/json",
+        },
+        body: jsonEncode({"notificationId": id}),
+      );
+      return response;
+    } on SocketException catch (e) {
+      debugPrint("No internet connection $e");
+    } on TimeoutException {
+      debugPrint("Request timeout");
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
 }
