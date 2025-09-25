@@ -4,7 +4,7 @@ import 'package:Vetted/app/utils/image_picker.dart';
 import 'package:Vetted/app/widgets/snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:Vetted/screens/notification_screen.dart';
-import 'package:Vetted/screens/criminal_record_search_screen.dart';
+// import 'package:Vetted/screens/criminal_record_search_screen.dart';
 // import 'package:Vetted/screens/reverse_image_screen.dart';
 // import 'package:Vetted/screens/sex_offenders_map_screen.dart';
 import 'package:Vetted/screens/court_search_resource_screen.dart';
@@ -204,11 +204,6 @@ class BackgroundCheckScreen extends StatelessWidget {
                 final im = await pickImage();
                 if (im == null) return;
                 appServiceController.reverseImageSearch(file: im);
-
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(builder: (_) => const ReverseImageScreen()),
-                // );
               },
               child: Container(
                 height: 180,
@@ -248,19 +243,19 @@ class BackgroundCheckScreen extends StatelessWidget {
               Colors.green,
               () => Get.toNamed(AppRoutes.backgroundCheckSearchScreen),
             ),
-            _customButton(
-              "Criminal Record Search",
-              "Search Now",
-              Colors.green,
-              () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => const CriminalRecordSearchScreen(),
-                  ),
-                );
-              },
-            ),
+            // _customButton(
+            //   "Criminal Record Search",
+            //   "Search Now",
+            //   Colors.green,
+            //   () {
+            //     Navigator.push(
+            //       context,
+            //       MaterialPageRoute(
+            //         builder: (_) => const CriminalRecordSearchScreen(),
+            //       ),
+            //     );
+            //   },
+            // ),
             _customButton(
               "Court Search Resources",
               "View Resources",
