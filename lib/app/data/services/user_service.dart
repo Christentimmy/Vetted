@@ -438,6 +438,59 @@ class UserService {
     return null;
   }
 
-  
+  Future<http.Response?> createAlert({
+    required String token,
+    required String name,
+  }) async {
+    try {
+      final response = await client.post(
+        Uri.parse("$baseUrl/user/create-alert"),
+        headers: {
+          "Authorization": "Bearer $token",
+          "Content-Type": "application/json",
+        },
+        body: jsonEncode({"name": name}),
+      );
+      return response;
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
+
+  Future<http.Response?> getAlert({required String token}) async {
+    try {
+      final response = await client.get(
+        Uri.parse("$baseUrl/user/get-alerts"),
+        headers: {
+          "Authorization": "Bearer $token",
+          "Content-Type": "application/json",
+        },
+      );
+      return response;
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
+
+  Future<http.Response?> deleteAlert({
+    required String token,
+    required String id,
+  }) async {
+    try {
+      final response = await client.delete(
+        Uri.parse("$baseUrl/user/delete-alert/$id"),
+        headers: {
+          "Authorization": "Bearer $token",
+          "Content-Type": "application/json",
+        },
+      ).timeout(const Duration(seconds: 60));
+      return response;
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
 
 }

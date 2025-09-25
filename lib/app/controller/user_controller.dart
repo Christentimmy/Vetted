@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:Vetted/app/controller/storage_controller.dart';
+import 'package:Vetted/app/data/models/alert_model.dart';
 import 'package:Vetted/app/data/models/notification_model.dart';
 import 'package:Vetted/app/data/models/post_model.dart';
 import 'package:Vetted/app/data/models/user_model.dart';
@@ -15,8 +16,10 @@ class UserController extends GetxController {
   final _userService = UserService();
   Rxn<UserModel> userModel = Rxn<UserModel>();
   RxBool isloading = false.obs;
+  RxBool isLoadingAlerts = false.obs;
   RxBool isUserDetailsFetched = false.obs;
   RxList<NotificationModel> notificationList = <NotificationModel>[].obs;
+  RxList<AlertModel> alertList = <AlertModel>[].obs;
 
   Future<void> getUserDetails() async {
     isloading.value = true;
@@ -550,6 +553,80 @@ class UserController extends GetxController {
       isloading.value = false;
     }
     return null;
+  }
+
+  Future<void> createAlert({required String name}) async {
+    isloading.value = true;
+    try {
+      final storageController = Get.find<StorageController>();
+      final String? token = await storageController.getToken();
+      if (token == null) return;
+      final response = await _userService.createAlert(token: token, name: name);
+      if (response == null) return;
+      final decoded = json.decode(response.body);
+      String message = decoded["message"] ?? "";
+      if (response.statusCode != 201) {
+        CustomSnackbar.showErrorToast(message);
+        return;
+      }
+      await getAlerts(showLoader: false);
+      CustomSnackbar.showSuccessToast(message);
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      isloading.value = false;
+    }
+  }
+
+  Future<void> getAlerts({bool showLoader = true}) async {
+    isLoadingAlerts.value = showLoader;
+    try {
+      final storageController = Get.find<StorageController>();
+      final String? token = await storageController.getToken();
+      if (token == null) return;
+      final response = await _userService.getAlert(token: token);
+      if (response == null) return;
+      final decoded = json.decode(response.body);
+      String message = decoded["message"] ?? "";
+      if (response.statusCode != 200) {
+        CustomSnackbar.showErrorToast(message);
+        return;
+      }
+      final List data = decoded["data"] ?? [];
+      debugPrint(data.toString());
+      if (data.isEmpty) return;
+      final List<AlertModel> mapped =
+          data.map((e) => AlertModel.fromJson(e)).toList();
+      alertList.value = mapped;
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      isLoadingAlerts.value = false;
+    }
+  }
+
+  Future<void> deleteAlert({required String id}) async {
+    final index = alertList.indexWhere((element) => element.id == id);
+    if (index != -1) {
+      alertList.removeAt(index);
+      alertList.refresh();
+    }
+    try {
+      final storageController = Get.find<StorageController>();
+      final String? token = await storageController.getToken();
+      if (token == null) return;
+      final response = await _userService.deleteAlert(token: token, id: id);
+      if (response == null) return;
+      final decoded = json.decode(response.body);
+      String message = decoded["message"] ?? "";
+      if (response.statusCode != 200) {
+        CustomSnackbar.showErrorToast(message);
+        return;
+      }
+      CustomSnackbar.showSuccessToast(message);
+    } catch (e) {
+      debugPrint(e.toString());
+    }
   }
 
   void clean() {

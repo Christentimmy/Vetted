@@ -1,11 +1,11 @@
 import 'package:Vetted/app/controller/auth_controller.dart';
 import 'package:Vetted/app/routes/app_routes.dart';
 import 'package:Vetted/app/widgets/top_bar.dart';
-import 'package:Vetted/screens/my_alerts_screen.dart';
+// import 'package:Vetted/screens/my_alerts_screen.dart';
 // import 'package:Vetted/screens/my_post_screen.dart';
 import 'package:Vetted/screens/notification_menu_screen.dart';
 import 'package:Vetted/screens/safety_resources_screen.dart';
-import 'package:Vetted/screens/saved_post_screen.dart';
+// import 'package:Vetted/screens/saved_post_screen.dart';
 import 'package:Vetted/screens/upgrade_plan_screen.dart';
 import 'package:Vetted/screens/support_screen.dart';
 import 'package:flutter/material.dart';
@@ -44,10 +44,6 @@ class SettingScreen extends StatelessWidget {
               icon: Icons.edit_note_outlined,
               title: "My Post",
               onTap: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(builder: (_) => const MyPostScreen()),
-                // );
                 Get.toNamed(AppRoutes.myPostScreen);
               },
             ),
@@ -62,10 +58,11 @@ class SettingScreen extends StatelessWidget {
               icon: Icons.warning_amber_outlined,
               title: "My Alerts",
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const MyAlertsScreen()),
-                );
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(builder: (_) => const MyAlertsScreen()),
+                // );
+                Get.toNamed(AppRoutes.myAlertsScreen);
               },
             ),
             _menuItem(

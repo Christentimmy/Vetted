@@ -32,4 +32,5 @@ class AppRoutes {
   static const String editProfileScreen = '/editProfileScreen';
   static const String myPostScreen = '/myPostScreen';
   static const String savedPostScreen = '/savedPostScreen';
+  static const String myAlertsScreen = '/myAlertsScreen';
 }
