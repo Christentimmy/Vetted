@@ -1,7 +1,23 @@
+import 'package:Vetted/app/controller/app_service_controller.dart';
+import 'package:Vetted/app/data/models/search_image_model.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-class ReverseImageScreen extends StatelessWidget {
+class ReverseImageScreen extends StatefulWidget {
   const ReverseImageScreen({super.key});
+
+  @override
+  State<ReverseImageScreen> createState() => _ReverseImageScreenState();
+}
+
+class _ReverseImageScreenState extends State<ReverseImageScreen> {
+  final appServiceController = Get.find<AppServiceController>();
+
+  @override
+  void dispose() {
+    appServiceController.images.clear();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,46 +36,29 @@ class ReverseImageScreen extends StatelessWidget {
         ),
       ),
 
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // 🔲 Main Image
-            Center(
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(16),
-                child: Image.asset(
-                  'assets/images/user1.png', // Update path
-                  height: 220,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-            const SizedBox(height: 24),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+        child: GridView.builder(
+          itemCount: appServiceController.images.length,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 10,
+          ),
+          itemBuilder: (context, index) {
+            final image = appServiceController.images[index];
 
-            const Text(
-              "Related Matches",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 16),
-
-            // 🟫 Grid of Matches
-            GridView.count(
-              crossAxisCount: 2,
-              shrinkWrap: true,
-              crossAxisSpacing: 16,
-              mainAxisSpacing: 16,
-              physics: const NeverScrollableScrollPhysics(),
-              children: const [
-                _MatchTile(platform: "Facebook"),
-                _MatchTile(platform: "Instagram"),
-                _MatchTile(platform: "Twitter"),
-                _MatchTile(platform: "LinkedIn"),
-              ],
-            ),
-          ],
+            return InkWell(
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return Dialog(child: Image.network(image.imageUrl));
+                  },
+                );
+              },
+              child: _MatchTile(searchImage: image),
+            );
+          },
         ),
       ),
     );
@@ -67,9 +66,9 @@ class ReverseImageScreen extends StatelessWidget {
 }
 
 class _MatchTile extends StatelessWidget {
-  final String platform;
+  final SearchImage searchImage;
 
-  const _MatchTile({required this.platform});
+  const _MatchTile({required this.searchImage});
 
   @override
   Widget build(BuildContext context) {
@@ -78,8 +77,8 @@ class _MatchTile extends StatelessWidget {
       child: Stack(
         alignment: Alignment.bottomCenter,
         children: [
-          Image.asset(
-            'assets/images/user1.png', // Reuse same image
+          Image.network(
+            searchImage.imageUrl,
             fit: BoxFit.cover,
             width: double.infinity,
             height: double.infinity,
@@ -89,7 +88,7 @@ class _MatchTile extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 6),
             color: Colors.white,
             child: Text(
-              platform,
+              searchImage.source,
               textAlign: TextAlign.center,
               style: const TextStyle(
                 color: Colors.red,

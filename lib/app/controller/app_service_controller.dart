@@ -11,12 +11,13 @@ import 'package:get/get.dart';
 
 class AppServiceController extends GetxController {
   final isloading = false.obs;
+  final isloadingImage = false.obs;
   final AppService appService = AppService();
   RxList<PersonModel> persons = <PersonModel>[].obs;
   RxList<SearchImage> images = <SearchImage>[].obs;
 
   Future<void> reverseImageSearch({required File file}) async {
-    isloading.value = true;
+    isloadingImage.value = true;
     try {
       final storageController = Get.find<StorageController>();
       final String? token = await storageController.getToken();
@@ -29,7 +30,7 @@ class AppServiceController extends GetxController {
         CustomSnackbar.showErrorToast(message);
         return;
       }
-      final result = data["data"]?["images"] ?? [];
+      List<dynamic> result = data["data"]?["images"] ?? [];
       if (result.isEmpty) {
         CustomSnackbar.showErrorToast("No data found");
         return;
@@ -41,7 +42,7 @@ class AppServiceController extends GetxController {
     } catch (e) {
       debugPrint(e.toString());
     } finally {
-      isloading.value = false;
+      isloadingImage.value = false;
     }
   }
 
@@ -77,4 +78,5 @@ class AppServiceController extends GetxController {
       isloading.value = false;
     }
   }
+
 }

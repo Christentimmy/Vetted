@@ -14,6 +14,12 @@ class _NumberCheckScreenState extends State<NumberCheckScreen> {
   final appServiceController = Get.find<AppServiceController>();
 
   @override
+  void dispose() {
+    appServiceController.persons.clear();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

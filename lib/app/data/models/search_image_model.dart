@@ -4,6 +4,7 @@
 class SearchImage {
   final int position;
   final String thumbnail;
+  final String imageUrl;
   final String? sourceUrl;
   final String title;
   final String link;
@@ -12,6 +13,7 @@ class SearchImage {
   SearchImage({
     required this.position,
     required this.thumbnail,
+    required this.imageUrl,
     this.sourceUrl,
     required this.title,
     required this.link,
@@ -22,6 +24,7 @@ class SearchImage {
     return SearchImage(
       position: json['position'] ?? 0,
       thumbnail: json['thumbnail'] ?? '',
+      imageUrl: json['imageUrl'] ?? '',
       sourceUrl: json['sourceUrl'],
       title: json['title'] ?? '',
       link: json['link'] ?? '',

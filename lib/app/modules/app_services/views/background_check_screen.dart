@@ -1,12 +1,14 @@
 import 'package:Vetted/app/controller/app_service_controller.dart';
+import 'package:Vetted/app/utils/image_picker.dart';
 import 'package:Vetted/app/widgets/snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:Vetted/screens/notification_screen.dart';
 import 'package:Vetted/screens/criminal_record_search_screen.dart';
-import 'package:Vetted/screens/reverse_image_screen.dart';
+// import 'package:Vetted/screens/reverse_image_screen.dart';
 import 'package:Vetted/screens/background_check_search_screen.dart';
-import 'package:Vetted/screens/sex_offenders_map_screen.dart';
+// import 'package:Vetted/screens/sex_offenders_map_screen.dart';
 import 'package:Vetted/screens/court_search_resource_screen.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -99,6 +101,7 @@ class BackgroundCheckScreen extends StatelessWidget {
                   child: SizedBox(
                     height: 56,
                     child: TextField(
+                      keyboardType: TextInputType.phone,
                       controller: phoneNumberController,
                       decoration: InputDecoration(
                         hintText: "(353) 745-8736",
@@ -124,12 +127,8 @@ class BackgroundCheckScreen extends StatelessWidget {
                       ),
                     ),
                     onPressed: () async {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //     builder: (_) => const NumberCheckScreen(),
-                      //   ),
-                      // );
+                      HapticFeedback.lightImpact();
+                      FocusManager.instance.primaryFocus?.unfocus();
                       if (phoneNumberController.text.isEmpty) {
                         CustomSnackbar.showErrorToast(
                           "Please enter a phone number",
@@ -139,6 +138,7 @@ class BackgroundCheckScreen extends StatelessWidget {
                       await appServiceController.getNumberInfo(
                         number: phoneNumberController.text,
                       );
+                      phoneNumberController.clear();
                     },
                     child: Obx(
                       () =>
@@ -158,33 +158,32 @@ class BackgroundCheckScreen extends StatelessWidget {
               ],
             ),
 
-            const SizedBox(height: 24),
+            // const SizedBox(height: 24),
 
-            const Text(
-              "Sex Offenders Map",
-              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
-            ),
-            const SizedBox(height: 12),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const SexOffendersMapScreen(),
-                    ),
-                  );
-                },
-                child: Image.asset(
-                  'assets/images/map_sample.png',
-                  height: 160,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-
+            // const Text(
+            //   "Sex Offenders Map",
+            //   style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+            // ),
+            // const SizedBox(height: 12),
+            // ClipRRect(
+            //   borderRadius: BorderRadius.circular(12),
+            //   child: GestureDetector(
+            //     onTap: () {
+            //       Navigator.push(
+            //         context,
+            //         MaterialPageRoute(
+            //           builder: (context) => const SexOffendersMapScreen(),
+            //         ),
+            //       );
+            //     },
+            //     child: Image.asset(
+            //       'assets/images/map_sample.png',
+            //       height: 160,
+            //       width: double.infinity,
+            //       fit: BoxFit.cover,
+            //     ),
+            //   ),
+            // ),
             const SizedBox(height: 24),
 
             const Text(
@@ -200,11 +199,16 @@ class BackgroundCheckScreen extends StatelessWidget {
 
             // 🔗 Navigate to ReverseImageScreen
             GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const ReverseImageScreen()),
-                );
+              onTap: () async {
+                HapticFeedback.lightImpact();
+                final im = await pickImage();
+                if (im == null) return;
+                appServiceController.reverseImageSearch(file: im);
+
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(builder: (_) => const ReverseImageScreen()),
+                // );
               },
               child: Container(
                 height: 180,
@@ -213,17 +217,24 @@ class BackgroundCheckScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: const [
-                      Icon(Icons.add_photo_alternate_outlined, size: 60),
-                      SizedBox(height: 12),
-                      Text(
-                        "Choose Photo",
-                        style: TextStyle(fontWeight: FontWeight.w500),
-                      ),
-                    ],
-                  ),
+                  child: Obx(() {
+                    if (appServiceController.isloadingImage.value) {
+                      return const CircularProgressIndicator(
+                        color: Colors.white,
+                      );
+                    }
+                    return Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: const [
+                        Icon(Icons.add_photo_alternate_outlined, size: 60),
+                        SizedBox(height: 12),
+                        Text(
+                          "Choose Photo",
+                          style: TextStyle(fontWeight: FontWeight.w500),
+                        ),
+                      ],
+                    );
+                  }),
                 ),
               ),
             ),
