@@ -147,6 +147,11 @@ class CreatePostController extends GetxController {
       final postController = Get.find<PostController>();
       final postModel = PostModel(postType: "regular", poll: poll);
       await postController.createPost(postModel: postModel);
+      await Get.find<PostController>().getFeedCommunity(showLoader: false);
+      Get.offAllNamed(
+        AppRoutes.bottomNavigationWidget,
+        arguments: {"index": 1},
+      );
     } catch (e) {
       debugPrint(e.toString());
     } finally {

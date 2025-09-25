@@ -2,7 +2,7 @@ import 'package:Vetted/app/controller/auth_controller.dart';
 import 'package:Vetted/app/routes/app_routes.dart';
 import 'package:Vetted/app/widgets/top_bar.dart';
 import 'package:Vetted/screens/my_alerts_screen.dart';
-import 'package:Vetted/screens/my_post_screen.dart';
+// import 'package:Vetted/screens/my_post_screen.dart';
 import 'package:Vetted/screens/notification_menu_screen.dart';
 import 'package:Vetted/screens/safety_resources_screen.dart';
 import 'package:Vetted/screens/saved_post_screen.dart';
@@ -44,20 +44,18 @@ class SettingScreen extends StatelessWidget {
               icon: Icons.edit_note_outlined,
               title: "My Post",
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const MyPostScreen()),
-                );
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(builder: (_) => const MyPostScreen()),
+                // );
+                Get.toNamed(AppRoutes.myPostScreen);
               },
             ),
             _menuItem(
               icon: Icons.bookmark_border,
               title: "Saved Post",
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const SavedPostScreen()),
-                );
+                Get.toNamed(AppRoutes.savedPostScreen);
               },
             ),
             _menuItem(

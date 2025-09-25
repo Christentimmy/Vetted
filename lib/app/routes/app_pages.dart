@@ -26,6 +26,8 @@ import 'package:Vetted/app/modules/profile/views/edit_profile_screen.dart';
 import 'package:Vetted/app/modules/profile/views/input_name_screen.dart';
 import 'package:Vetted/app/modules/profile/views/relationship_status_screen.dart';
 import 'package:Vetted/app/modules/profile/views/set_location_screen.dart';
+import 'package:Vetted/app/modules/settings/views/my_post_screen.dart';
+import 'package:Vetted/app/modules/settings/views/saved_post_screen.dart';
 import 'package:Vetted/app/modules/settings/views/setting_screen.dart';
 import 'package:Vetted/app/modules/splash/views/splash_screen.dart';
 import 'package:Vetted/app/modules/verification/views/gender_verification_screen.dart';
@@ -161,5 +163,7 @@ class AppPages {
       page: () => NotificationScreen(),
     ),
     GetPage(name: AppRoutes.editProfileScreen, page: () => EditProfileScreen()),
+    GetPage(name: AppRoutes.myPostScreen, page: () => MyPostScreen()),
+    GetPage(name: AppRoutes.savedPostScreen, page: () => SavedPostScreen()),
   ];
 }

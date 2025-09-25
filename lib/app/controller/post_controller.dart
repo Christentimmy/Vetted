@@ -27,6 +27,7 @@ class PostController extends GetxController {
   RxInt currentPage = 1.obs;
   RxBool hasNextPage = false.obs;
   RxList<PostModel> posts = <PostModel>[].obs;
+  RxList<PostModel> savedPosts = <PostModel>[].obs;
 
   //community-feed
   RxInt currentPageCommunity = 1.obs;
@@ -563,8 +564,61 @@ class PostController extends GetxController {
     viewedPostIds.add(postId);
   }
 
+  Future<void> getSavedPosts() async {
+    isloading.value = true;
+    try {
+      final storageController = Get.find<StorageController>();
+      final token = await storageController.getToken();
+      if (token == null) return;
+      final response = await postService.getSavedPosts(token: token);
+      if (response == null) return;
+      final decoded = json.decode(response.body);
+      String message = decoded["message"] ?? "";
+      if (response.statusCode != 200) {
+        CustomSnackbar.showErrorToast(message);
+        return;
+      }
+      savedPosts.clear();
+      List<dynamic> savedPostsList = decoded["data"] ?? [];
+      if (savedPostsList.isEmpty) return;
+      savedPosts.addAll(savedPostsList.map((e) => PostModel.fromJson(e)).toList());
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      isloading.value = false;
+    }
+  }
+
+  Future<bool> voteOnPoll({
+    required String postId,
+    required String optionId,
+  }) async {
+    try {
+      final storageController = Get.find<StorageController>();
+      final token = await storageController.getToken();
+      if (token == null) return false;
+      final response = await postService.voteOnPoll(
+        token: token,
+        postId: postId,
+        optionId: optionId,
+      );
+      if (response == null) return false;
+      final decoded = json.decode(response.body);
+      String message = decoded["message"] ?? "";
+      if (response.statusCode != 200) {
+        CustomSnackbar.showErrorToast(message);
+        return false;
+      }
+      return true;
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return false;
+  }
+
   void clean() {
     posts.clear();
+    savedPosts.clear();
     currentPage.value = 1;
     hasNextPage.value = false;
 

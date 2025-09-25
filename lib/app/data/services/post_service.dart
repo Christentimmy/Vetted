@@ -445,6 +445,53 @@ class PostService {
     return null;
   }
 
- 
+  Future<http.Response?> voteOnPoll({
+    required String token,
+    required String postId,
+    required String optionId,
+  }) async {
+    try {
+      var uri = Uri.parse("$baseUrl/post/vote-poll");
+      var response = await http
+          .post(
+            uri,
+            headers: {
+              "Authorization": "Bearer $token",
+              "Content-Type": "application/json",
+            },
+            body: jsonEncode({"postId": postId, "optionId": optionId}),
+          )
+          .timeout(const Duration(seconds: 60));
+      return response;
+    } on SocketException catch (e) {
+      debugPrint("No internet connection $e");
+    } on TimeoutException {
+      debugPrint("Request timeout");
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
+
+  Future<http.Response?> getSavedPosts({required String token})async{
+    try {
+      var uri = Uri.parse("$baseUrl/post/get-saved-posts");
+      var response = await http.get(
+        uri,
+        headers: {
+          "Authorization": "Bearer $token",
+          "Content-Type": "application/json",
+        },
+      ).timeout(const Duration(seconds: 20));
+      return response;
+    } on SocketException catch (e) {
+      debugPrint("No internet connection $e");
+    } on TimeoutException {
+      debugPrint("Request timeout");
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
 
 }

@@ -30,4 +30,6 @@ class AppRoutes {
   static const String chatScreen = '/chatScreen';
   static const String notificationScreen = '/notificationScreen';
   static const String editProfileScreen = '/editProfileScreen';
+  static const String myPostScreen = '/myPostScreen';
+  static const String savedPostScreen = '/savedPostScreen';
 }

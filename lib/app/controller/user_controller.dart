@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:Vetted/app/controller/storage_controller.dart';
 import 'package:Vetted/app/data/models/notification_model.dart';
+import 'package:Vetted/app/data/models/post_model.dart';
 import 'package:Vetted/app/data/models/user_model.dart';
 import 'package:Vetted/app/data/services/user_service.dart';
 import 'package:Vetted/app/routes/app_routes.dart';
@@ -515,6 +516,40 @@ class UserController extends GetxController {
     } finally {
       isloading.value = false;
     }
+  }
+
+  Future<List<PostModel>?> getAllUserPost({
+    required String userId,
+    bool showLoader = false,
+  }) async {
+    isloading.value = showLoader;
+    try {
+      final storageController = Get.find<StorageController>();
+      final String? token = await storageController.getToken();
+      if (token == null) return null;
+      final response = await _userService.getAllUserPost(
+        token: token,
+        userId: userId,
+        currentPage: 1,
+      );
+      if (response == null) return null;
+      final decoded = json.decode(response.body);
+      String message = decoded["message"] ?? "";
+      if (response.statusCode != 200) {
+        CustomSnackbar.showErrorToast(message);
+        return null;
+      }
+      final List data = decoded["data"] ?? [];
+      if (data.isEmpty) return null;
+      final List<PostModel> mapped =
+          data.map((e) => PostModel.fromJson(e)).toList();
+      return mapped;
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      isloading.value = false;
+    }
+    return null;
   }
 
   void clean() {

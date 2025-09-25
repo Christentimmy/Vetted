@@ -1,5 +1,6 @@
 import 'package:Vetted/app/controller/post_controller.dart';
 import 'package:Vetted/app/data/models/post_model.dart';
+import 'package:Vetted/app/modules/post/widgets/poll_widget.dart';
 import 'package:Vetted/app/modules/post/widgets/post_widgets.dart';
 import 'package:Vetted/app/resources/colors.dart';
 import 'package:Vetted/app/utils/timeago.dart';
@@ -89,7 +90,10 @@ class _CommunityScreenState extends State<CommunityScreen> {
                   itemCount: postController.postsCommunity.length,
                   itemBuilder: (context, index) {
                     final post = postController.postsCommunity[index];
-                    return _buildPostItem(post: post);
+                    if (post.poll != null) {
+                      return buildPollWidget(post: post, isProfilePost: false);
+                    }
+                    return buildPostItem(post: post);
                   },
                 );
               }),
@@ -108,49 +112,46 @@ class _CommunityScreenState extends State<CommunityScreen> {
       ),
     );
   }
+}
 
-  Widget _buildPostItem({required PostModel post}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Expanded(
-              child: Text(
-                post.content?.title ?? "",
-                style: const TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 16,
-                ),
-              ),
-            ),
-            // const Icon(Icons.more_vert, size: 20), // Save icon
-            buildOptionAboutPost(postModel: post, isProfilePost: false),
-          ],
-        ),
-        Text(
-          timeAgo(post.createdAt),
-          style: GoogleFonts.fredoka(color: Colors.black54, fontSize: 12),
-        ),
-        const SizedBox(height: 5),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(12),
-          child: Container(
-            width: Get.width,
-            color: const Color(0xFFD9A827),
-            padding: const EdgeInsets.all(16),
+Widget buildPostItem({required PostModel post}) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Row(
+        children: [
+          Expanded(
             child: Text(
-              post.content?.text ?? "",
-              style: const TextStyle(fontSize: 14, color: Colors.white),
+              post.content?.title ?? "",
+              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
             ),
           ),
+          // const Icon(Icons.more_vert, size: 20), // Save icon
+          buildOptionAboutPost(postModel: post, isProfilePost: false),
+        ],
+      ),
+      Text(
+        timeAgo(post.createdAt),
+        style: GoogleFonts.fredoka(color: Colors.black54, fontSize: 12),
+      ),
+      const SizedBox(height: 5),
+      ClipRRect(
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          width: Get.width,
+          color: const Color(0xFFD9A827),
+          padding: const EdgeInsets.all(16),
+          child: Text(
+            post.content?.text ?? "",
+            style: const TextStyle(fontSize: 14, color: Colors.white),
+          ),
         ),
-        const SizedBox(height: 8),
-        buildPostActionRowWidget(postModel: post),
-        const SizedBox(height: 8),
-        Divider(color: Colors.grey.shade300, thickness: 1),
-        const SizedBox(height: 8),
-      ],
-    );
-  }
+      ),
+      const SizedBox(height: 8),
+      buildPostActionRowWidget(postModel: post),
+      const SizedBox(height: 8),
+      Divider(color: Colors.grey.shade300, thickness: 1),
+      const SizedBox(height: 8),
+    ],
+  );
 }
