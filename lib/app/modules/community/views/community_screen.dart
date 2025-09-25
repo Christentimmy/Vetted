@@ -25,6 +25,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      postController.startTimer();
       if (postController.postsCommunity.isEmpty) {
         postController.getFeedCommunity();
       }
@@ -45,6 +46,12 @@ class _CommunityScreenState extends State<CommunityScreen> {
   }
 
   @override
+  void dispose() {
+    postController.stopTimer();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
@@ -53,6 +60,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
           color: AppColors.primaryColor,
           onRefresh: () => postController.getFeedCommunity(showLoader: false),
           child: ListView(
+            controller: scrollController,
             physics: const AlwaysScrollableScrollPhysics(),
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
             children: [

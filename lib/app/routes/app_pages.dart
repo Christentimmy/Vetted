@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:Vetted/app/data/models/chat_list_model.dart';
 import 'package:Vetted/app/data/models/person_model.dart';
 import 'package:Vetted/app/modules/app_services/views/background_check_search_result_screen.dart';
 import 'package:Vetted/app/modules/app_services/views/background_check_search_screen.dart';
@@ -8,6 +9,7 @@ import 'package:Vetted/app/modules/app_services/views/number_check_screen.dart';
 import 'package:Vetted/app/modules/app_services/views/reverse_image_screen.dart';
 import 'package:Vetted/app/modules/auth/views/otp_screen.dart';
 import 'package:Vetted/app/modules/auth/views/phone_number_screen.dart';
+import 'package:Vetted/app/modules/chat/views/chat_screen.dart';
 import 'package:Vetted/app/modules/community/views/community_screen.dart';
 import 'package:Vetted/app/modules/home/views/home_screen.dart';
 import 'package:Vetted/app/modules/notificaton/views/allow_notification_screen.dart';
@@ -139,6 +141,17 @@ class AppPages {
           throw Exception("Name is required");
         }
         return BackgroundResultMoreDetailsScreen(person: person);
+      },
+    ),
+    GetPage(
+      name: AppRoutes.chatScreen,
+      page: () {
+        final arguments = Get.arguments as Map;
+        final chatHead = arguments['chatHead'] as ChatListModel?;
+        if (chatHead == null) {
+          throw Exception("Chat ID is required");
+        }
+        return ChatScreen(chatHead: chatHead);
       },
     ),
 

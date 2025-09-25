@@ -417,4 +417,32 @@ class PostService {
     }
     return null;
   }
+
+  Future<http.Response?> viewPosts({
+    required String token,
+    required List<String> postId,
+  }) async {
+    try {
+      var uri = Uri.parse("$baseUrl/post/view-posts");
+      var response = await http
+          .post(
+            uri,
+            headers: {
+              "Authorization": "Bearer $token",
+              "Content-Type": "application/json",
+            },
+            body: jsonEncode({"postIds": postId}),
+          )
+          .timeout(const Duration(seconds: 120));
+      return response;
+    } on SocketException catch (e) {
+      debugPrint("No internet connection $e");
+    } on TimeoutException {
+      debugPrint("Request timeout");
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
+
 }

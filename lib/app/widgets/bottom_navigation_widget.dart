@@ -1,10 +1,10 @@
 import 'package:Vetted/app/controller/socket_controller.dart';
 import 'package:Vetted/app/modules/app_services/views/background_check_screen.dart';
+import 'package:Vetted/app/modules/chat/views/message_list_screen.dart';
 import 'package:Vetted/app/modules/community/views/community_screen.dart';
 import 'package:Vetted/app/modules/home/views/home_screen.dart';
 import 'package:Vetted/app/resources/colors.dart';
 import 'package:Vetted/app/modules/settings/views/setting_screen.dart';
-import 'package:Vetted/screens/message_list_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

@@ -12,6 +12,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
 
+import 'package:visibility_detector/visibility_detector.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -29,6 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      postController.startTimer();
       if (postController.posts.isEmpty) {
         postController.getFeed();
       }
@@ -45,6 +48,13 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   @override
+  void dispose() {
+    postController.stopTimer();
+    scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
@@ -55,6 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
             color: AppColors.primaryColor,
             onRefresh: () => postController.getFeed(showLoader: false),
             child: ListView(
+              controller: scrollController,
               physics: const AlwaysScrollableScrollPhysics(),
               children: [
                 const SizedBox(height: 12),
@@ -113,115 +124,119 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  GestureDetector buildDisplayCard(
-    BuildContext context,
-    PostModel post,
-    int index,
-  ) {
-    return GestureDetector(
-      onTap: () => Get.toNamed(AppRoutes.postScreen),
-      child: Stack(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: CachedNetworkImage(
-              imageUrl: post.media?[0].url ?? "",
-              fit: BoxFit.cover,
-              width: double.infinity,
-              height: double.infinity,
-              placeholder: (context, url) {
-                return Shimmer.fromColors(
-                  baseColor: Colors.grey[300]!,
-                  highlightColor: Colors.grey[100]!,
-                  child: Container(color: Colors.grey[300]),
-                );
-              },
-              errorWidget:
-                  (context, url, error) => const Icon(Icons.broken_image),
-            ),
-          ),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: Image.network(
-              post.media?[0].url ?? "",
-              fit: BoxFit.cover,
-              width: double.infinity,
-              height: double.infinity,
-            ),
-          ),
-          Container(
-            width: double.infinity,
-            height: double.infinity,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Colors.transparent,
-                  Colors.black.withValues(alpha: 0.5),
-                ],
-              ),
-            ),
-          ),
-
-          Positioned(
-            top: 6,
-            right: 6,
-            child: GestureDetector(
-              onTap: () {
-                setState(() {
-                  likedProfiles.contains(index)
-                      ? likedProfiles.remove(index)
-                      : likedProfiles.add(index);
-                });
-              },
-              child: Icon(
-                likedProfiles.contains(index)
-                    ? Icons.favorite
-                    : Icons.favorite_border,
-                color: Colors.white,
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: 8,
-            left: 8,
-            right: 8,
-            child: Center(
-              child: BidirectionalVoteSwitch(
-                leadingFlag: post.stats?.leadingFlag,
-                hasVoted: post.hasVoted,
-                votedColor: post.votedColor,
-                greenCount: post.stats?.greenVotes,
-                redCount: post.stats?.redVotes,
-                onVote: (String vote) async {
-                  // Update local state immediately for better UX
-                  updateUiVote(post: post, vote: vote);
-                  await postController.voteOnWoman(
-                    postId: post.id!,
-                    color: vote,
+  Widget buildDisplayCard(BuildContext context, PostModel post, int index) {
+    return VisibilityDetector(
+      key: ValueKey(post.id),
+      onVisibilityChanged: (info) {
+        if (info.visibleFraction > 0.5) {
+          postController.addViewedPost(post.id);
+        }
+      },
+      child: GestureDetector(
+        onTap: () => Get.toNamed(AppRoutes.postScreen),
+        child: Stack(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: CachedNetworkImage(
+                imageUrl: post.media?[0].url ?? "",
+                fit: BoxFit.cover,
+                width: double.infinity,
+                height: double.infinity,
+                placeholder: (context, url) {
+                  return Shimmer.fromColors(
+                    baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!,
+                    child: Container(color: Colors.grey[300]),
                   );
                 },
+                errorWidget:
+                    (context, url, error) => const Icon(Icons.broken_image),
               ),
             ),
-          ),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.network(
+                post.media?[0].url ?? "",
+                fit: BoxFit.cover,
+                width: double.infinity,
+                height: double.infinity,
+              ),
+            ),
+            Container(
+              width: double.infinity,
+              height: double.infinity,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.transparent,
+                    Colors.black.withValues(alpha: 0.5),
+                  ],
+                ),
+              ),
+            ),
 
-          Positioned(
-            bottom: 8,
-            right: 8,
-            child: Text(
-              post.personName ?? "",
-              textAlign: TextAlign.right,
-              style: const TextStyle(
-                fontSize: 13,
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                shadows: [Shadow(blurRadius: 2, color: Colors.black)],
+            Positioned(
+              top: 6,
+              right: 6,
+              child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    likedProfiles.contains(index)
+                        ? likedProfiles.remove(index)
+                        : likedProfiles.add(index);
+                  });
+                },
+                child: Icon(
+                  likedProfiles.contains(index)
+                      ? Icons.favorite
+                      : Icons.favorite_border,
+                  color: Colors.white,
+                ),
               ),
             ),
-          ),
-        ],
+            Positioned(
+              bottom: 8,
+              left: 8,
+              right: 8,
+              child: Center(
+                child: BidirectionalVoteSwitch(
+                  leadingFlag: post.stats?.leadingFlag,
+                  hasVoted: post.hasVoted,
+                  votedColor: post.votedColor,
+                  greenCount: post.stats?.greenVotes,
+                  redCount: post.stats?.redVotes,
+                  onVote: (String vote) async {
+                    // Update local state immediately for better UX
+                    updateUiVote(post: post, vote: vote);
+                    await postController.voteOnWoman(
+                      postId: post.id!,
+                      color: vote,
+                    );
+                  },
+                ),
+              ),
+            ),
+
+            Positioned(
+              bottom: 2,
+              right: 8,
+              child: Text(
+                post.personName ?? "",
+                textAlign: TextAlign.right,
+                style: const TextStyle(
+                  fontSize: 13,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  shadows: [Shadow(blurRadius: 2, color: Colors.black)],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

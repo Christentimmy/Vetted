@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import 'package:video_compress/video_compress.dart';
 
 Future<List<File>?> pickMultipleImages() async {
   try {
@@ -28,4 +29,21 @@ pickImage() async {
     print('Error picking image: $e');
     return null;
   }
+}
+
+
+Future<File?> pickVideo() async {
+  final pickedFile = await ImagePicker().pickVideo(source: ImageSource.gallery);
+
+  if (pickedFile != null) {
+    final compressedVideo = await VideoCompress.compressVideo(
+      pickedFile.path,
+      quality: VideoQuality.MediumQuality,
+      deleteOrigin: false,
+    );
+
+    return compressedVideo?.file;
+  }
+
+  return null;
 }

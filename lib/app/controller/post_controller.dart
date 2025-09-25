@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:Vetted/app/controller/storage_controller.dart';
@@ -42,6 +43,9 @@ class PostController extends GetxController {
   final isReplyingComments = false.obs;
 
   RxList<PostModel> allPersonalPost = <PostModel>[].obs;
+
+  RxList<String> viewedPostIds = <String>[].obs;
+  Timer? timer;
 
   Future<void> createPost({
     required PostModel postModel,
@@ -515,4 +519,48 @@ class PostController extends GetxController {
       debugPrint(e.toString());
     }
   }
+
+  Future<void> viewPosts(List<String> postIds) async {
+    try {
+      final storageController = Get.find<StorageController>();
+      final token = await storageController.getToken();
+      if (token == null) return;
+      if (postIds.isEmpty) return;
+      final response = await postService.viewPosts(
+        token: token,
+        postId: postIds,
+      );
+      if (response == null) return;
+      final decoded = json.decode(response.body);
+      String message = decoded["message"] ?? "";
+      if (response.statusCode != 200) {
+        print("Error-from-view-posts: $message");
+        CustomSnackbar.showErrorToast(message);
+        return;
+      }
+      postIds.clear();
+      viewedPostIds.clear();
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  void startTimer() {
+    timer = Timer.periodic(const Duration(minutes: 1), (timer) async {
+      if (viewedPostIds.isNotEmpty) {
+        await viewPosts(viewedPostIds);
+      }
+    });
+  }
+
+  void stopTimer() {
+    timer?.cancel();
+  }
+
+  void addViewedPost(String? postId) {
+    if (postId == null) return;
+    if (viewedPostIds.contains(postId)) return;
+    viewedPostIds.add(postId);
+  }
+
 }

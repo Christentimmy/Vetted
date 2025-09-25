@@ -1,9 +1,11 @@
 import 'package:Vetted/app/controller/post_controller.dart';
 import 'package:Vetted/app/controller/user_controller.dart';
+import 'package:Vetted/app/data/models/chat_list_model.dart';
 import 'package:Vetted/app/data/models/post_model.dart';
 import 'package:Vetted/app/modules/post/widgets/comment_widget.dart';
 import 'package:Vetted/app/modules/post/widgets/reaction_row.dart';
 import 'package:Vetted/app/modules/report/widgets/report_widget.dart';
+import 'package:Vetted/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -160,18 +162,6 @@ Widget buildOptionAboutPost({
         items: [
           PopupMenuItem(
             value: "report",
-            onTap: () {
-              showModalBottomSheet(
-                context: Get.context!,
-                builder: (context) {
-                  return ReportBottomSheet(
-                    reportUser: postModel.author?.id ?? "",
-                    type: ReportType.post,
-                    referenceId: postModel.id,
-                  );
-                },
-              );
-            },
             child: Text(
               "Report",
               style: TextStyle(
@@ -198,6 +188,18 @@ Widget buildOptionAboutPost({
               value: "block",
               child: Text(
                 "Block",
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black87,
+                ),
+              ),
+            ),
+          if (!isAuthor)
+            PopupMenuItem(
+              value: "message",
+              child: Text(
+                "Message",
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
@@ -264,6 +266,17 @@ Widget buildOptionAboutPost({
             postId: postModel.id!,
             isProfilePost: isProfilePost,
           );
+          break;
+        case "message":
+          final chatHead = ChatListModel(
+            userId: postModel.author?.id,
+            displayName: postModel.author?.displayName,
+            avatar: postModel.author?.avatar,
+            lastMessage: "",
+            unreadCount: 0,
+            online: false,
+          );
+          Get.toNamed(AppRoutes.chatScreen, arguments: {"chatHead": chatHead});
           break;
         case "save":
           await postController.toggleSavePost(postId: postModel.id!);
