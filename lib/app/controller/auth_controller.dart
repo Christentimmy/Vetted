@@ -125,6 +125,57 @@ class AuthController extends GetxController {
     }
   }
 
+  Future<void> loginWithNumber({required String phoneNumber}) async {
+    isLoading.value = true;
+    try {
+      final response = await _authService.loginWithNumber(
+        phoneNumber: phoneNumber,
+      );
+      if (response == null) return;
+      final decoded = json.decode(response.body);
+      String message = decoded["message"] ?? "";
+      String token = decoded["token"] ?? "";
+      String phone = decoded["phone"] ?? "";
+      final storageController = Get.find<StorageController>();
+      await storageController.storeToken(token);
+
+      if (response.statusCode == 405) {
+        CustomSnackbar.showErrorToast(message);
+        Get.offAllNamed(AppRoutes.selfieDisclaimer);
+        return;
+      }
+
+      if (response.statusCode != 200) {
+        CustomSnackbar.showErrorToast(message);
+        return;
+      }
+
+      if (response.statusCode == 405) {
+        CustomSnackbar.showErrorToast(message);
+        Get.offAllNamed(
+          AppRoutes.otp,
+          arguments: {
+            'phoneNumber': phone,
+            'onTap': () {
+              Get.offAllNamed(AppRoutes.bottomNavigationWidget);
+            },
+          },
+        );
+        return;
+      }
+
+      final userController = Get.find<UserController>();
+      await userController.getUserDetails();
+      final socketController = Get.find<SocketController>();
+      socketController.initializeSocket();
+      Get.offAllNamed(AppRoutes.bottomNavigationWidget);
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
   Future<void> registerWithNumber({required String phoneNumber}) async {
     isLoading.value = true;
     try {
@@ -140,12 +191,15 @@ class AuthController extends GetxController {
         CustomSnackbar.showErrorToast(message);
         return;
       }
-      Get.toNamed(AppRoutes.otp, arguments: {
-        'phoneNumber': phoneNumber,
-        'onTap': () {
-          Get.toNamed(AppRoutes.howItWorksScreen);
+      Get.toNamed(
+        AppRoutes.otp,
+        arguments: {
+          'phoneNumber': phoneNumber,
+          'onTap': () {
+            Get.toNamed(AppRoutes.howItWorksScreen);
+          },
         },
-      });
+      );
     } catch (e) {
       debugPrint(e.toString());
     } finally {
@@ -200,5 +254,4 @@ class AuthController extends GetxController {
       isOtpVerifyLoading.value = false;
     }
   }
-
 }

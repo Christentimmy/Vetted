@@ -20,6 +20,7 @@ import 'package:Vetted/app/modules/onboarding/views/our_safety_tools_screen.dart
 import 'package:Vetted/app/modules/post/views/create_post_screen.dart';
 import 'package:Vetted/app/modules/post/views/poll_post_screen.dart';
 import 'package:Vetted/app/modules/post/views/post_screen.dart';
+import 'package:Vetted/app/modules/post/views/upgrade_plan_screen.dart';
 import 'package:Vetted/app/modules/post/views/woman_post_screen.dart';
 import 'package:Vetted/app/modules/profile/views/date_of_birth_screen.dart';
 import 'package:Vetted/app/modules/profile/views/edit_profile_screen.dart';
@@ -52,7 +53,14 @@ class AppPages {
         return OTPScreen(phoneNumber: phoneNumber, onTap: onTap);
       },
     ),
-    GetPage(name: AppRoutes.phoneNumberScreen, page: () => PhoneNumberScreen()),
+    GetPage(
+      name: AppRoutes.phoneNumberScreen,
+      page: () {
+        final arguments = Get.arguments as Map<String, dynamic>? ?? {};
+        final isSignUp = arguments['isSignUp'] as bool? ?? false;
+        return PhoneNumberScreen(isSignUp: isSignUp);
+      },
+    ),
     GetPage(
       name: AppRoutes.inputNameScreen,
       page: () {
@@ -167,5 +175,6 @@ class AppPages {
     GetPage(name: AppRoutes.myPostScreen, page: () => MyPostScreen()),
     GetPage(name: AppRoutes.savedPostScreen, page: () => SavedPostScreen()),
     GetPage(name: AppRoutes.myAlertsScreen, page: () => MyAlertsScreen()),
+    GetPage(name: AppRoutes.upgradePlanScreen, page: () => UpgradePlanScreen()),
   ];
 }

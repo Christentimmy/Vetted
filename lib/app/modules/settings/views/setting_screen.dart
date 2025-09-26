@@ -6,7 +6,7 @@ import 'package:Vetted/app/widgets/top_bar.dart';
 import 'package:Vetted/screens/notification_menu_screen.dart';
 import 'package:Vetted/screens/safety_resources_screen.dart';
 // import 'package:Vetted/screens/saved_post_screen.dart';
-import 'package:Vetted/screens/upgrade_plan_screen.dart';
+// import 'package:Vetted/screens/upgrade_plan_screen.dart';
 import 'package:Vetted/screens/support_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -115,10 +115,11 @@ class SettingScreen extends StatelessWidget {
               icon: Icons.workspace_premium_outlined,
               title: "Upgrade",
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const UpgradePlanScreen()),
-                );
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(builder: (_) => const UpgradePlanScreen()),
+                // );
+                Get.toNamed(AppRoutes.upgradePlanScreen);
               },
             ),
 

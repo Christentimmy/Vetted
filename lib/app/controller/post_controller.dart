@@ -109,12 +109,13 @@ class PostController extends GetxController {
         return;
       }
       List<dynamic> postsList = decoded["data"]?["posts"] ?? [];
-      if (loadMore == true) {
+      if (loadMore == true && hasNextPage.value) {
         posts.addAll(postsList.map((e) => PostModel.fromJson(e)).toList());
       } else {
         posts.clear();
         posts.addAll(postsList.map((e) => PostModel.fromJson(e)).toList());
       }
+      print(decoded["data"]?["pagination"]);
       hasNextPage.value = decoded["data"]?["pagination"]?["hasMore"] ?? false;
     } catch (e) {
       debugPrint(e.toString());
@@ -581,7 +582,9 @@ class PostController extends GetxController {
       savedPosts.clear();
       List<dynamic> savedPostsList = decoded["data"] ?? [];
       if (savedPostsList.isEmpty) return;
-      savedPosts.addAll(savedPostsList.map((e) => PostModel.fromJson(e)).toList());
+      savedPosts.addAll(
+        savedPostsList.map((e) => PostModel.fromJson(e)).toList(),
+      );
     } catch (e) {
       debugPrint(e.toString());
     } finally {

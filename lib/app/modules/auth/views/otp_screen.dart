@@ -112,9 +112,9 @@ class _OTPScreenState extends State<OTPScreen> {
 
               // Continue Button
               CustomButton(
-                ontap: () {
+                ontap: () async {
                   if (otpController.text.isEmpty) return;
-                  authController.verifyNumberOtp(
+                  await authController.verifyNumberOtp(
                     phoneNumber: widget.phoneNumber,
                     otp: otpController.text,
                     whatNext: widget.onTap,

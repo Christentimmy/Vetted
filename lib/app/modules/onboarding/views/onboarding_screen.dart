@@ -1,7 +1,6 @@
 import 'package:Vetted/app/controller/auth_controller.dart';
 import 'package:Vetted/app/routes/app_routes.dart';
 import 'package:Vetted/app/widgets/custom_button.dart';
-import 'package:Vetted/screens/phone_number_login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -75,7 +74,10 @@ class OnboardingScreen extends StatelessWidget {
 
                   GestureDetector(
                     onTap: () {
-                      Get.toNamed(AppRoutes.phoneNumberScreen);
+                      Get.toNamed(
+                        AppRoutes.phoneNumberScreen,
+                        arguments: {'isSignUp': true},
+                      );
                     },
                     child: const Text(
                       'Let’s get started',
@@ -95,12 +97,16 @@ class OnboardingScreen extends StatelessWidget {
                     color: Colors.red.shade700,
                     textColor: Colors.white,
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const PhoneNumberLoginScreen(),
-                        ),
+                      Get.toNamed(
+                        AppRoutes.phoneNumberScreen,
+                        arguments: {'isSignUp': false},
                       );
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (context) => const PhoneNumberLoginScreen(),
+                      //   ),
+                      // );
                     },
                   ),
 

@@ -25,7 +25,7 @@ class SocketController extends GetxController {
       return;
     }
 
-    socket = IO.io("https://30b7823229ed.ngrok-free.app", <String, dynamic>{
+    socket = IO.io("https://vetted-backend.onrender.com", <String, dynamic>{
       'transports': ['websocket'],
       'extraHeaders': {'Authorization': 'Bearer $token'},
       'reconnection': true,

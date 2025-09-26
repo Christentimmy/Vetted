@@ -7,7 +7,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 
 class PhoneNumberScreen extends StatelessWidget {
-  PhoneNumberScreen({super.key});
+  final bool isSignUp;
+  PhoneNumberScreen({super.key, required this.isSignUp});
 
   final authController = Get.find<AuthController>();
   final phoneNumberController = TextEditingController();
@@ -65,9 +66,15 @@ class PhoneNumberScreen extends StatelessWidget {
                   HapticFeedback.lightImpact();
                   if (phoneNumberController.text.isEmpty) return;
                   if (authController.isLoading.value) return;
-                  await authController.registerWithNumber(
-                    phoneNumber: phoneNumberController.text,
-                  );
+                  if (isSignUp) {
+                    await authController.registerWithNumber(
+                      phoneNumber: phoneNumberController.text,
+                    );
+                  } else {
+                    await authController.loginWithNumber(
+                      phoneNumber: phoneNumberController.text,
+                    );
+                  }
                 },
                 loaderColor: Colors.white,
                 isLoading: authController.isLoading,

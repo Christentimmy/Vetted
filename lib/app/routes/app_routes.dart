@@ -33,4 +33,5 @@ class AppRoutes {
   static const String myPostScreen = '/myPostScreen';
   static const String savedPostScreen = '/savedPostScreen';
   static const String myAlertsScreen = '/myAlertsScreen';
+  static const String upgradePlanScreen = '/upgradePlanScreen';
 }

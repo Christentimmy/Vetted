@@ -98,6 +98,28 @@ class AuthService {
     return null;
   }
 
+  Future<http.Response?> loginWithNumber({
+    required String phoneNumber,
+  }) async {
+    try {
+      final response = await http
+          .post(
+            Uri.parse("$baseUrl/auth/login-with-phoneNumber"),
+            headers: {"Content-Type": "application/json"},
+            body: json.encode({"phone": phoneNumber}),
+          )
+          .timeout(const Duration(seconds: 20));
+      return response;
+    } on SocketException catch (e) {
+      debugPrint("No internet connection $e");
+    } on TimeoutException {
+      debugPrint("Request timeout");
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
+
   Future<http.Response?> sendNumberOtp({required String phoneNumber}) async {
     try {
       final response = await http

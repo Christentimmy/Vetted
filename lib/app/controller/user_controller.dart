@@ -11,6 +11,9 @@ import 'package:Vetted/app/widgets/snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:app_links/app_links.dart';
+
+
 
 class UserController extends GetxController {
   final _userService = UserService();
@@ -626,6 +629,38 @@ class UserController extends GetxController {
       CustomSnackbar.showSuccessToast(message);
     } catch (e) {
       debugPrint(e.toString());
+    }
+  }
+
+  Future<void> initDeepLinks(AppLinks appLinks) async {
+    try {
+      final appLink = await appLinks.getInitialLink();
+      if (appLink != null) {
+        _handleDeepLink(appLink);
+      }
+
+      appLinks.uriLinkStream.listen((Uri? uri) {
+        if (uri != null) {
+          _handleDeepLink(uri);
+        }
+      });
+    } catch (e) {
+      print('Error initializing deep links: $e');
+    }
+  }
+
+  void _handleDeepLink(Uri uri) {
+    if (uri.host == 'payment-success') {
+      Future.delayed(const Duration(milliseconds: 1000), () async {
+        try {
+          await getUserDetails();
+          if (Get.currentRoute != '/bottom-navigation') {
+            Get.offAllNamed(AppRoutes.bottomNavigationWidget);
+          }
+        } catch (e) {
+          debugPrint('Error handling deep link: $e');
+        }
+      });
     }
   }
 

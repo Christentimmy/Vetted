@@ -1,5 +1,6 @@
 
 
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -13,7 +14,12 @@ class StorageController extends GetxController {
 
   // Get token
   Future<String?> getToken() async {
-    return await _secureStorage.read(key: 'userToken');
+    try {
+      return await _secureStorage.read(key: 'userToken');
+    } catch (e) {
+      debugPrint('Error reading token from secure storage: $e');
+      return null;
+    }
   }
 
   // Delete token

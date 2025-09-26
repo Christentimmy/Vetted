@@ -1,3 +1,6 @@
+import 'package:Vetted/app/controller/post_controller.dart';
+import 'package:Vetted/app/data/models/post_model.dart';
+import 'package:Vetted/app/resources/colors.dart';
 import 'package:Vetted/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -65,8 +68,10 @@ void _showFilterPopup(BuildContext context) {
   String sortBy = 'newest';
   bool showRedFlag = true;
   bool showGreenFlag = true;
-  double maxDistance = 1500;
+  // double maxDistance = 1500;
   RangeValues ageRange = const RangeValues(18, 75);
+
+  final locationAddressController = TextEditingController();
 
   showModalBottomSheet(
     context: context,
@@ -102,6 +107,7 @@ void _showFilterPopup(BuildContext context) {
                   const SizedBox(height: 12),
 
                   TextField(
+                    controller: locationAddressController,
                     decoration: InputDecoration(
                       hintText: 'Search location',
                       border: OutlineInputBorder(
@@ -111,37 +117,36 @@ void _showFilterPopup(BuildContext context) {
                     ),
                   ),
 
-                  const SizedBox(height: 20),
+                  // const SizedBox(height: 20),
 
-                  // MAX DISTANCE
-                  const Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "Maximum distance",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                  Slider(
-                    value: maxDistance,
-                    min: 0,
-                    max: 1500,
-                    divisions: 30,
-                    label: "${maxDistance.round()}+ mi",
-                    onChanged: (value) {
-                      setState(() => maxDistance = value);
-                    },
-                  ),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "${maxDistance.round()}+ mi",
-                      style: const TextStyle(color: Colors.black54),
-                    ),
-                  ),
-
+                  // // MAX DISTANCE
+                  // const Align(
+                  //   alignment: Alignment.centerLeft,
+                  //   child: Text(
+                  //     "Maximum distance",
+                  //     style: TextStyle(
+                  //       fontSize: 16,
+                  //       fontWeight: FontWeight.w600,
+                  //     ),
+                  //   ),
+                  // ),
+                  // Slider(
+                  //   value: maxDistance,
+                  //   min: 0,
+                  //   max: 1500,
+                  //   divisions: 30,
+                  //   label: "${maxDistance.round()}+ mi",
+                  //   onChanged: (value) {
+                  //     setState(() => maxDistance = value);
+                  //   },
+                  // ),
+                  // Align(
+                  //   alignment: Alignment.centerLeft,
+                  //   child: Text(
+                  //     "${maxDistance.round()}+ mi",
+                  //     style: const TextStyle(color: Colors.black54),
+                  //   ),
+                  // ),
                   const SizedBox(height: 12),
 
                   // AGE RANGE
@@ -156,6 +161,7 @@ void _showFilterPopup(BuildContext context) {
                     ),
                   ),
                   RangeSlider(
+                    activeColor: AppColors.primaryColor,
                     values: ageRange,
                     min: 18,
                     max: 75,
@@ -193,12 +199,14 @@ void _showFilterPopup(BuildContext context) {
                   Row(
                     children: [
                       Radio<String>(
+                        activeColor: AppColors.primaryColor,
                         value: 'newest',
                         groupValue: sortBy,
                         onChanged: (value) => setState(() => sortBy = value!),
                       ),
                       const Text('Newest'),
                       Radio<String>(
+                        activeColor: AppColors.primaryColor,
                         value: 'oldest',
                         groupValue: sortBy,
                         onChanged: (value) => setState(() => sortBy = value!),
@@ -307,6 +315,48 @@ void _showFilterPopup(BuildContext context) {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
+                        final postController = Get.find<PostController>();
+                        List<PostModel> filteredPosts = List.from(
+                          postController.posts,
+                        );
+
+                        // Filter by location if provided
+                        if (locationAddressController.text.isNotEmpty) {
+                          final locationQuery =
+                              locationAddressController.text.toLowerCase();
+                          filteredPosts =
+                              filteredPosts.where((post) {
+                                return post.personLocation
+                                        ?.toLowerCase()
+                                        .contains(locationQuery) ??
+                                    false;
+                              }).toList();
+                        }
+
+                        // Filter by age range
+                        filteredPosts =
+                            filteredPosts.where((post) {
+                              if (post.personAge == null) return false;
+                              final age = int.tryParse(post.personAge!) ?? 0;
+                              return age >= ageRange.start &&
+                                  age <= ageRange.end;
+                            }).toList();
+
+                        // Sort by selected option (newest/oldest)
+                        if (sortBy == 'newest') {
+                          filteredPosts.sort(
+                            (a, b) => b.createdAt!.compareTo(a.createdAt!),
+                          );
+                        } else {
+                          filteredPosts.sort(
+                            (a, b) => a.createdAt!.compareTo(b.createdAt!),
+                          );
+                        }
+
+                        // Update the posts list in the controller
+                        postController.posts.value = filteredPosts.obs;
+
+                        // Close the bottom sheet
                         Navigator.pop(context);
                       },
                       style: ElevatedButton.styleFrom(
