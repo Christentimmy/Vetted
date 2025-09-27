@@ -35,13 +35,13 @@ class _PostScreenState extends State<PostScreen> {
         isLoadingMore.value = false;
       }
     });
-    postController.startTimer();
+    // postController.startTimer();
     super.initState();
   }
 
   @override
   void dispose() {
-    postController.stopTimer();
+    // postController.stopTimer();
     scrollController.dispose();
     super.dispose();
   }

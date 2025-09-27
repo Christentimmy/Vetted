@@ -666,6 +666,8 @@ class UserController extends GetxController {
 
   void clean() {
     userModel.value = null;
+    alertList.clear();
+    notificationList.clear();
     isUserDetailsFetched.value = false;
     notificationList.clear();
     isloading.value = false;

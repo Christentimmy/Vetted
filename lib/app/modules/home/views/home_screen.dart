@@ -32,7 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      postController.startTimer();
+      // postController.startTimer();
       if (postController.posts.isEmpty) {
         postController.getFeed();
       }
@@ -50,7 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void dispose() {
-    postController.stopTimer();
+    // postController.stopTimer();
     scrollController.dispose();
     super.dispose();
   }

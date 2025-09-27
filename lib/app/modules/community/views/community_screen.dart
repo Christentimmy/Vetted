@@ -26,7 +26,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      postController.startTimer();
+      // postController.startTimer();
       if (postController.postsCommunity.isEmpty) {
         postController.getFeedCommunity();
       }
@@ -48,7 +48,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
 
   @override
   void dispose() {
-    postController.stopTimer();
+    // postController.stopTimer();
     super.dispose();
   }
 

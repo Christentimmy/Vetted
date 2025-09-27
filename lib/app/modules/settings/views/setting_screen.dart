@@ -77,6 +77,13 @@ class SettingScreen extends StatelessWidget {
                 );
               },
             ),
+            _menuItem(
+              icon: Icons.insert_chart_outlined_rounded,
+              title: "Court Resources",
+              onTap: () {
+                Get.toNamed(AppRoutes.courtStateResources);
+              },
+            ),
 
             const SizedBox(height: 24),
             const Text(
@@ -115,10 +122,6 @@ class SettingScreen extends StatelessWidget {
               icon: Icons.workspace_premium_outlined,
               title: "Upgrade",
               onTap: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(builder: (_) => const UpgradePlanScreen()),
-                // );
                 Get.toNamed(AppRoutes.upgradePlanScreen);
               },
             ),

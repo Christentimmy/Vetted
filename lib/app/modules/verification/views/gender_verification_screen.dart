@@ -109,14 +109,14 @@ class GenderVerificationScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildRecordingView() {
+    Widget _buildRecordingView() {
     return Stack(
       children: [
         CameraPreview(controller.cameraController!),
         Container(
           width: double.infinity,
           height: double.infinity,
-          color: Colors.red.withValues(alpha: 0.06),
+          color: Colors.red.withValues(alpha: 0.02),
         ),
         Center(
           child: Container(

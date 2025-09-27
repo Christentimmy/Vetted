@@ -27,6 +27,7 @@ import 'package:Vetted/app/modules/profile/views/edit_profile_screen.dart';
 import 'package:Vetted/app/modules/profile/views/input_name_screen.dart';
 import 'package:Vetted/app/modules/profile/views/relationship_status_screen.dart';
 import 'package:Vetted/app/modules/profile/views/set_location_screen.dart';
+import 'package:Vetted/app/modules/settings/views/court_resources_screen.dart';
 import 'package:Vetted/app/modules/settings/views/my_alerts_screen.dart';
 import 'package:Vetted/app/modules/settings/views/my_post_screen.dart';
 import 'package:Vetted/app/modules/settings/views/saved_post_screen.dart';
@@ -176,5 +177,6 @@ class AppPages {
     GetPage(name: AppRoutes.savedPostScreen, page: () => SavedPostScreen()),
     GetPage(name: AppRoutes.myAlertsScreen, page: () => MyAlertsScreen()),
     GetPage(name: AppRoutes.upgradePlanScreen, page: () => UpgradePlanScreen()),
+    GetPage(name: AppRoutes.courtStateResources, page: () => CourtResourcesScreen()),
   ];
 }
