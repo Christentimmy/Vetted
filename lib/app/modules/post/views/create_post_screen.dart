@@ -13,8 +13,6 @@ class CreatePostScreen extends StatefulWidget {
 }
 
 class _CreatePostScreenState extends State<CreatePostScreen> {
-  // final TextEditingController _controller = TextEditingController();
-  // final TextEditingController _titleController = TextEditingController();
 
   final formKey = GlobalKey<FormState>();
   final createPostController = Get.put(CreatePostController());

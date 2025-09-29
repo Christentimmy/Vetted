@@ -193,7 +193,7 @@ class WomanPostScreen extends StatelessWidget {
               child: Obx(() {
                 final value = createPostController.selectedCity.value;
                 return DropdownButton<String>(
-                  hint: const Text("City"),
+                  hint: const Text("State"),
                   value: value.isEmpty ? null : value,
                   isExpanded: true,
                   items:

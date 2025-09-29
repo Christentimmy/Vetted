@@ -210,14 +210,14 @@ class Metadata {
 }
 
 class Poll {
-  final String? question;
-  final List<PollOptions>? options;
-  final bool? allowMultipleChoices;
-  final int? totalVotes;
-  final bool? isActive;
-  final DateTime? expiresAt;
-  final bool? hasVoted;
-  final String? selectedOptionId;
+  String? question;
+  List<PollOptions>? options;
+  bool? allowMultipleChoices;
+  int? totalVotes;
+  bool? isActive;
+  DateTime? expiresAt;
+  RxBool? hasVoted;
+  RxString? selectedOptionId;
 
   Poll({
     this.question,
@@ -244,8 +244,8 @@ class Poll {
       isActive: json['isActive'] ?? false,
       expiresAt:
           json['expiresAt'] != null ? DateTime.parse(json['expiresAt']) : null,
-      hasVoted: json['hasVoted'] ?? false,
-      selectedOptionId: json['selectedOptionId'] ?? "",
+      hasVoted: RxBool(json['hasVoted'] ?? false),
+      selectedOptionId: RxString(json['selectedOptionId'] ?? ""),
     );
   }
 
@@ -271,11 +271,11 @@ class Poll {
 }
 
 class PollOptions {
-  final String? id;
-  final String? text;
-  final int? voteCount;
-  final List? voters;
-  final Color? color;
+  String? id;
+  String? text;
+  int? voteCount;
+  List? voters;
+  Color? color;
 
   PollOptions({this.id, this.text, this.voteCount, this.voters, this.color});
 

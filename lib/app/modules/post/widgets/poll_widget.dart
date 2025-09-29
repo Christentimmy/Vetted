@@ -3,6 +3,7 @@ import 'package:Vetted/app/data/models/post_model.dart';
 import 'package:Vetted/app/modules/post/widgets/post_widgets.dart';
 import 'package:Vetted/app/resources/colors.dart';
 import 'package:Vetted/app/utils/timeago.dart';
+import 'package:Vetted/app/widgets/loaders.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polls/flutter_polls.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -127,51 +128,81 @@ Widget buildPollWidget({
   );
 }
 
-class PollWidget extends StatelessWidget {
+class PollWidget extends StatefulWidget {
   final PostModel post;
-  PollWidget({super.key, required this.post});
+  const PollWidget({super.key, required this.post});
 
+  @override
+  State<PollWidget> createState() => _PollWidgetState();
+}
+
+class _PollWidgetState extends State<PollWidget> {
   final postController = Get.find<PostController>();
 
   @override
   Widget build(BuildContext context) {
-    return FlutterPolls(
-      pollId: post.id,
-      hasVoted: post.poll?.hasVoted ?? false,
-      userVotedOptionId: post.poll?.selectedOptionId,
-      onVoted: (PollOption pollOption, int newTotalVotes) async {
-        return await postController.voteOnPoll(
-          postId: post.id!,
-          optionId: pollOption.id!,
-        );
-      },
-      pollOptionsSplashColor: Colors.white,
-      votedBackgroundColor: const Color.fromARGB(255, 240, 240, 240),
-      heightBetweenOptions: 15,
-      votesTextStyle: Get.textTheme.bodyMedium,
-      votedPercentageTextStyle: Get.textTheme.bodyMedium?.copyWith(
-        color: Colors.blueGrey,
-      ),
-      heightBetweenTitleAndOptions: 25,
-      leadingVotedProgessColor: const Color.fromARGB(255, 226, 131, 129),
-      pollTitle: Align(
-        alignment: Alignment.centerLeft,
-        child: Text(post.poll?.question ?? "", style: Get.textTheme.bodySmall),
-      ),
-      pollOptionsBorder: Border.all(width: 1, color: Colors.grey.shade300),
-      pollOptions: buildOptions(),
-      pollEnded:
-          post.poll?.expiresAt != null &&
-          post.poll!.expiresAt!.isBefore(DateTime.now()),
-    );
+    return Obx(() {
+      return FlutterPolls(
+        pollId: widget.post.id,
+        hasVoted: widget.post.poll?.hasVoted?.value ?? false,
+        userVotedOptionId: widget.post.poll?.selectedOptionId?.value,
+        onVoted: (PollOption pollOption, int newTotalVotes) async {
+          if (widget.post.poll!.hasVoted?.value == true) {
+            return false;
+          }
+
+          widget.post.poll!.hasVoted!.value = true;
+          widget.post.poll!.selectedOptionId!.value = pollOption.id!;
+
+          final success = await postController.voteOnPoll(
+            postId: widget.post.id!,
+            optionId: pollOption.id!,
+          );
+          
+          if (success) {
+            setState(() {
+              final option = widget.post.poll!.options!.firstWhere(
+                (o) => o.id == pollOption.id,
+              );
+              option.voteCount = (option.voteCount ?? 0) + 1;
+              widget.post.poll!.totalVotes = widget.post.poll!.totalVotes! + 1;
+            });
+          }
+
+          return success;
+        },
+        pollOptionsSplashColor: Colors.white,
+        votedBackgroundColor: const Color.fromARGB(255, 240, 240, 240),
+        heightBetweenOptions: 15,
+        votesTextStyle: Get.textTheme.bodyMedium,
+        votedPercentageTextStyle: Get.textTheme.bodyMedium?.copyWith(
+          color: AppColors.primaryColor,
+        ),
+        loadingWidget: Loader2(),
+        heightBetweenTitleAndOptions: 25,
+        leadingVotedProgessColor: const Color.fromARGB(255, 226, 131, 129),
+        pollTitle: Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            widget.post.poll?.question ?? "",
+            style: Get.textTheme.bodySmall,
+          ),
+        ),
+        pollOptionsBorder: Border.all(width: 1, color: Colors.grey.shade300),
+        pollOptions: buildOptions(),
+        pollEnded:
+            widget.post.poll?.expiresAt != null &&
+            widget.post.poll!.expiresAt!.isBefore(DateTime.now()),
+      );
+    });
   }
 
   List<PollOption> buildOptions() {
-    if (post.poll?.options == null) {
+    if (widget.post.poll?.options == null) {
       return [];
     }
     final pollOptions =
-        post.poll!.options!.map((option) {
+        widget.post.poll!.options!.map((option) {
           return PollOption(
             id: option.id,
             title: Text(option.text ?? ""),

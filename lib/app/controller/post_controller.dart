@@ -151,7 +151,7 @@ class PostController extends GetxController {
         return;
       }
       List<dynamic> postsList = decoded["data"]?["posts"] ?? [];
-      if (loadMore == true) {
+      if (loadMore == true && hasNextPageCommunity.value) {
         postsCommunity.addAll(
           postsList.map((e) => PostModel.fromJson(e)).toList(),
         );

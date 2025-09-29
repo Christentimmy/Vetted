@@ -451,7 +451,7 @@ class PostService {
     required String optionId,
   }) async {
     try {
-      var uri = Uri.parse("$baseUrl/post/vote-poll");
+      var uri = Uri.parse("$baseUrl/post/vote-on-poll");
       var response = await http
           .post(
             uri,
