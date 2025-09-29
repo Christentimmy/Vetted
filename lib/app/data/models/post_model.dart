@@ -16,8 +16,8 @@ class PostModel {
   bool? isFollowing;
   DateTime? createdAt;
   final RxString? reactedEmoji;
-  bool? hasVoted;
-  String? votedColor;
+  RxBool? hasVoted;
+  RxString? votedColor;
   RxBool? isBookmarked;
   RxBool isFollow = false.obs;
 
@@ -63,8 +63,8 @@ class PostModel {
               ? DateTime.parse(json["createdAt"].toString())
               : DateTime.now(),
       reactedEmoji: RxString(json['reactedEmoji'] ?? ""),
-      hasVoted: json['hasVoted'] ?? false,
-      votedColor: json['votedColor'],
+      hasVoted: RxBool(json['hasVoted'] ?? false),
+      votedColor: RxString(json['votedColor'] ?? ""),
       isBookmarked: RxBool(json['isBookmarked'] ?? false),
     );
   }
@@ -114,8 +114,8 @@ class Stats {
   int? views;
   int? totalFlagVote;
   String? leadingFlag;
-  int? greenVotes;
-  int? redVotes;
+  RxInt? greenVotes;
+  RxInt? redVotes;
 
   Stats({
     this.reactionCount,
@@ -134,8 +134,8 @@ class Stats {
       views: json["views"] ?? 0,
       totalFlagVote: json["totalFlagVote"] ?? 0,
       leadingFlag: json["leadingFlag"] ?? "",
-      greenVotes: json["greenVotes"] ?? 0,
-      redVotes: json["redVotes"] ?? 0,
+      greenVotes: RxInt(json["greenVotes"] ?? 0),
+      redVotes: RxInt(json["redVotes"] ?? 0),
     );
   }
 }

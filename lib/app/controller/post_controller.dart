@@ -191,7 +191,6 @@ class PostController extends GetxController {
         CustomSnackbar.showErrorToast(message);
         return;
       }
-      // CustomSnackbar.showSuccessToast(message);
     } catch (e) {
       debugPrint(e.toString());
     }

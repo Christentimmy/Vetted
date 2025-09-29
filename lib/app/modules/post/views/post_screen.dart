@@ -6,6 +6,7 @@ import 'package:Vetted/app/resources/colors.dart';
 import 'package:Vetted/app/widgets/loaders.dart';
 import 'package:Vetted/app/widgets/snack_bar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cherry_toast/resources/arrays.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
@@ -179,19 +180,77 @@ class PostItem extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  _flagWithCount(
-                    Icons.flag,
-                    Colors.red,
-                    post.stats?.redVotes.toString() ?? "",
-                    () {},
-                  ),
+                  Obx(() {
+                    return _flagWithCount(
+                      Icons.flag,
+                      Colors.red,
+                      post.stats?.redVotes?.value.toString() ?? "",
+                      () async {
+                        RxString votedColor = post.votedColor ?? RxString("");
+                        RxInt redVotes = post.stats?.redVotes ?? RxInt(0);
+                        RxInt greenVotes = post.stats?.greenVotes ?? RxInt(0);
+
+                        if (votedColor.value == "red") {
+                          // Already voted red
+                          CustomSnackbar.showErrorToast(
+                            "You already voted red",
+                            position: Position.bottom,
+                          );
+                          return;
+                        }
+
+                        // If voted green before, remove that first
+                        if (votedColor.value == "green") {
+                          greenVotes.value -= 1;
+                        }
+
+                        // Then vote red
+                        redVotes.value += 1;
+                        votedColor.value = "red";
+
+                        await postController.voteOnWoman(
+                          postId: post.id!,
+                          color: votedColor.value,
+                        );
+                      },
+                    );
+                  }),
                   const SizedBox(width: 12),
-                  _flagWithCount(
-                    Icons.flag,
-                    Colors.green,
-                    post.stats?.greenVotes.toString() ?? "",
-                    () {},
-                  ),
+                  Obx(() {
+                    return _flagWithCount(
+                      Icons.flag,
+                      Colors.green,
+                      post.stats?.greenVotes?.value.toString() ?? "",
+                      () async {
+                        RxString votedColor = post.votedColor ?? RxString("");
+                        RxInt redVotes = post.stats?.redVotes ?? RxInt(0);
+                        RxInt greenVotes = post.stats?.greenVotes ?? RxInt(0);
+
+                        if (votedColor.value == "green") {
+                          // Already voted green
+                          CustomSnackbar.showErrorToast(
+                            "You already voted green",  
+                            position: Position.bottom,
+                          );
+                          return;
+                        }
+
+                        // If voted red before, remove that first
+                        if (votedColor.value == "red") {
+                          redVotes.value -= 1;
+                        }
+
+                        // Then vote green
+                        greenVotes.value += 1;
+                        votedColor.value = "green";
+
+                        await postController.voteOnWoman(
+                          postId: post.id!,
+                          color: votedColor.value,
+                        );
+                      },
+                    );
+                  }),
                 ],
               ),
               ElevatedButton(

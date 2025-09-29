@@ -1,5 +1,4 @@
 import 'package:Vetted/app/controller/auth_controller.dart';
-import 'package:Vetted/app/routes/app_routes.dart';
 import 'package:Vetted/app/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
@@ -70,68 +69,69 @@ class OnboardingScreen extends StatelessWidget {
                     ),
                   ),
 
-                  const Spacer(),
+                  SizedBox(height: Get.height * 0.2),
+                  // const Spacer(),
 
-                  GestureDetector(
-                    onTap: () {
-                      Get.toNamed(
-                        AppRoutes.phoneNumberScreen,
-                        arguments: {'isSignUp': true},
-                      );
-                    },
-                    child: const Text(
-                      'Let’s get started',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        decoration: TextDecoration.underline,
-                      ),
-                    ),
-                  ),
+                  // GestureDetector(
+                  //   onTap: () {
+                  //     Get.toNamed(
+                  //       AppRoutes.phoneNumberScreen,
+                  //       arguments: {'isSignUp': true},
+                  //     );
+                  //   },
+                  //   child: const Text(
+                  //     'Let’s get started',
+                  //     style: TextStyle(
+                  //       color: Colors.white,
+                  //       fontSize: 16,
+                  //       fontWeight: FontWeight.w500,
+                  //       decoration: TextDecoration.underline,
+                  //     ),
+                  //   ),
+                  // ),
 
-                  const SizedBox(height: 16),
+                  // const SizedBox(height: 16),
 
-                  _buildWideButton(
-                    text: 'Log in with phone number',
-                    color: Colors.red.shade700,
-                    textColor: Colors.white,
-                    onPressed: () {
-                      Get.toNamed(
-                        AppRoutes.phoneNumberScreen,
-                        arguments: {'isSignUp': false},
-                      );
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //     builder: (context) => const PhoneNumberLoginScreen(),
-                      //   ),
-                      // );
-                    },
-                  ),
+                  // _buildWideButton(
+                  //   text: 'Log in with phone number',
+                  //   color: Colors.red.shade700,
+                  //   textColor: Colors.white,
+                  //   onPressed: () {
+                  //     Get.toNamed(
+                  //       AppRoutes.phoneNumberScreen,
+                  //       arguments: {'isSignUp': false},
+                  //     );
+                  //     // Navigator.push(
+                  //     //   context,
+                  //     //   MaterialPageRoute(
+                  //     //     builder: (context) => const PhoneNumberLoginScreen(),
+                  //     //   ),
+                  //     // );
+                  //   },
+                  // ),
 
-                  const SizedBox(height: 20),
+                  // const SizedBox(height: 20),
 
-                  // OR Divider with lines
-                  Row(
-                    children: const [
-                      Expanded(
-                        child: Divider(color: Colors.white54, thickness: 1),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8),
-                        child: Text(
-                          "or",
-                          style: TextStyle(color: Colors.white70),
-                        ),
-                      ),
-                      Expanded(
-                        child: Divider(color: Colors.white54, thickness: 1),
-                      ),
-                    ],
-                  ),
+                  // // OR Divider with lines
+                  // Row(
+                  //   children: const [
+                  //     Expanded(
+                  //       child: Divider(color: Colors.white54, thickness: 1),
+                  //     ),
+                  //     Padding(
+                  //       padding: EdgeInsets.symmetric(horizontal: 8),
+                  //       child: Text(
+                  //         "or",
+                  //         style: TextStyle(color: Colors.white70),
+                  //       ),
+                  //     ),
+                  //     Expanded(
+                  //       child: Divider(color: Colors.white54, thickness: 1),
+                  //     ),
+                  //   ],
+                  // ),
 
-                  const SizedBox(height: 20),
+                  // const SizedBox(height: 20),
 
                   // Apple Button
                   _buildWideSignInButton(Buttons.AppleDark, onPressed: () {}),
@@ -188,7 +188,7 @@ class OnboardingScreen extends StatelessWidget {
   }
 
   // Phone/Custom Button
-  static Widget _buildWideButton({
+  static Widget buildWideButton({
     required String text,
     required Color color,
     required Color textColor,

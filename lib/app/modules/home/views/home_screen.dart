@@ -206,10 +206,10 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Center(
                 child: BidirectionalVoteSwitch(
                   leadingFlag: post.stats?.leadingFlag,
-                  hasVoted: post.hasVoted,
-                  votedColor: post.votedColor,
-                  greenCount: post.stats?.greenVotes,
-                  redCount: post.stats?.redVotes,
+                  hasVoted: post.hasVoted?.value,
+                  votedColor: post.votedColor?.value,
+                  greenCount: post.stats?.greenVotes?.value,
+                  redCount: post.stats?.redVotes?.value,
                   onVote: (String vote) async {
                     // Update local state immediately for better UX
                     updateUiVote(post: post, vote: vote);
@@ -360,16 +360,16 @@ class _HomeScreenState extends State<HomeScreen> {
       if (post.stats?.leadingFlag != vote) {
         // Remove previous vote count
         if (post.stats?.leadingFlag == 'green') {
-          post.stats?.greenVotes = (post.stats?.greenVotes ?? 1) - 1;
+          post.stats?.greenVotes?.value = (post.stats?.greenVotes?.value ?? 1) - 1;
         } else if (post.stats?.leadingFlag == 'red') {
-          post.stats?.redVotes = (post.stats?.redVotes ?? 1) - 1;
+          post.stats?.redVotes?.value = (post.stats?.redVotes?.value ?? 1) - 1;
         }
 
         // Add new vote count
         if (vote == 'green') {
-          post.stats?.greenVotes = (post.stats?.greenVotes ?? 0) + 1;
+          post.stats?.greenVotes?.value = (post.stats?.greenVotes?.value ?? 0) + 1;
         } else {
-          post.stats?.redVotes = (post.stats?.redVotes ?? 0) + 1;
+          post.stats?.redVotes?.value = (post.stats?.redVotes?.value ?? 0) + 1;
         }
 
         post.stats?.leadingFlag = vote;

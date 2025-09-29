@@ -1,11 +1,16 @@
 import 'package:cherry_toast/cherry_toast.dart';
+import 'package:cherry_toast/resources/arrays.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CustomSnackbar {
-  static void showErrorToast(String message) {
+  static void showErrorToast(
+    String message, {
+    Position position = Position.top,
+  }) {
     CherryToast.error(
+      toastPosition: position,
       title: Text(
         "Error",
         style: GoogleFonts.poppins(
