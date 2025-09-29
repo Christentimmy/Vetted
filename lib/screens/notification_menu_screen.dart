@@ -56,7 +56,7 @@ class _NotificationMenuScreenState extends State<NotificationMenuScreen> {
             _buildSwitchTile("New Comments", newComments, (val) {
               setState(() => newComments = val);
             }),
-            _buildSwitchTile("Alert for Men’s Names", alertMensNames, (val) {
+            _buildSwitchTile("Alert for Women’s Names", alertMensNames, (val) {
               setState(() => alertMensNames = val);
             }),
             _buildSwitchTile("Reactions", reactions, (val) {

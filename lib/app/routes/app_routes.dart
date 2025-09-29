@@ -35,4 +35,6 @@ class AppRoutes {
   static const String myAlertsScreen = '/myAlertsScreen';
   static const String upgradePlanScreen = '/upgradePlanScreen';
   static const String courtStateResources = '/courtStateResources';
+  static const String supportScreen = '/supportScreen';
+  static const String faqScreen = '/faqScreen';
 }

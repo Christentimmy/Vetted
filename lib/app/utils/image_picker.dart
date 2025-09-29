@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:video_compress/video_compress.dart';
 
@@ -31,7 +32,6 @@ pickImage() async {
   }
 }
 
-
 Future<File?> pickVideo() async {
   final pickedFile = await ImagePicker().pickVideo(source: ImageSource.gallery);
 
@@ -46,4 +46,28 @@ Future<File?> pickVideo() async {
   }
 
   return null;
+}
+
+Future<List<File>?> pickNoCompressedImages() async {
+  try {
+    final picker = ImagePicker();
+    List<XFile> pickedFiles = await picker.pickMultiImage(
+      limit: 5,
+      imageQuality: 40,
+    );
+
+    if (pickedFiles.isNotEmpty) {
+      List<File> files = [];
+
+      for (var file in pickedFiles) {
+        files.add(File(file.path));
+      }
+
+      return files;
+    }
+    return null;
+  } catch (e) {
+    debugPrint('Error picking multiple images: $e');
+    return null;
+  }
 }

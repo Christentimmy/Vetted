@@ -1,4 +1,6 @@
+import 'package:Vetted/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class SafetyResourcesScreen extends StatelessWidget {
   const SafetyResourcesScreen({super.key});
@@ -39,7 +41,9 @@ class SafetyResourcesScreen extends StatelessWidget {
                     title: Text(resource),
                     trailing: const Icon(Icons.chevron_right),
                     onTap: () {
-                      // TODO: Navigate to detailed info or external link
+                      if (resource == "Crime Victim Resource Center") {
+                        Get.toNamed(AppRoutes.courtStateResources);
+                      }
                     },
                   ),
                 );

@@ -28,10 +28,12 @@ import 'package:Vetted/app/modules/profile/views/input_name_screen.dart';
 import 'package:Vetted/app/modules/profile/views/relationship_status_screen.dart';
 import 'package:Vetted/app/modules/profile/views/set_location_screen.dart';
 import 'package:Vetted/app/modules/settings/views/court_resources_screen.dart';
+import 'package:Vetted/app/modules/settings/views/faq_screen.dart';
 import 'package:Vetted/app/modules/settings/views/my_alerts_screen.dart';
 import 'package:Vetted/app/modules/settings/views/my_post_screen.dart';
 import 'package:Vetted/app/modules/settings/views/saved_post_screen.dart';
 import 'package:Vetted/app/modules/settings/views/setting_screen.dart';
+import 'package:Vetted/app/modules/settings/views/support_screen.dart';
 import 'package:Vetted/app/modules/splash/views/splash_screen.dart';
 import 'package:Vetted/app/modules/verification/views/gender_verification_screen.dart';
 import 'package:Vetted/app/modules/verification/views/selfie_disclaimer_screen.dart';
@@ -178,5 +180,7 @@ class AppPages {
     GetPage(name: AppRoutes.myAlertsScreen, page: () => MyAlertsScreen()),
     GetPage(name: AppRoutes.upgradePlanScreen, page: () => UpgradePlanScreen()),
     GetPage(name: AppRoutes.courtStateResources, page: () => CourtResourcesScreen()),
+    GetPage(name: AppRoutes.supportScreen, page: () => SupportScreen()),
+    GetPage(name: AppRoutes.faqScreen, page: () => FAQScreen()),
   ];
 }

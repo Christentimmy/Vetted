@@ -3,6 +3,7 @@ import 'package:Vetted/app/data/models/post_model.dart';
 import 'package:Vetted/app/modules/community/views/community_screen.dart';
 import 'package:Vetted/app/modules/post/views/post_screen.dart';
 import 'package:Vetted/app/modules/post/widgets/poll_widget.dart';
+import 'package:Vetted/app/resources/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 // import 'package:Vetted/app/modules/community/views/community_screen.dart';
@@ -50,7 +51,9 @@ class _MyPostScreenState extends State<MyPostScreen> {
       ),
       body: Obx(() {
         if (isLoading.value) {
-          return const Center(child: CircularProgressIndicator());
+          return Center(
+            child: CircularProgressIndicator(color: AppColors.primaryColor),
+          );
         }
         if (posts.isEmpty) {
           return const Center(child: Text("No posts found"));

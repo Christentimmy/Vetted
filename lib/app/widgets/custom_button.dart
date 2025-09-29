@@ -47,7 +47,7 @@ class CustomButton extends StatelessWidget {
         ),
         child: Obx(() {
           return isLoading.value
-              ? Loader1(color: loaderColor)
+              ? Loader1(color: loaderColor ?? Colors.white)
               : child ?? Text(text.toString(), style: Get.textTheme.bodyMedium);
         }),
       ),

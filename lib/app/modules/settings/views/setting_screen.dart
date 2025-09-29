@@ -7,7 +7,7 @@ import 'package:Vetted/screens/notification_menu_screen.dart';
 import 'package:Vetted/screens/safety_resources_screen.dart';
 // import 'package:Vetted/screens/saved_post_screen.dart';
 // import 'package:Vetted/screens/upgrade_plan_screen.dart';
-import 'package:Vetted/screens/support_screen.dart';
+// import 'package:Vetted/screens/support_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -91,19 +91,23 @@ class SettingScreen extends StatelessWidget {
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 16),
-            _menuItem(icon: Icons.face_unlock_outlined, title: "Face ID"),
+            // _menuItem(icon: Icons.face_unlock_outlined, title: "Face ID"),
             _menuItem(
               icon: Icons.help_outline,
               title: "Frequently Asked Questions",
+              onTap: () {
+                Get.toNamed(AppRoutes.faqScreen);
+              },
             ),
             _menuItem(
               icon: Icons.support_agent_outlined,
               title: "Support",
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const SupportScreen()),
-                );
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(builder: (_) => const SupportScreen()),
+                // );
+                Get.toNamed(AppRoutes.supportScreen);
               },
             ),
             _menuItem(

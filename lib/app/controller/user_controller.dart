@@ -13,8 +13,6 @@ import 'package:get/get.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:app_links/app_links.dart';
 
-
-
 class UserController extends GetxController {
   final _userService = UserService();
   Rxn<UserModel> userModel = Rxn<UserModel>();
@@ -661,6 +659,41 @@ class UserController extends GetxController {
           debugPrint('Error handling deep link: $e');
         }
       });
+    }
+  }
+
+  Future<void> createTicket({
+    required List<File> attachments,
+    required String subject,
+    required String description,
+  }) async {
+    isloading.value = true;
+    try {
+      final storageController = Get.find<StorageController>();
+      final token = await storageController.getToken();
+      if (token == null) return;
+
+      final response = await _userService.createTicket(
+        token: token,
+        attachments: attachments,
+        subject: subject,
+        description: description,
+      );
+
+      if (response == null) return;
+      final decoded = await json.decode(response.body);
+
+      String message = decoded["message"] ?? "";
+      if (response.statusCode != 201) {
+        CustomSnackbar.showErrorToast(message);
+        return;
+      }
+      CustomSnackbar.showSuccessToast(message);
+      Get.offAllNamed(AppRoutes.bottomNavigationWidget);
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      isloading.value = false;
     }
   }
 
