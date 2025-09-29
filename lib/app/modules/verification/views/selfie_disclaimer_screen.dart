@@ -61,7 +61,7 @@ class SelfieDisclaimerScreen extends StatelessWidget {
                 height: 52,
                 child: ElevatedButton(
                   onPressed: () {
-                    Get.toNamed(AppRoutes.genderVerificationScreen);
+                    Get.toNamed(AppRoutes.newVerificationScreen);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.red.shade700,

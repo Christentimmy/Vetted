@@ -15,7 +15,7 @@ class EditProfileScreen extends StatelessWidget {
   final userController = Get.find<UserController>();
   final nameController = TextEditingController();
   final emailController = TextEditingController();
-  final phoneController = TextEditingController();
+  // final phoneController = TextEditingController();
   final addressController = TextEditingController();
 
   final locationModel = Rx<LocationModel?>(null);
@@ -25,7 +25,7 @@ class EditProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     nameController.text = userController.userModel.value?.displayName ?? '';
     emailController.text = userController.userModel.value?.email ?? '';
-    phoneController.text = userController.userModel.value?.phone ?? '';
+    // phoneController.text = userController.userModel.value?.phone ?? '';
     addressController.text =
         userController.userModel.value?.location?.address ?? '';
 
@@ -68,19 +68,19 @@ class EditProfileScreen extends StatelessWidget {
             const SizedBox(height: 12),
 
             // Phone Number
-            CustomTextField(
-              controller: phoneController,
-              hintText: 'Phone number',
-              bgColor: Colors.grey.shade200,
-              enabledBorderColor: Colors.grey.shade300,
-              keyboardType: TextInputType.phone,
-              hintStyle: GoogleFonts.poppins(
-                color: Colors.grey,
-                fontWeight: FontWeight.w400,
-              ),
-            ),
+            // CustomTextField(
+            //   controller: phoneController,
+            //   hintText: 'Phone number',
+            //   bgColor: Colors.grey.shade200,
+            //   enabledBorderColor: Colors.grey.shade300,
+            //   keyboardType: TextInputType.phone,
+            //   hintStyle: GoogleFonts.poppins(
+            //     color: Colors.grey,
+            //     fontWeight: FontWeight.w400,
+            //   ),
+            // ),
 
-            const SizedBox(height: 12),
+            // const SizedBox(height: 12),
 
             // Location Dropdown
             // _dropdownField(cities, selectedCity),
@@ -134,7 +134,7 @@ class EditProfileScreen extends StatelessWidget {
                   final userModel = UserModel(
                     displayName: nameController.text,
                     email: emailController.text,
-                    phone: phoneController.text,
+                    // phone: phoneController.text,
                     location: LocationModel(
                       address: addressController.text,
                       coordinates: locationModel.value?.coordinates,

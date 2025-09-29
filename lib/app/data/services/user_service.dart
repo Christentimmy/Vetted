@@ -179,7 +179,7 @@ class UserService {
       // Attach video file
       request.files.add(
         await http.MultipartFile.fromPath(
-          'video',
+          'media',
           videoFile.path,
           contentType: MediaType('video', 'mp4'),
         ),

@@ -36,6 +36,7 @@ import 'package:Vetted/app/modules/settings/views/setting_screen.dart';
 import 'package:Vetted/app/modules/settings/views/support_screen.dart';
 import 'package:Vetted/app/modules/splash/views/splash_screen.dart';
 import 'package:Vetted/app/modules/verification/views/gender_verification_screen.dart';
+import 'package:Vetted/app/modules/verification/views/new_verification_screen.dart';
 import 'package:Vetted/app/modules/verification/views/selfie_disclaimer_screen.dart';
 import 'package:Vetted/app/routes/app_routes.dart';
 import 'package:Vetted/app/widgets/bottom_navigation_widget.dart';
@@ -182,5 +183,6 @@ class AppPages {
     GetPage(name: AppRoutes.courtStateResources, page: () => CourtResourcesScreen()),
     GetPage(name: AppRoutes.supportScreen, page: () => SupportScreen()),
     GetPage(name: AppRoutes.faqScreen, page: () => FAQScreen()),
+    GetPage(name: AppRoutes.newVerificationScreen, page: () => NewVerificationScreen()),
   ];
 }

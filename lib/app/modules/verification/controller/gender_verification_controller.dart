@@ -183,10 +183,10 @@ class GenderVerificationController extends GetxController {
   }
 
   Future<void> endPointAnalysis() async {
-    if (videoFile == null) return;
-    final gender = await userController.verifyGender(file: videoFile!);
-    if (gender == null) return;
-    detectedGender.value = gender;
+    // if (videoFile == null) return;
+    // final gender = await userController.verifyGender(file: videoFile!);
+    // if (gender == null) return;
+    // detectedGender.value = gender;
   }
 
   void resetVerification() {

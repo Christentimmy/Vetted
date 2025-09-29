@@ -37,4 +37,5 @@ class AppRoutes {
   static const String courtStateResources = '/courtStateResources';
   static const String supportScreen = '/supportScreen';
   static const String faqScreen = '/faqScreen';
+  static const String newVerificationScreen = '/newVerificationScreen';
 }

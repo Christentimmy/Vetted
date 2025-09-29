@@ -37,7 +37,10 @@ class CustomSnackbar {
     ).show(Get.context!);
   }
 
-  static void showSuccessToast(String message) {
+  static void showSuccessToast(
+    String message, {
+    Duration toastDuration = const Duration(milliseconds: 3000),
+  }) {
     CherryToast.success(
       title: Text(
         "Success",
@@ -61,6 +64,7 @@ class CustomSnackbar {
           child: Icon(Icons.check_circle, size: 23, color: Colors.green),
         ),
       ),
+      toastDuration: toastDuration,
       enableIconAnimation: true,
     ).show(Get.context!);
   }

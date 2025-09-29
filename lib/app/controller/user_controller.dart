@@ -181,28 +181,33 @@ class UserController extends GetxController {
     }
   }
 
-  Future<String?> verifyGender({required File file}) async {
+  Future<void> verifyGender({required File file}) async {
+    isloading.value = true;
     try {
       final storageController = Get.find<StorageController>();
       String? token = await storageController.getToken();
-      if (token == null || token.isEmpty) return null;
+      if (token == null || token.isEmpty) return;
       final response = await _userService.verifyGender(
         token: token,
         videoFile: file,
       );
-      if (response == null) return null;
+      if (response == null) return;
       final decoded = json.decode(response.body);
       String message = decoded["message"] ?? "";
-      String gender = decoded["data"] ?? "";
       if (response.statusCode != 200) {
         CustomSnackbar.showErrorToast(message);
-        return null;
+        return;
       }
-      return gender.toLowerCase();
+      CustomSnackbar.showSuccessToast(
+        "Gender application submitted successfully. You will be notified once it is approved.",
+        toastDuration: Duration(seconds: 10),
+      );
+      Get.offAllNamed(AppRoutes.onboardingScreen);
     } catch (e) {
       debugPrint(e.toString());
+    } finally {
+      isloading.value = false;
     }
-    return null;
   }
 
   Future<void> getUserStatus() async {
@@ -221,6 +226,7 @@ class UserController extends GetxController {
         return;
       }
       final decoded = json.decode(response.body);
+      print(decoded);
       String message = decoded["message"];
 
       if (response.statusCode != 200 || message == "Token has expired.") {
@@ -235,24 +241,8 @@ class UserController extends GetxController {
       }
 
       String accountStatus = userData["accountStatus"] ?? "";
-      String phone = userData["phone"] ?? "";
-
-      bool isPhoneVerified = userData["isPhoneVerified"] ?? false;
       if (accountStatus.isEmpty || accountStatus != "active") {
         Get.offAllNamed(AppRoutes.onboardingScreen);
-        return;
-      }
-
-      if (!isPhoneVerified && phone.isNotEmpty) {
-        Get.offAllNamed(
-          AppRoutes.otp,
-          arguments: {
-            "phoneNumber": userData["phone"],
-            "onTap": () async {
-              await getUserStatus();
-            },
-          },
-        );
         return;
       }
 
@@ -309,8 +299,16 @@ class UserController extends GetxController {
       }
 
       bool isProfileCompleted = userData["isProfileCompleted"] ?? false;
-      if (!isProfileCompleted) {
+      String verificationStatus = decoded["vStatus"] ?? "";
+      if (!isProfileCompleted ||
+          verificationStatus.isEmpty ||
+          verificationStatus == "rejected") {
         Get.offAllNamed(AppRoutes.selfieDisclaimer);
+        return;
+      }
+      if (verificationStatus == "pending") {
+        CustomSnackbar.showErrorToast("Your verification is pending");
+        Get.offAllNamed(AppRoutes.onboardingScreen);
         return;
       }
 
