@@ -12,6 +12,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+
+RxBool isBlocked = false.obs;  
+
 Widget buildPostActionRowWidget({
   required PostModel postModel,
   bool? isGhostCard,
@@ -186,14 +189,16 @@ Widget buildOptionAboutPost({
           if (!isAuthor)
             PopupMenuItem(
               value: "block",
-              child: Text(
-                "Block",
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.black87,
-                ),
-              ),
+              child: Obx(() {
+                return Text(
+                  isBlocked.value ? "Unblock" : "Block",
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black87,
+                  ),
+                );
+              }),
             ),
           if (!isAuthor)
             PopupMenuItem(
@@ -258,6 +263,7 @@ Widget buildOptionAboutPost({
         case "block":
           if (postModel.author != null) {
             await userController.toggleBlock(blockId: postModel.author!.id!);
+            isBlocked.value = !isBlocked.value;
           }
           break;
         case "delete":
