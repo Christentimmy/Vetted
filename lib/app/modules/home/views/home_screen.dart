@@ -5,8 +5,10 @@ import 'package:Vetted/app/resources/colors.dart';
 import 'package:Vetted/app/routes/app_routes.dart';
 import 'package:Vetted/app/widgets/custom_button.dart';
 import 'package:Vetted/app/widgets/loaders.dart';
+import 'package:Vetted/app/widgets/staggered_column_animation.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -71,27 +73,36 @@ class _HomeScreenState extends State<HomeScreen> {
           child: RefreshIndicator(
             color: AppColors.primaryColor,
             onRefresh: () => postController.getFeed(showLoader: false),
-            child: ListView(
+            child: SingleChildScrollView(
               controller: scrollController,
               physics: const AlwaysScrollableScrollPhysics(),
-              children: [
-                const SizedBox(height: 12),
-                // buildTopBar(context),
-                buildFirstHeader(context),
-                const SizedBox(height: 20),
-                buildActionRow(context),
-                const SizedBox(height: 20),
-                buildFeed(),
-                SizedBox(height: 12),
-                Obx(() {
-                  if (isLoadingMore.value && postController.posts.isNotEmpty) {
-                    return Loader1();
-                  }
-                  return const SizedBox.shrink();
-                }),
-                SizedBox(height: Get.height * 0.12),
-              ],
+              child: StaggeredColumnAnimation(
+                children: [
+                  const SizedBox(height: 12),
+                  // buildTopBar(context),
+                  buildFirstHeader(context),
+                  const SizedBox(height: 20),
+                  buildActionRow(context),
+                  const SizedBox(height: 20),
+                  buildFeed(),
+                  SizedBox(height: 12),
+                  Obx(() {
+                    if (isLoadingMore.value &&
+                        postController.posts.isNotEmpty) {
+                      return Loader1();
+                    }
+                    return const SizedBox.shrink();
+                  }),
+                  SizedBox(height: Get.height * 0.12),
+                ],
+              ),
             ),
+            // child: ListView(
+            //   controller: scrollController,
+            //   physics: const AlwaysScrollableScrollPhysics(),
+            //   children: [
+            //   ],
+            // ),
           ),
         ),
       ),
@@ -495,20 +506,32 @@ class _HomeScreenState extends State<HomeScreen> {
           child: const Center(child: Text("No posts found")),
         );
       }
-      return GridView.builder(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        itemCount: postController.posts.length,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: 12,
-          mainAxisSpacing: 12,
-          childAspectRatio: 0.8,
+      return AnimationLimiter(
+        child: GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: postController.posts.length,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 12,
+            mainAxisSpacing: 12,
+            childAspectRatio: 0.8,
+          ),
+          itemBuilder: (context, index) {
+            final post = postController.posts[index];
+            return AnimationConfiguration.staggeredGrid(
+              position: index,
+              columnCount: 2, // same as crossAxisCount
+              duration: const Duration(milliseconds: 500),
+              child: SlideAnimation(
+                verticalOffset: 50.0,
+                child: FadeInAnimation(
+                  child: buildDisplayCard(context, post, index),
+                ),
+              ),
+            );
+          },
         ),
-        itemBuilder: (context, index) {
-          final post = postController.posts[index];
-          return buildDisplayCard(context, post, index);
-        },
       );
     });
   }
