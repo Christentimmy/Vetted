@@ -25,6 +25,7 @@ class CustomSnackbar {
       backgroundColor: const Color.fromARGB(216, 244, 67, 54),
       animationDuration: const Duration(milliseconds: 300),
       autoDismiss: true,
+      shadowColor: Colors.transparent,
       borderRadius: 14,
       iconWidget: Padding(
         padding: const EdgeInsets.only(left: 8.0),
@@ -56,6 +57,7 @@ class CustomSnackbar {
       backgroundColor: Colors.green,
       animationDuration: const Duration(milliseconds: 300),
       autoDismiss: true,
+      shadowColor: Colors.transparent,
       borderRadius: 14,
       iconWidget: Padding(
         padding: const EdgeInsets.only(left: 8.0),

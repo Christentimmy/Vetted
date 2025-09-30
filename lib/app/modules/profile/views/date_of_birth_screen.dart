@@ -1,5 +1,7 @@
 import 'package:Vetted/app/controller/user_controller.dart';
+import 'package:Vetted/app/resources/colors.dart';
 import 'package:Vetted/app/widgets/custom_button.dart';
+import 'package:Vetted/app/widgets/staggered_column_animation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -45,7 +47,7 @@ class _DateOfBirthScreenState extends State<DateOfBirthScreen> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: Column(
+          child: StaggeredColumnAnimation(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 30),
@@ -76,6 +78,21 @@ class _DateOfBirthScreenState extends State<DateOfBirthScreen> {
                         firstDate: DateTime(1900),
                         lastDate: DateTime.now(),
                         helpText: 'Select Your Birthday',
+                        builder: (context, child) {
+                          return Theme(
+                            data: ThemeData(
+                              colorScheme: ColorScheme.light(
+                                primary: AppColors.primaryColor,
+                                onPrimary: Colors.white,
+                                onSurface: Colors.black,
+                              ),
+                              dialogTheme: DialogThemeData(
+                                backgroundColor: Colors.white,
+                              ),
+                            ),
+                            child: child!,
+                          );
+                        },
                       );
 
                       if (pickedDate != null) {
@@ -88,12 +105,10 @@ class _DateOfBirthScreenState extends State<DateOfBirthScreen> {
                       padding: const EdgeInsets.symmetric(horizontal: 12),
                       child: Text(
                         "${DateFormat.MMMM().format(_selectedDate)} ${_selectedDate.year}",
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
-                          color: Colors.blue,
-                          // Removed underline 👇
-                          // decoration: TextDecoration.underline,
+                          color: AppColors.primaryColor,
                         ),
                       ),
                     ),
@@ -107,42 +122,40 @@ class _DateOfBirthScreenState extends State<DateOfBirthScreen> {
 
               const SizedBox(height: 16),
               // Calendar Grid
-              Expanded(
-                child: GridView.count(
-                  crossAxisCount: 7,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  mainAxisSpacing: 8,
-                  crossAxisSpacing: 8,
-                  children: List.generate(daysInMonth, (index) {
-                    final day = index + 1;
-                    final isSelected = _selectedDate.day == day;
+              GridView.count(
+                crossAxisCount: 7,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                mainAxisSpacing: 8,
+                crossAxisSpacing: 8,
+                children: List.generate(daysInMonth, (index) {
+                  final day = index + 1;
+                  final isSelected = _selectedDate.day == day;
 
-                    return GestureDetector(
-                      onTap: () => _onDaySelected(day),
-                      child: Container(
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color:
-                              isSelected
-                                  ? Colors.blue.shade100
-                                  : Colors.transparent,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Text(
-                          '$day',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: isSelected ? Colors.black : Colors.black87,
-                          ),
+                  return GestureDetector(
+                    onTap: () => _onDaySelected(day),
+                    child: Container(
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color:
+                            isSelected
+                                ? AppColors.primaryColor
+                                : Colors.transparent,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        '$day',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: isSelected ? Colors.white : Colors.black87,
                         ),
                       ),
-                    );
-                  }),
-                ),
+                    ),
+                  );
+                }),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: Get.height * 0.1),
               CustomButton(
                 ontap: () async {
                   HapticFeedback.lightImpact();

@@ -226,7 +226,6 @@ class UserController extends GetxController {
         return;
       }
       final decoded = json.decode(response.body);
-      print(decoded);
       String message = decoded["message"];
 
       if (response.statusCode != 200 || message == "Token has expired.") {

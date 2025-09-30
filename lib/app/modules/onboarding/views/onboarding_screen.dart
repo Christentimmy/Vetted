@@ -2,6 +2,7 @@ import 'package:Vetted/app/controller/auth_controller.dart';
 import 'package:Vetted/app/resources/colors.dart';
 import 'package:Vetted/app/widgets/custom_button.dart';
 import 'package:Vetted/app/widgets/staggered_column_animation.dart';
+import 'package:cherry_toast/cherry_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -75,7 +76,14 @@ class OnboardingScreen extends StatelessWidget {
                   SizedBox(height: Get.height * 0.1),
 
                   CustomButton(
-                    ontap: () async {},
+                    ontap: () async {
+                      CherryToast.info(
+                        title: const Text('Feature'),
+                        description: const Text(
+                          'This feature will be available soon',
+                        ),
+                      ).show(context);
+                    },
                     bgColor: Colors.black,
                     isLoading: false.obs,
                     child: Row(
@@ -95,7 +103,14 @@ class OnboardingScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 14),
                   CustomButton(
-                    ontap: () async {},
+                    ontap: () async {
+                      CherryToast.info(
+                        title: const Text('Feature'),
+                        description: const Text(
+                          'This feature will be available soon',
+                        ),
+                      ).show(context);
+                    },
                     bgColor: Colors.white,
                     isLoading: false.obs,
                     child: Row(

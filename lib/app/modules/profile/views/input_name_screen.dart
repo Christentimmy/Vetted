@@ -1,5 +1,6 @@
 import 'package:Vetted/app/controller/user_controller.dart';
 import 'package:Vetted/app/widgets/custom_button.dart';
+import 'package:Vetted/app/widgets/staggered_column_animation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -18,9 +19,10 @@ class InputNameScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: Padding(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: Column(
+          child: StaggeredColumnAnimation(
+            duration: Duration(milliseconds: 400),
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 40),

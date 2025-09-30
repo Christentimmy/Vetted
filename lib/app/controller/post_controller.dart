@@ -105,7 +105,7 @@ class PostController extends GetxController {
       final decoded = json.decode(response.body);
       String message = decoded["message"] ?? "";
       if (response.statusCode != 200) {
-        CustomSnackbar.showErrorToast(message);
+        debugPrint(message);
         return;
       }
       List<dynamic> postsList = decoded["data"]?["posts"] ?? [];
@@ -147,7 +147,7 @@ class PostController extends GetxController {
       final decoded = json.decode(response.body);
       String message = decoded["message"] ?? "";
       if (response.statusCode != 200) {
-        CustomSnackbar.showErrorToast(message);
+        debugPrint(message);
         return;
       }
       List<dynamic> postsList = decoded["data"]?["posts"] ?? [];

@@ -1,6 +1,6 @@
-
 import 'package:Vetted/app/routes/app_routes.dart';
 import 'package:Vetted/app/widgets/custom_button.dart';
+import 'package:Vetted/app/widgets/staggered_column_animation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -12,7 +12,6 @@ class HowItWorksScreen extends StatefulWidget {
 }
 
 class _HowItWorksScreenState extends State<HowItWorksScreen> {
-
   final List<_Feature> features = [
     _Feature("assets/images/icons/anonymous.png", "Everything is anonymous"),
     _Feature("assets/images/icons/screenshot.png", "Screenshots are disabled"),
@@ -63,23 +62,9 @@ class _HowItWorksScreenState extends State<HowItWorksScreen> {
             const SizedBox(height: 24),
 
             // Feature List
-            ...features.map(
-              (feature) => Column(
-                children: [
-                  ListTile(
-                    leading: Image.asset(
-                      feature.iconPath,
-                      width: 28,
-                      height: 28,
-                    ),
-                    title: Text(
-                      feature.title,
-                      style: const TextStyle(fontSize: 14),
-                    ),
-                  ),
-                  const Divider(height: 1, thickness: 0.8),
-                ],
-              ),
+            StaggeredColumnAnimation(
+              children:
+                  features.map((feature) => buildFeature(feature)).toList(),
             ),
 
             const Spacer(),
@@ -103,6 +88,18 @@ class _HowItWorksScreenState extends State<HowItWorksScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget buildFeature(_Feature feature) {
+    return Column(
+      children: [
+        ListTile(
+          leading: Image.asset(feature.iconPath, width: 28, height: 28),
+          title: Text(feature.title, style: const TextStyle(fontSize: 14)),
+        ),
+        const Divider(height: 1, thickness: 0.8),
+      ],
     );
   }
 }

@@ -715,8 +715,6 @@ class _HomeScreenState extends State<HomeScreen> {
       children: [
         SlideToCreatePost(),
         const Spacer(),
-
-        // Send button
         GestureDetector(
           onTap: () {
             Get.toNamed(AppRoutes.chatList);
