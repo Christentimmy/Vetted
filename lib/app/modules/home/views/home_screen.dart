@@ -1,12 +1,9 @@
 import 'package:Vetted/app/controller/post_controller.dart';
 import 'package:Vetted/app/data/models/post_model.dart';
-import 'package:Vetted/app/modules/post/widgets/vote_widget.dart';
 import 'package:Vetted/app/resources/colors.dart';
 import 'package:Vetted/app/routes/app_routes.dart';
 import 'package:Vetted/app/widgets/custom_button.dart';
 import 'package:Vetted/app/widgets/loaders.dart';
-// import 'package:Vetted/app/widgets/top_bar.dart';
-// import 'package:Vetted/screens/notification_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -588,26 +585,108 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               );
             }),
+
+            // Positioned(
+            //   bottom: 8,
+            //   left: 8,
+            //   right: 8,
+            //   child: Center(
+            //     child: BidirectionalVoteSwitch(
+            //       leadingFlag: post.stats?.leadingFlag,
+            //       hasVoted: post.hasVoted?.value,
+            //       votedColor: post.votedColor?.value,
+            //       greenCount: post.stats?.greenVotes?.value,
+            //       redCount: post.stats?.redVotes?.value,
+            //       onVote: (String vote) async {
+            //         // Update local state immediately for better UX
+            //         updateUiVote(post: post, vote: vote);
+            //         await postController.voteOnWoman(
+            //           postId: post.id!,
+            //           color: vote,
+            //         );
+            //       },
+            //     ),
+            //   ),
+            // ),
             Positioned(
               bottom: 8,
               left: 8,
               right: 8,
-              child: Center(
-                child: BidirectionalVoteSwitch(
-                  leadingFlag: post.stats?.leadingFlag,
-                  hasVoted: post.hasVoted?.value,
-                  votedColor: post.votedColor?.value,
-                  greenCount: post.stats?.greenVotes?.value,
-                  redCount: post.stats?.redVotes?.value,
-                  onVote: (String vote) async {
-                    // Update local state immediately for better UX
-                    updateUiVote(post: post, vote: vote);
-                    await postController.voteOnWoman(
-                      postId: post.id!,
-                      color: vote,
-                    );
-                  },
-                ),
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  Container(
+                    width: 50,
+                    height: 15,
+                    margin: const EdgeInsets.only(left: 20),
+                    padding: const EdgeInsets.only(right: 9),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade300,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        if (post.stats?.leadingFlag == 'green')
+                          Text(
+                            post.stats?.greenVotes?.value.toString() ?? "0",
+                            style: GoogleFonts.fredoka(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.green,
+                            ),
+                          )
+                        else if (post.stats?.leadingFlag == 'red')
+                          Text(
+                            post.stats?.redVotes?.value.toString() ?? "0",
+                            style: GoogleFonts.fredoka(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.red,
+                            ),
+                          )
+                        else
+                          Text(
+                            "0",
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey,
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                  Center(
+                    child: Container(
+                      width: 32,
+                      height: 32,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.white,
+                        border: Border.all(
+                          color: _getFlagColor(
+                            leadingFlag: post.stats?.leadingFlag,
+                          ),
+                          width: 2,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.2),
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Icon(
+                        Icons.flag,
+                        size: 16,
+                        color: _getFlagColor(
+                          leadingFlag: post.stats?.leadingFlag,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
 
@@ -703,44 +782,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget singleFlagWithCount({
-    required IconData icon,
-    required String leadingFlag,
-    required int? count,
-  }) {
-    return Row(
-      children: [
-        Container(
-          width: 28,
-          height: 28,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: Colors.white,
-            border: Border.all(color: getColor(leadingFlag)),
-          ),
-          child: Icon(icon, size: 14, color: getColor(leadingFlag)),
-        ),
-        const SizedBox(width: 4),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(6),
-            border: Border.all(color: Colors.grey.shade300),
-          ),
-          child: Text(
-            count.toString(),
-            style: const TextStyle(
-              fontSize: 12,
-              color: Colors.black87,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
   void updateUiVote({required PostModel post, required String vote}) async {
     setState(() {
       if (post.stats?.leadingFlag != vote) {
@@ -766,7 +807,10 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-getColor(String leadingFlag) {
+_getFlagColor({required String? leadingFlag}) {
+  if (leadingFlag == null) {
+    return Colors.grey;
+  }
   if (leadingFlag == 'green') {
     return Colors.green;
   } else if (leadingFlag == 'red') {
