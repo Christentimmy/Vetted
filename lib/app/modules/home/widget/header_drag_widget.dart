@@ -1,6 +1,6 @@
-
-
+import 'package:Vetted/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class DraggableCreatePostWidget extends StatefulWidget {
   final VoidCallback onNavigate;
@@ -13,70 +13,58 @@ class DraggableCreatePostWidget extends StatefulWidget {
   });
 
   @override
-  State<DraggableCreatePostWidget> createState() => _DraggableCreatePostWidgetState();
+  State<DraggableCreatePostWidget> createState() =>
+      _DraggableCreatePostWidgetState();
 }
 
 class _DraggableCreatePostWidgetState extends State<DraggableCreatePostWidget>
     with TickerProviderStateMixin {
-  
   late AnimationController _slideController;
   late AnimationController _bounceController;
   late AnimationController _glowController;
-  
+
   late Animation<double> _slideAnimation;
   late Animation<double> _bounceAnimation;
   late Animation<double> _glowAnimation;
-  
+
   double _dragDistance = 0;
   bool _isDragging = false;
   bool _isCompleted = false;
-  
+
   static const double _threshold = 100.0; // Distance needed to trigger action
-  
+
   @override
   void initState() {
     super.initState();
-    
+
     _slideController = AnimationController(
       duration: const Duration(milliseconds: 300),
       vsync: this,
     );
-    
+
     _bounceController = AnimationController(
       duration: const Duration(milliseconds: 150),
       vsync: this,
     );
-    
+
     _glowController = AnimationController(
       duration: const Duration(milliseconds: 1500),
       vsync: this,
     )..repeat();
-    
-    _slideAnimation = Tween<double>(
-      begin: 0,
-      end: 1,
-    ).animate(CurvedAnimation(
-      parent: _slideController,
-      curve: Curves.elasticOut,
-    ));
-    
-    _bounceAnimation = Tween<double>(
-      begin: 1,
-      end: 1.1,
-    ).animate(CurvedAnimation(
-      parent: _bounceController,
-      curve: Curves.elasticOut,
-    ));
-    
-    _glowAnimation = Tween<double>(
-      begin: 0.3,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _glowController,
-      curve: Curves.easeInOut,
-    ));
+
+    _slideAnimation = Tween<double>(begin: 0, end: 1).animate(
+      CurvedAnimation(parent: _slideController, curve: Curves.elasticOut),
+    );
+
+    _bounceAnimation = Tween<double>(begin: 1, end: 1.1).animate(
+      CurvedAnimation(parent: _bounceController, curve: Curves.elasticOut),
+    );
+
+    _glowAnimation = Tween<double>(begin: 0.3, end: 1.0).animate(
+      CurvedAnimation(parent: _glowController, curve: Curves.easeInOut),
+    );
   }
-  
+
   @override
   void dispose() {
     _slideController.dispose();
@@ -84,7 +72,7 @@ class _DraggableCreatePostWidgetState extends State<DraggableCreatePostWidget>
     _glowController.dispose();
     super.dispose();
   }
-  
+
   void _onPanStart(DragStartDetails details) {
     setState(() {
       _isDragging = true;
@@ -92,21 +80,21 @@ class _DraggableCreatePostWidgetState extends State<DraggableCreatePostWidget>
     });
     _bounceController.forward().then((_) => _bounceController.reverse());
   }
-  
+
   void _onPanUpdate(DragUpdateDetails details) {
     setState(() {
       _dragDistance = (details.localPosition.dx - 24).clamp(0.0, _threshold);
     });
-    
+
     // Update slide animation based on drag progress
     _slideController.value = _dragDistance / _threshold;
   }
-  
+
   void _onPanEnd(DragEndDetails details) {
     setState(() {
       _isDragging = false;
     });
-    
+
     if (_dragDistance >= _threshold) {
       // Complete the action
       _completeAction();
@@ -118,12 +106,12 @@ class _DraggableCreatePostWidgetState extends State<DraggableCreatePostWidget>
       });
     }
   }
-  
+
   void _completeAction() {
     setState(() {
       _isCompleted = true;
     });
-    
+
     // Animate to completion
     _slideController.forward().then((_) {
       // Trigger navigation after animation
@@ -133,7 +121,7 @@ class _DraggableCreatePostWidgetState extends State<DraggableCreatePostWidget>
       });
     });
   }
-  
+
   void _resetWidget() {
     Future.delayed(const Duration(milliseconds: 500), () {
       if (mounted) {
@@ -145,11 +133,15 @@ class _DraggableCreatePostWidgetState extends State<DraggableCreatePostWidget>
       }
     });
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: Listenable.merge([_slideAnimation, _bounceAnimation, _glowAnimation]),
+      animation: Listenable.merge([
+        _slideAnimation,
+        _bounceAnimation,
+        _glowAnimation,
+      ]),
       builder: (context, child) {
         return Transform.scale(
           scale: _bounceAnimation.value,
@@ -175,22 +167,19 @@ class _DraggableCreatePostWidgetState extends State<DraggableCreatePostWidget>
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                
+
                 // Progress indicator
                 if (_dragDistance > 0)
                   Container(
                     width: _dragDistance + 48,
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
-                        colors: [
-                          Colors.red.shade600,
-                          Colors.red.shade800,
-                        ],
+                        colors: [Colors.red.shade600, Colors.red.shade800],
                       ),
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                
+
                 // Content
                 GestureDetector(
                   onPanStart: _onPanStart,
@@ -226,11 +215,9 @@ class _DraggableCreatePostWidgetState extends State<DraggableCreatePostWidget>
                             ),
                           ),
                         ),
-                        
+
                         // Arrow indicators
-                        Expanded(
-                          child: _buildArrowTrail(),
-                        ),
+                        Expanded(child: _buildArrowTrail()),
                       ],
                     ),
                   ),
@@ -242,16 +229,16 @@ class _DraggableCreatePostWidgetState extends State<DraggableCreatePostWidget>
       },
     );
   }
-  
+
   Widget _buildArrowTrail() {
     final progress = _dragDistance / _threshold;
-    
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: List.generate(4, (index) {
         final opacity = _calculateArrowOpacity(index, progress);
         final scale = _calculateArrowScale(index, progress);
-        
+
         return Padding(
           padding: const EdgeInsets.only(left: 4),
           child: Transform.scale(
@@ -266,15 +253,95 @@ class _DraggableCreatePostWidgetState extends State<DraggableCreatePostWidget>
       }),
     );
   }
-  
+
   double _calculateArrowOpacity(int index, double progress) {
     final baseOpacity = [0.4, 0.6, 0.8, 1.0][index];
     final animatedOpacity = (progress * 2 - index * 0.2).clamp(0.0, 1.0);
     return baseOpacity * (0.3 + 0.7 * animatedOpacity);
   }
-  
+
   double _calculateArrowScale(int index, double progress) {
     final wave = (progress * 4 - index).clamp(0.0, 1.0);
     return 0.8 + 0.4 * wave;
+  }
+}
+
+class SlideToCreatePost extends StatefulWidget {
+  const SlideToCreatePost({super.key});
+
+  @override
+  State<SlideToCreatePost> createState() => _SlideToCreatePostState();
+}
+
+class _SlideToCreatePostState extends State<SlideToCreatePost> {
+  double _alignmentX = -1; // start at left
+
+  void _onDragUpdate(DragUpdateDetails details) {
+    setState(() {
+      _alignmentX += details.primaryDelta! / 100;
+      _alignmentX = _alignmentX.clamp(-1.0, 1.0);
+    });
+  }
+
+  void _onDragEnd(DragEndDetails details) async {
+    if (_alignmentX > 0.6) {
+      await Future.delayed(const Duration(milliseconds: 130));
+      Get.toNamed(AppRoutes.createPostScreen);
+    }
+    // reset back
+    setState(() => _alignmentX = -1);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 48,
+      width: MediaQuery.of(context).size.width * 0.4,
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      decoration: BoxDecoration(
+        color: Colors.red.shade700,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Stack(
+        children: [
+          // The arrows background
+          Center(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: const [
+                Icon(Icons.arrow_forward_ios, color: Colors.white, size: 14),
+                Icon(Icons.arrow_forward_ios, color: Colors.white70, size: 14),
+                Icon(Icons.arrow_forward_ios, color: Colors.white54, size: 14),
+                Icon(Icons.arrow_forward_ios, color: Colors.white38, size: 14),
+              ],
+            ),
+          ),
+
+          // Draggable edit icon
+          GestureDetector(
+            onHorizontalDragUpdate: _onDragUpdate,
+            onHorizontalDragEnd: _onDragEnd,
+            child: AnimatedAlign(
+              duration: const Duration(milliseconds: 150),
+              curve: Curves.easeOut,
+              alignment: Alignment(_alignmentX, 0),
+              child: Container(
+                height: 30,
+                width: 30,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  color: Colors.white,
+                ),
+                child: const Icon(
+                  Icons.edit_square,
+                  color: Colors.red,
+                  size: 20,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

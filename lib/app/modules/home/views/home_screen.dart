@@ -1,5 +1,6 @@
 import 'package:Vetted/app/controller/post_controller.dart';
 import 'package:Vetted/app/data/models/post_model.dart';
+import 'package:Vetted/app/modules/home/widget/header_drag_widget.dart';
 import 'package:Vetted/app/resources/colors.dart';
 import 'package:Vetted/app/routes/app_routes.dart';
 import 'package:Vetted/app/widgets/custom_button.dart';
@@ -21,7 +22,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final Set<int> likedProfiles = {};
   final postController = Get.find<PostController>();
   RxBool isLoadingMore = false.obs;
   ScrollController scrollController = ScrollController();
@@ -713,46 +713,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Row buildActionRow(BuildContext context) {
     return Row(
       children: [
-        GestureDetector(
-          onHorizontalDragEnd: (details) {
-            if (details.primaryVelocity != null &&
-                details.primaryVelocity! > 0) {
-              Get.toNamed(AppRoutes.createPostScreen);
-            }
-          },
-          child: Container(
-            height: 48,
-            width: MediaQuery.of(context).size.width * 0.45,
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            decoration: BoxDecoration(
-              color: Colors.red.shade700,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Container(
-                  height: 30,
-                  width: 30,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    color: Colors.white,
-                  ),
-                  child: const Icon(
-                    Icons.edit_square,
-                    color: Colors.red,
-                    size: 20,
-                  ),
-                ),
-                Icon(Icons.arrow_forward_ios, color: Colors.white, size: 14),
-                Icon(Icons.arrow_forward_ios, color: Colors.white70, size: 14),
-                Icon(Icons.arrow_forward_ios, color: Colors.white54, size: 14),
-                Icon(Icons.arrow_forward_ios, color: Colors.white38, size: 14),
-              ],
-            ),
-          ),
-        ),
-
+        SlideToCreatePost(),
         const Spacer(),
 
         // Send button
