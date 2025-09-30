@@ -3,14 +3,15 @@ import 'package:Vetted/app/data/models/post_model.dart';
 import 'package:Vetted/app/modules/post/widgets/vote_widget.dart';
 import 'package:Vetted/app/resources/colors.dart';
 import 'package:Vetted/app/routes/app_routes.dart';
+import 'package:Vetted/app/widgets/custom_button.dart';
 import 'package:Vetted/app/widgets/loaders.dart';
-import 'package:Vetted/app/widgets/top_bar.dart';
-import 'package:Vetted/screens/message_list_screen.dart';
+// import 'package:Vetted/app/widgets/top_bar.dart';
 // import 'package:Vetted/screens/notification_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
 
 import 'package:visibility_detector/visibility_detector.dart';
@@ -27,6 +28,14 @@ class _HomeScreenState extends State<HomeScreen> {
   final postController = Get.find<PostController>();
   RxBool isLoadingMore = false.obs;
   ScrollController scrollController = ScrollController();
+
+  String sortBy = 'newest';
+  bool showRedFlag = true;
+  bool showGreenFlag = true;
+  RangeValues ageRange = const RangeValues(18, 75);
+
+  final locationAddressController = TextEditingController();
+  final nameController = TextEditingController();
 
   @override
   void initState() {
@@ -70,7 +79,8 @@ class _HomeScreenState extends State<HomeScreen> {
               physics: const AlwaysScrollableScrollPhysics(),
               children: [
                 const SizedBox(height: 12),
-                buildTopBar(context),
+                // buildTopBar(context),
+                buildFirstHeader(context),
                 const SizedBox(height: 20),
                 buildActionRow(context),
                 const SizedBox(height: 20),
@@ -88,6 +98,387 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Row buildFirstHeader(BuildContext context) {
+    return Row(
+      children: [
+        Image.asset('assets/images/logo_black.png', height: 28),
+        const SizedBox(width: 8),
+        const Text(
+          "Vetted",
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+        ),
+        const Spacer(),
+
+        // Search bar with filter
+        Container(
+          width: 160,
+          height: 36,
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          decoration: BoxDecoration(
+            color: Colors.grey.shade200,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Row(
+            children: [
+              const Icon(Icons.search, size: 18, color: Colors.grey),
+              const SizedBox(width: 6),
+              const Expanded(
+                child: TextField(
+                  decoration: InputDecoration(
+                    hintText: 'Search',
+                    border: InputBorder.none,
+                    isCollapsed: true,
+                  ),
+                  style: TextStyle(fontSize: 14),
+                ),
+              ),
+
+              IconButton(
+                onPressed: () {
+                  buildFilterBottomSheet(context);
+                },
+                icon: Icon(Icons.filter_list, size: 18, color: Colors.grey),
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(width: 12),
+
+        // Notifications
+        GestureDetector(
+          onTap: () {
+            Get.toNamed(AppRoutes.notificationScreen);
+          },
+          child: const Icon(Icons.notifications_none),
+        ),
+      ],
+    );
+  }
+
+  Future<dynamic> buildFilterBottomSheet(BuildContext context) {
+    return showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Padding(
+          padding: EdgeInsets.only(
+            left: 24,
+            right: 24,
+            top: 24,
+            bottom: MediaQuery.of(context).viewInsets.bottom + 36,
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  "Filter posts",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 20),
+
+                TextField(
+                  controller: nameController,
+                  decoration: InputDecoration(
+                    hintText: 'Name',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    contentPadding: const EdgeInsets.all(12),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(
+                        color: AppColors.primaryColor,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: locationAddressController,
+                  decoration: InputDecoration(
+                    hintText: 'Search location',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    contentPadding: const EdgeInsets.all(12),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(
+                        color: AppColors.primaryColor,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+
+                // AGE RANGE
+                const Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "Age range",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                  ),
+                ),
+                RangeSlider(
+                  activeColor: AppColors.primaryColor,
+                  values: ageRange,
+                  min: 18,
+                  max: 75,
+                  divisions: 57,
+                  labels: RangeLabels(
+                    "${ageRange.start.round()}",
+                    "${ageRange.end.round()}",
+                  ),
+                  onChanged: (values) {
+                    setState(() => ageRange = values);
+                  },
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "From ${ageRange.start.round()} to ${ageRange.end.round()}",
+                    style: const TextStyle(color: Colors.black54),
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+
+                // SORT BY
+                const Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "Sort by",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Radio<String>(
+                      activeColor: AppColors.primaryColor,
+                      value: 'newest',
+                      groupValue: sortBy,
+                      onChanged: (value) => setState(() => sortBy = value!),
+                    ),
+                    const Text('Newest'),
+                    Radio<String>(
+                      activeColor: AppColors.primaryColor,
+                      value: 'oldest',
+                      groupValue: sortBy,
+                      onChanged: (value) => setState(() => sortBy = value!),
+                    ),
+                    const Text('Oldest'),
+                  ],
+                ),
+
+                const SizedBox(height: 8),
+
+                // RED & GREEN FLAG TOGGLES (Icon-Based)
+                Row(
+                  children: [
+                    Expanded(
+                      child: InkWell(
+                        onTap: () => setState(() => showRedFlag = !showRedFlag),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey.shade300),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Column(
+                            children: [
+                              const Text("Post has"),
+                              const SizedBox(height: 6),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.flag,
+                                    size: 20,
+                                    color:
+                                        showRedFlag ? Colors.red : Colors.grey,
+                                  ),
+                                  const SizedBox(width: 6),
+                                  Icon(
+                                    Icons.flag,
+                                    size: 20,
+                                    color:
+                                        showRedFlag ? Colors.red : Colors.grey,
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: InkWell(
+                        onTap:
+                            () =>
+                                setState(() => showGreenFlag = !showGreenFlag),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey.shade300),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Column(
+                            children: [
+                              const Text("Post has"),
+                              const SizedBox(height: 6),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.flag,
+                                    size: 20,
+                                    color:
+                                        showGreenFlag
+                                            ? Colors.green
+                                            : Colors.grey,
+                                  ),
+                                  const SizedBox(width: 6),
+                                  Icon(
+                                    Icons.flag,
+                                    size: 20,
+                                    color:
+                                        showGreenFlag
+                                            ? Colors.green
+                                            : Colors.grey,
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 24),
+
+                // FILTER BUTTON
+                Row(
+                  children: [
+                    CustomButton(
+                      width: Get.width * 0.25,
+                      ontap: () async {
+                        Get.back();
+                        nameController.clear();
+                        locationAddressController.clear();
+                        ageRange = const RangeValues(18, 75);
+                        sortBy = 'newest';
+                        showRedFlag = true;
+                        showGreenFlag = true;
+                        await postController.getFeed();
+                      },
+                      isLoading: false.obs,
+                      bgColor: Colors.transparent,
+                      border: Border.all(color: AppColors.primaryColor),
+                      child: Text(
+                        "Reset",
+                        style: GoogleFonts.poppins(
+                          color: AppColors.primaryColor,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            final postController = Get.find<PostController>();
+                            List<PostModel> filteredPosts = List.from(
+                              postController.posts,
+                            );
+
+                            // Filter by location if provided
+                            if (locationAddressController.text.isNotEmpty) {
+                              final locationQuery =
+                                  locationAddressController.text.toLowerCase();
+                              filteredPosts =
+                                  filteredPosts.where((post) {
+                                    return post.personLocation
+                                            ?.toLowerCase()
+                                            .contains(locationQuery) ??
+                                        false;
+                                  }).toList();
+                            }
+
+                            // Filter by name if provided
+                            if (nameController.text.isNotEmpty) {
+                              final nameQuery =
+                                  nameController.text.toLowerCase();
+                              filteredPosts =
+                                  filteredPosts.where((post) {
+                                    return post.personName
+                                            ?.toLowerCase()
+                                            .contains(nameQuery) ??
+                                        false;
+                                  }).toList();
+                            }
+
+                            // Filter by age range
+                            filteredPosts =
+                                filteredPosts.where((post) {
+                                  if (post.personAge == null) return false;
+                                  final age =
+                                      int.tryParse(post.personAge!) ?? 0;
+                                  return age >= ageRange.start &&
+                                      age <= ageRange.end;
+                                }).toList();
+
+                            // Sort by selected option (newest/oldest)
+                            if (sortBy == 'newest') {
+                              filteredPosts.sort(
+                                (a, b) => b.createdAt!.compareTo(a.createdAt!),
+                              );
+                            } else {
+                              filteredPosts.sort(
+                                (a, b) => a.createdAt!.compareTo(b.createdAt!),
+                              );
+                            }
+
+                            // Update the posts list in the controller
+                            postController.posts.value = filteredPosts.obs;
+
+                            // Close the bottom sheet
+                            Navigator.pop(context);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.primaryColor,
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          child: const Text(
+                            'Filter',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -180,25 +571,23 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
 
-            Positioned(
-              top: 6,
-              right: 6,
-              child: GestureDetector(
-                onTap: () {
-                  setState(() {
-                    likedProfiles.contains(index)
-                        ? likedProfiles.remove(index)
-                        : likedProfiles.add(index);
-                  });
-                },
-                child: Icon(
-                  likedProfiles.contains(index)
-                      ? Icons.favorite
-                      : Icons.favorite_border,
-                  color: Colors.white,
+            Obx(() {
+              return Positioned(
+                top: 6,
+                right: 6,
+                child: GestureDetector(
+                  onTap: () async {
+                    await postController.toggleSavePost(postId: post.id!);
+                  },
+                  child: Icon(
+                    post.isBookmarked!.value
+                        ? Icons.favorite
+                        : Icons.favorite_border,
+                    color: Colors.white,
+                  ),
                 ),
-              ),
-            ),
+              );
+            }),
             Positioned(
               bottom: 8,
               left: 8,
@@ -290,10 +679,7 @@ class _HomeScreenState extends State<HomeScreen> {
         // Send button
         GestureDetector(
           onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const MessageListScreen()),
-            );
+            Get.toNamed(AppRoutes.chatList);
           },
           child: Container(
             height: 48,
@@ -360,14 +746,16 @@ class _HomeScreenState extends State<HomeScreen> {
       if (post.stats?.leadingFlag != vote) {
         // Remove previous vote count
         if (post.stats?.leadingFlag == 'green') {
-          post.stats?.greenVotes?.value = (post.stats?.greenVotes?.value ?? 1) - 1;
+          post.stats?.greenVotes?.value =
+              (post.stats?.greenVotes?.value ?? 1) - 1;
         } else if (post.stats?.leadingFlag == 'red') {
           post.stats?.redVotes?.value = (post.stats?.redVotes?.value ?? 1) - 1;
         }
 
         // Add new vote count
         if (vote == 'green') {
-          post.stats?.greenVotes?.value = (post.stats?.greenVotes?.value ?? 0) + 1;
+          post.stats?.greenVotes?.value =
+              (post.stats?.greenVotes?.value ?? 0) + 1;
         } else {
           post.stats?.redVotes?.value = (post.stats?.redVotes?.value ?? 0) + 1;
         }

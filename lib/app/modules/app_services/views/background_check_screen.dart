@@ -4,10 +4,6 @@ import 'package:Vetted/app/utils/image_picker.dart';
 import 'package:Vetted/app/widgets/snack_bar.dart';
 import 'package:Vetted/app/widgets/top_bar.dart';
 import 'package:flutter/material.dart';
-// import 'package:Vetted/screens/criminal_record_search_screen.dart';
-// import 'package:Vetted/screens/reverse_image_screen.dart';
-// import 'package:Vetted/screens/sex_offenders_map_screen.dart';
-import 'package:Vetted/screens/court_search_resource_screen.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -203,12 +199,13 @@ class BackgroundCheckScreen extends StatelessWidget {
               "View Resources",
               Colors.green,
               () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => const CourtSearchResourceScreen(),
-                  ),
-                );
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (_) => const CourtSearchResourceScreen(),
+                //   ),
+                // );
+                Get.toNamed(AppRoutes.courtStateResources);
               },
             ),
             SizedBox(height: Get.height * 0.12),

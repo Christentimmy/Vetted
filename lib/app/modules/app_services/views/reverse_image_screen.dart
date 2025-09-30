@@ -47,7 +47,6 @@ class _ReverseImageScreenState extends State<ReverseImageScreen> {
           ),
           itemBuilder: (context, index) {
             final image = appServiceController.images[index];
-
             return _MatchTile(searchImage: image);
           },
         ),

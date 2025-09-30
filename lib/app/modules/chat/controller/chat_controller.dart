@@ -101,8 +101,9 @@ class ChatController extends GetxController {
   void scrollToMessage(String? messageId) {
     final messageController = Get.find<MessageController>();
     if (messageId == null) return;
-    final messageIndex = messageController.chatHistoryAndLiveMessage
-        .indexWhere((msg) => msg.id == messageId);
+    final messageIndex = messageController.chatHistoryAndLiveMessage.indexWhere(
+      (msg) => msg.id == messageId,
+    );
     if (messageIndex == -1) return;
     final reversedIndex =
         messageController.chatHistoryAndLiveMessage.length - 1 - messageIndex;
@@ -227,7 +228,8 @@ class ChatController extends GetxController {
     );
 
     final multipleIMages = mediaController.multipleMediaSelected;
-    dynamic selectedFile = mediaController.selectedFile.value ??
+    dynamic selectedFile =
+        mediaController.selectedFile.value ??
         audioController.selectedFile.value;
     if (multipleIMages.isNotEmpty && multipleIMages.length == 1) {
       selectedFile = multipleIMages[0];
@@ -236,7 +238,8 @@ class ChatController extends GetxController {
 
     if (selectedFile != null) {
       isUploading.value = true;
-      final messageType = mediaController.getFileType(selectedFile.path) ??
+      final messageType =
+          mediaController.getFileType(selectedFile.path) ??
           audioController.getFileType(selectedFile.path) ??
           "image";
 
@@ -253,14 +256,15 @@ class ChatController extends GetxController {
       messageController.chatHistoryAndLiveMessage.add(tempMessage);
 
       dynamic res = await MessageService().uploadMedia(selectedFile);
+      print(res);
       if (res == null) {
         isUploading.value = false;
         CustomSnackbar.showErrorToast("Error Uploading Media");
         return;
       }
-      String? mediaUrl = res["mediaUrl"];
-      String? uploadedMessageType = res["messageType"];
-      String? mediaIv = res["mediaIv"];
+      String? mediaUrl = res["data"]["mediaUrl"];
+      String? uploadedMessageType = res["data"]["messageType"];
+      String? mediaIv = res["data"]["mediaIv"];
 
       isUploading.value = false;
 
@@ -287,20 +291,22 @@ class ChatController extends GetxController {
         status: "sending",
         tempFile: selectedFile,
         clientGeneratedId: tempId,
-        multipleImages: multipleIMages.map((e) {
-          return MultipleImages(
-            mediaIv: "",
-            mediaUrl: File(e.path),
-            filename: e.path,
-            mimetype: "image",
-          );
-        }).toList(),
+        multipleImages:
+            multipleIMages.map((e) {
+              return MultipleImages(
+                mediaIv: "",
+                mediaUrl: File(e.path),
+                filename: e.path,
+                mimetype: "image",
+              );
+            }).toList(),
       );
 
       messageController.chatHistoryAndLiveMessage.add(tempMessage);
 
-      dynamic res =
-          await MessageService().uploadMultiplePictures(multipleIMages);
+      dynamic res = await MessageService().uploadMultiplePictures(
+        multipleIMages,
+      );
       if (res == null) {
         isUploading.value = false;
         CustomSnackbar.showErrorToast("Error Uploading Pictures");
@@ -324,6 +330,7 @@ class ChatController extends GetxController {
       tempMessage.status = "sent";
     }
     // Send the message
+
     socketController.sendMessage(message: messageModel);
     replyToMessage.value = null;
     scrollToBottom();
@@ -344,9 +351,7 @@ class ChatController extends GetxController {
     if (messageController.chatHistoryAndLiveMessage.isEmpty) return;
     final clonedMessages = [...messageController.chatHistoryAndLiveMessage];
     messageController.savedChatToAvoidLoading[userId] =
-        RxList<MessageModel>.from(
-      clonedMessages,
-    );
+        RxList<MessageModel>.from(clonedMessages);
     messageController.chatHistoryAndLiveMessage.clear();
     textMessageController.clear();
   }

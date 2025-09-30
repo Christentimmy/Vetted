@@ -72,6 +72,7 @@ void _showFilterPopup(BuildContext context) {
   RangeValues ageRange = const RangeValues(18, 75);
 
   final locationAddressController = TextEditingController();
+  final nameController = TextEditingController();
 
   showModalBottomSheet(
     context: context,
@@ -100,12 +101,23 @@ void _showFilterPopup(BuildContext context) {
                   ),
                   const SizedBox(height: 20),
 
-                  const Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text("Anonymous", style: TextStyle(fontSize: 16)),
+                  TextField(
+                    controller: nameController,
+                    decoration: InputDecoration(
+                      hintText: 'Name',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      contentPadding: const EdgeInsets.all(12),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(
+                          color: AppColors.primaryColor,
+                        ),
+                      ),
+                    ),
                   ),
                   const SizedBox(height: 12),
-
                   TextField(
                     controller: locationAddressController,
                     decoration: InputDecoration(
@@ -114,6 +126,12 @@ void _showFilterPopup(BuildContext context) {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       contentPadding: const EdgeInsets.all(12),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(
+                          color: AppColors.primaryColor,
+                        ),
+                      ),
                     ),
                   ),
 
@@ -329,6 +347,18 @@ void _showFilterPopup(BuildContext context) {
                                 return post.personLocation
                                         ?.toLowerCase()
                                         .contains(locationQuery) ??
+                                    false;
+                              }).toList();
+                        }
+
+                        // Filter by name if provided
+                        if (nameController.text.isNotEmpty) {
+                          final nameQuery = nameController.text.toLowerCase();
+                          filteredPosts =
+                              filteredPosts.where((post) {
+                                return post.personName?.toLowerCase().contains(
+                                      nameQuery,
+                                    ) ??
                                     false;
                               }).toList();
                         }

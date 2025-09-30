@@ -197,14 +197,22 @@ class PostController extends GetxController {
   }
 
   Future<void> toggleSavePost({required String postId}) async {
-    final postIndex = postsCommunity.indexWhere(
+    final normalFeedIndex = posts.indexWhere((element) => element.id == postId);
+    if (normalFeedIndex != -1) {
+      posts[normalFeedIndex].isBookmarked!.value =
+          !posts[normalFeedIndex].isBookmarked!.value;
+      posts.refresh();
+    }
+
+    final communityFeedIndex = postsCommunity.indexWhere(
       (element) => element.id == postId,
     );
 
-    if (postIndex == -1) return;
-    postsCommunity[postIndex].isBookmarked!.value =
-        !postsCommunity[postIndex].isBookmarked!.value;
-    postsCommunity.refresh();
+    if (communityFeedIndex != -1) {
+      postsCommunity[communityFeedIndex].isBookmarked!.value =
+          !postsCommunity[communityFeedIndex].isBookmarked!.value;
+      postsCommunity.refresh();
+    }
     try {
       final storageController = Get.find<StorageController>();
       final token = await storageController.getToken();

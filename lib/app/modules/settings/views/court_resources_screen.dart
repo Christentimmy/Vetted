@@ -1,9 +1,27 @@
 import 'package:Vetted/app/resources/colors.dart';
-import 'package:Vetted/app/utils/url_launcher.dart';
+// import 'package:Vetted/app/utils/url_launcher.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CourtResourcesScreen extends StatelessWidget {
   const CourtResourcesScreen({super.key});
+
+  Future<void> urlLauncher(String url) async {
+    final Uri uri = Uri.parse(url);
+    
+    final Uri encodedUri = Uri(
+      scheme: uri.scheme,
+      host: uri.host,
+      path: uri.path,
+      query: uri.query,
+    );
+
+    try {
+      await launchUrl(encodedUri, mode: LaunchMode.externalApplication);
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

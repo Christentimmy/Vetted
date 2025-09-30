@@ -10,6 +10,7 @@ import 'package:Vetted/app/modules/app_services/views/reverse_image_screen.dart'
 import 'package:Vetted/app/modules/auth/views/otp_screen.dart';
 import 'package:Vetted/app/modules/auth/views/phone_number_screen.dart';
 import 'package:Vetted/app/modules/chat/views/chat_screen.dart';
+import 'package:Vetted/app/modules/chat/views/message_list_screen.dart';
 import 'package:Vetted/app/modules/community/views/community_screen.dart';
 import 'package:Vetted/app/modules/home/views/home_screen.dart';
 import 'package:Vetted/app/modules/notification/views/notification_screen.dart';
@@ -184,5 +185,6 @@ class AppPages {
     GetPage(name: AppRoutes.supportScreen, page: () => SupportScreen()),
     GetPage(name: AppRoutes.faqScreen, page: () => FAQScreen()),
     GetPage(name: AppRoutes.newVerificationScreen, page: () => NewVerificationScreen()),
+    GetPage(name: AppRoutes.chatList, page: () => MessageListScreen()),
   ];
 }

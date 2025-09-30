@@ -39,72 +39,68 @@ class _MessageListScreenState extends State<MessageListScreen> {
         if (messageController.allChattedUserList.isEmpty) {
           return const Center(child: Text("No Chatted User"));
         }
-        return ListView.builder(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          itemCount: messageController.allChattedUserList.length,
-          itemBuilder: (context, index) {
-            final msg = messageController.allChattedUserList[index];
-            return GestureDetector(
-              onTap: () {
-                Get.toNamed(AppRoutes.chatScreen, arguments: {'chatHead': msg});
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder:
-                //         (context) =>
-                //             InboxScreen(username: msg.displayName ?? ""),
-                //   ),
-                // );
-              },
-              child: Container(
-                margin: const EdgeInsets.only(bottom: 12),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 14,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade100,
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            msg.displayName ?? "",
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15,
+        return RefreshIndicator(
+          color: AppColors.primaryColor,
+          onRefresh: ()=> messageController.getChatList(showLoading: false),
+          child: ListView.builder(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            itemCount: messageController.allChattedUserList.length,
+            itemBuilder: (context, index) {
+              final msg = messageController.allChattedUserList[index];
+              return GestureDetector(
+                onTap: () {
+                  Get.toNamed(AppRoutes.chatScreen, arguments: {'chatHead': msg});
+                },
+                child: Container(
+                  margin: const EdgeInsets.only(bottom: 12),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 14,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade100,
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              msg.displayName ?? "",
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            msg.lastMessage ?? "",
-                            style: const TextStyle(
-                              fontSize: 13,
-                              color: Colors.black54,
+                            const SizedBox(height: 4),
+                            Text(
+                              msg.lastMessage ?? "",
+                              style: const TextStyle(
+                                fontSize: 13,
+                                color: Colors.black54,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      msg.unreadCount.toString(),
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Colors.black45,
+                      const SizedBox(width: 8),
+                      Text(
+                        msg.unreadCount.toString(),
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.black45,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         );
       }),
     );

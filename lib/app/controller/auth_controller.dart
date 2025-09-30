@@ -26,6 +26,7 @@ class AuthController extends GetxController {
       if (googleUser == null) {
         return;
       }
+      print(googleUser);
       final googleAuth = googleUser.authentication;
       final String? idToken = googleAuth.idToken;
       if (idToken == null) return;

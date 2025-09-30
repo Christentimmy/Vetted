@@ -25,7 +25,7 @@ class SocketController extends GetxController {
       return;
     }
 
-    socket = IO.io("https://vetted-backend.onrender.com", <String, dynamic>{
+    socket = IO.io("https://e0670aa9d887.ngrok-free.app", <String, dynamic>{
       'transports': ['websocket'],
       'extraHeaders': {'Authorization': 'Bearer $token'},
       'reconnection': true,
@@ -127,6 +127,7 @@ class SocketController extends GetxController {
   }
 
   void sendMessage({required MessageModel message}) {
+    print(message.toJson());
     if (socket != null && socket!.connected) {
       socket?.emit("send-message", message.toJson());
     }
