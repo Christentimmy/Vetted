@@ -1,5 +1,7 @@
 import 'package:Vetted/app/controller/user_controller.dart';
 import 'package:Vetted/app/widgets/custom_button.dart';
+import 'package:Vetted/app/widgets/snack_bar.dart';
+import 'package:Vetted/app/widgets/staggered_column_animation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -38,10 +40,10 @@ class _RelationshipStatusScreenState extends State<RelationshipStatusScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: Padding(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+          child: StaggeredColumnAnimation(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 40),
               const Text(
@@ -50,53 +52,49 @@ class _RelationshipStatusScreenState extends State<RelationshipStatusScreen> {
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 24),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: _statuses.length,
-                  itemBuilder: (context, index) {
-                    final status = _statuses[index];
-                    final isSelected = _selectedStatus == status;
-
-                    return GestureDetector(
-                      onTap: () => _onSelect(status),
-                      child: Container(
-                        margin: const EdgeInsets.only(bottom: 16),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 16,
-                        ),
-                        decoration: BoxDecoration(
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: _statuses.length,
+                itemBuilder: (context, index) {
+                  final status = _statuses[index];
+                  final isSelected = _selectedStatus == status;
+                  return GestureDetector(
+                    onTap: () => _onSelect(status),
+                    child: Container(
+                      margin: const EdgeInsets.only(bottom: 16),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 16,
+                      ),
+                      decoration: BoxDecoration(
+                        color:
+                            isSelected
+                                ? Colors.grey.shade300
+                                : const Color(0xFFF5F5F5),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
                           color:
-                              isSelected
-                                  ? Colors.grey.shade300
-                                  : const Color(0xFFF5F5F5),
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color:
-                                isSelected
-                                    ? Colors.black87
-                                    : Colors.transparent,
-                          ),
-                        ),
-                        child: Text(
-                          status,
-                          style: const TextStyle(fontSize: 16),
+                              isSelected ? Colors.black87 : Colors.transparent,
                         ),
                       ),
-                    );
-                  },
-                ),
+                      child: Text(status, style: const TextStyle(fontSize: 16)),
+                    ),
+                  );
+                },
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: Get.height * 0.1),
               CustomButton(
                 ontap: () async {
-                  if (_selectedStatus == null) return;
+                  if (_selectedStatus == null){
+                    CustomSnackbar.showErrorToast("Select Status");
+                    return;
+                  }
                   await userController.updateRelationStatus(
                     relationStatus: _selectedStatus!,
                     whatNext: widget.whatNext,
                   );
                 },
-                text: "Single",
                 isLoading: userController.isloading,
                 loaderColor: Colors.white,
                 child: Text(

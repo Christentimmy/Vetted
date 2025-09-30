@@ -23,10 +23,13 @@ class SplashScreen extends StatelessWidget {
         child: Center(
           child: FadeTransition(
             opacity: splashController.fadeAnimation,
-            child: Image.asset(
-              'assets/images/v_logo_1.png',
-              width: 100,
-              height: 100,
+            child: ScaleTransition(
+              scale: splashController.scaleAnimation,
+              child: Image.asset(
+                'assets/images/v_logo_1.png',
+                width: 100,
+                height: 100,
+              ),
             ),
           ),
         ),

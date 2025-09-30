@@ -2,6 +2,8 @@ import 'package:Vetted/app/controller/location_controller.dart';
 import 'package:Vetted/app/controller/user_controller.dart';
 import 'package:Vetted/app/data/models/user_model.dart';
 import 'package:Vetted/app/widgets/custom_button.dart';
+import 'package:Vetted/app/widgets/snack_bar.dart';
+import 'package:Vetted/app/widgets/staggered_column_animation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -22,8 +24,8 @@ class SetLocationScreen extends StatelessWidget {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+          child: StaggeredColumnAnimation(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 40),
               const Text(
@@ -62,7 +64,10 @@ class SetLocationScreen extends StatelessWidget {
               const SizedBox(height: 24),
               CustomButton(
                 ontap: () async {
-                  if (locationModel.value == null) return;
+                  if (locationModel.value == null) {
+                    CustomSnackbar.showErrorToast("Select Location");
+                    return;
+                  }
                   await userController.updateLocation(
                     location: locationModel.value!,
                   );
