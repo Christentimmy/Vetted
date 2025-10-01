@@ -545,7 +545,11 @@ class _HomeScreenState extends State<HomeScreen> {
         }
       },
       child: GestureDetector(
-        onTap: () => Get.toNamed(AppRoutes.postScreen),
+        onTap:
+            () => Get.toNamed(
+              AppRoutes.postScreen,
+              arguments: {'postId': post.id},
+            ),
         child: Stack(
           children: [
             ClipRRect(
@@ -647,68 +651,72 @@ class _HomeScreenState extends State<HomeScreen> {
                       color: Colors.grey.shade300,
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        if (post.stats?.leadingFlag == 'green')
-                          Text(
-                            post.stats?.greenVotes?.value.toString() ?? "0",
-                            style: GoogleFonts.fredoka(
-                              fontSize: 10,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.green,
+                    child: Obx(() {
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          if (post.stats?.leadingFlag == 'green')
+                            Text(
+                              post.stats?.greenVotes?.value.toString() ?? "0",
+                              style: GoogleFonts.fredoka(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.green,
+                              ),
+                            )
+                          else if (post.stats?.leadingFlag == 'red')
+                            Text(
+                              post.stats?.redVotes?.value.toString() ?? "0",
+                              style: GoogleFonts.fredoka(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.red,
+                              ),
+                            )
+                          else
+                            Text(
+                              "0",
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey,
+                              ),
                             ),
-                          )
-                        else if (post.stats?.leadingFlag == 'red')
-                          Text(
-                            post.stats?.redVotes?.value.toString() ?? "0",
-                            style: GoogleFonts.fredoka(
-                              fontSize: 10,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.red,
-                            ),
-                          )
-                        else
-                          Text(
-                            "0",
-                            style: const TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey,
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                  Center(
-                    child: Container(
-                      width: 32,
-                      height: 32,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.white,
-                        border: Border.all(
-                          color: _getFlagColor(
-                            leadingFlag: post.stats?.leadingFlag,
-                          ),
-                          width: 2,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.2),
-                            blurRadius: 4,
-                            offset: const Offset(0, 2),
-                          ),
                         ],
-                      ),
-                      child: Icon(
-                        Icons.flag,
-                        size: 16,
-                        color: _getFlagColor(
-                          leadingFlag: post.stats?.leadingFlag,
+                      );
+                    }),
+                  ),
+                  Obx(() {
+                    return Center(
+                      child: Container(
+                        width: 32,
+                        height: 32,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white,
+                          border: Border.all(
+                            color: _getFlagColor(
+                              leadingFlag: post.stats?.leadingFlag?.value,
+                            ),
+                            width: 2,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.2),
+                              blurRadius: 4,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: Icon(
+                          Icons.flag,
+                          size: 16,
+                          color: _getFlagColor(
+                            leadingFlag: post.stats?.leadingFlag?.value,
+                          ),
                         ),
                       ),
-                    ),
-                  ),
+                    );
+                  }),
                 ],
               ),
             ),
@@ -783,7 +791,7 @@ class _HomeScreenState extends State<HomeScreen> {
           post.stats?.redVotes?.value = (post.stats?.redVotes?.value ?? 0) + 1;
         }
 
-        post.stats?.leadingFlag = vote;
+        post.stats?.leadingFlag?.value = vote;
       }
     });
   }

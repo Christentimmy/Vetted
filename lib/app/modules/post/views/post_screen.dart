@@ -9,11 +9,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cherry_toast/resources/arrays.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
 class PostScreen extends StatefulWidget {
-  const PostScreen({super.key});
+  final String postId;
+  const PostScreen({super.key, required this.postId});
 
   @override
   State<PostScreen> createState() => _PostScreenState();
@@ -23,30 +25,47 @@ class _PostScreenState extends State<PostScreen> {
   final postController = Get.find<PostController>();
 
   RxBool isLoadingMore = false.obs;
-  ScrollController scrollController = ScrollController();
+  ItemScrollController itemScrollController = ItemScrollController();
+  ItemPositionsListener itemPositionsListener = ItemPositionsListener.create();
 
   @override
   void initState() {
-    scrollController.addListener(() async {
-      if (isLoadingMore.value) return;
-      if (scrollController.position.pixels >=
-          scrollController.position.maxScrollExtent - 1000) {
+    itemPositionsListener.itemPositions.addListener(() async {
+      final positions = itemPositionsListener.itemPositions.value;
+      if (positions.isEmpty || isLoadingMore.value) return;
+
+      // If no more pages, stop early
+      if (!postController.hasNextPage.value) return;
+
+      final maxIndex = positions
+          .map((e) => e.index)
+          .reduce((a, b) => a > b ? a : b);
+      final total = postController.posts.length;
+
+      if (maxIndex >= total - 5 && !isLoadingMore.value) {
         isLoadingMore.value = true;
         await postController.getFeed(loadMore: true, showLoader: false);
         isLoadingMore.value = false;
       }
     });
-    // postController.startTimer();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await Future.delayed(const Duration(milliseconds: 150));
+      final index = postController.posts.indexWhere(
+        (post) => post.id == widget.postId,
+      );
+      if (index != -1) {
+        itemScrollController.scrollTo(
+          index: index,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+      }
+    });
     super.initState();
   }
 
-  @override
-  void dispose() {
-    // postController.stopTimer();
-    scrollController.dispose();
-    super.dispose();
-  }
-
+ 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,30 +82,31 @@ class _PostScreenState extends State<PostScreen> {
       body: RefreshIndicator(
         color: AppColors.primaryColor,
         onRefresh: () => postController.getFeed(showLoader: false),
-        child: ListView(
-          controller: scrollController,
-          physics: const AlwaysScrollableScrollPhysics(),
-          children: [
-            ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              padding: const EdgeInsets.all(12),
-              itemCount: postController.posts.length,
-              itemBuilder: (context, index) {
-                final post = postController.posts[index];
+        child: Obx(() {
+          final posts = postController.posts;
+          final count = posts.length + (isLoadingMore.value ? 1 : 0);
+
+          return ScrollablePositionedList.builder(
+            shrinkWrap: true,
+            itemScrollController: itemScrollController,
+            itemPositionsListener: itemPositionsListener,
+            physics: const BouncingScrollPhysics(),
+            padding: const EdgeInsets.all(12),
+            itemCount: count,
+            itemBuilder: (context, index) {
+              if (index < posts.length) {
+                final post = posts[index];
                 return PostItem(post: post);
-              },
-            ),
-            SizedBox(height: 12),
-            Obx(() {
-              if (isLoadingMore.value && postController.posts.isNotEmpty) {
-                return Loader1();
+              } else {
+                // Loader widget at the bottom
+                return const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 20),
+                  child: Center(child: Loader1()),
+                );
               }
-              return const SizedBox.shrink();
-            }),
-            SizedBox(height: Get.height * 0.12),
-          ],
-        ),
+            },
+          );
+        }),
       ),
     );
   }
@@ -136,17 +156,6 @@ class PostItem extends StatelessWidget {
           ),
 
           const SizedBox(height: 8),
-
-          // Image
-          // ClipRRect(
-          //   borderRadius: BorderRadius.circular(4),
-          //   child: Image.asset(
-          //     'assets/images/sample_post.png',
-          //     fit: BoxFit.cover,
-          //     width: double.infinity,
-          //     height: 240,
-          //   ),
-          // ),
           InkWell(
             onTap: () {
               Get.dialog(Image.network(post.media?[0].url ?? ""));
@@ -178,10 +187,13 @@ class PostItem extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                children: [
-                  Obx(() {
-                    return _flagWithCount(
+              Obx(() {
+                print(
+                  "refreshijnh.........////...............................",
+                );
+                return Row(
+                  children: [
+                    _flagWithCount(
                       Icons.flag,
                       Colors.red,
                       post.stats?.redVotes?.value.toString() ?? "",
@@ -208,16 +220,21 @@ class PostItem extends StatelessWidget {
                         redVotes.value += 1;
                         votedColor.value = "red";
 
+                        if (post.stats!.greenVotes!.value >=
+                            post.stats!.redVotes!.value) {
+                          post.stats?.leadingFlag?.value = "green";
+                        } else {
+                          post.stats?.leadingFlag?.value = "red";
+                        }
+
                         await postController.voteOnWoman(
                           postId: post.id!,
                           color: votedColor.value,
                         );
                       },
-                    );
-                  }),
-                  const SizedBox(width: 12),
-                  Obx(() {
-                    return _flagWithCount(
+                    ),
+                    const SizedBox(width: 12),
+                    _flagWithCount(
                       Icons.flag,
                       Colors.green,
                       post.stats?.greenVotes?.value.toString() ?? "",
@@ -229,7 +246,7 @@ class PostItem extends StatelessWidget {
                         if (votedColor.value == "green") {
                           // Already voted green
                           CustomSnackbar.showErrorToast(
-                            "You already voted green",  
+                            "You already voted green",
                             position: Position.bottom,
                           );
                           return;
@@ -244,15 +261,22 @@ class PostItem extends StatelessWidget {
                         greenVotes.value += 1;
                         votedColor.value = "green";
 
+                        if (post.stats!.greenVotes!.value >=
+                            post.stats!.redVotes!.value) {
+                          post.stats?.leadingFlag?.value = "green";
+                        } else {
+                          post.stats?.leadingFlag?.value = "red";
+                        }
+
                         await postController.voteOnWoman(
                           postId: post.id!,
                           color: votedColor.value,
                         );
                       },
-                    );
-                  }),
-                ],
-              ),
+                    ),
+                  ],
+                );
+              }),
               ElevatedButton(
                 onPressed: () async {
                   if (post.author?.id == userController.userModel.value?.id) {

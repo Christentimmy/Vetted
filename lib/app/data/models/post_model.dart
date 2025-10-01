@@ -113,7 +113,7 @@ class Stats {
   final RxInt? comments;
   int? views;
   int? totalFlagVote;
-  String? leadingFlag;
+  RxString? leadingFlag;
   RxInt? greenVotes;
   RxInt? redVotes;
 
@@ -133,7 +133,7 @@ class Stats {
       comments: RxInt(json['comments'] ?? 0),
       views: json["views"] ?? 0,
       totalFlagVote: json["totalFlagVote"] ?? 0,
-      leadingFlag: json["leadingFlag"] ?? "",
+      leadingFlag: RxString(json["leadingFlag"] ?? ""),
       greenVotes: RxInt(json["greenVotes"] ?? 0),
       redVotes: RxInt(json["redVotes"] ?? 0),
     );

@@ -129,7 +129,17 @@ class AppPages {
     GetPage(name: AppRoutes.createPostScreen, page: () => CreatePostScreen()),
     GetPage(name: AppRoutes.womanPostScreen, page: () => WomanPostScreen()),
     GetPage(name: AppRoutes.pollPostScreen, page: () => PollPostScreen()),
-    GetPage(name: AppRoutes.postScreen, page: () => PostScreen()),
+    GetPage(
+      name: AppRoutes.postScreen,
+      page: () {
+        final arguments = Get.arguments;
+        final postId = arguments['postId'];
+        if (postId == null) {
+          throw Exception("Post ID is required");
+        }
+        return PostScreen(postId: postId);
+      },
+    ),
     GetPage(name: AppRoutes.numberCheckScreen, page: () => NumberCheckScreen()),
     GetPage(
       name: AppRoutes.reverseImageScreen,
@@ -181,10 +191,16 @@ class AppPages {
     GetPage(name: AppRoutes.savedPostScreen, page: () => SavedPostScreen()),
     GetPage(name: AppRoutes.myAlertsScreen, page: () => MyAlertsScreen()),
     GetPage(name: AppRoutes.upgradePlanScreen, page: () => UpgradePlanScreen()),
-    GetPage(name: AppRoutes.courtStateResources, page: () => CourtResourcesScreen()),
+    GetPage(
+      name: AppRoutes.courtStateResources,
+      page: () => CourtResourcesScreen(),
+    ),
     GetPage(name: AppRoutes.supportScreen, page: () => SupportScreen()),
     GetPage(name: AppRoutes.faqScreen, page: () => FAQScreen()),
-    GetPage(name: AppRoutes.newVerificationScreen, page: () => NewVerificationScreen()),
+    GetPage(
+      name: AppRoutes.newVerificationScreen,
+      page: () => NewVerificationScreen(),
+    ),
     GetPage(name: AppRoutes.chatList, page: () => MessageListScreen()),
   ];
 }
