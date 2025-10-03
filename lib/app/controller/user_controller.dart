@@ -649,7 +649,7 @@ class UserController extends GetxController {
       Future.delayed(const Duration(milliseconds: 1000), () async {
         try {
           await getUserDetails();
-          if (Get.currentRoute != '/bottom-navigation') {
+          if (Get.currentRoute != '/bottomNavigationWidget') {
             Get.offAllNamed(AppRoutes.bottomNavigationWidget);
           }
         } catch (e) {

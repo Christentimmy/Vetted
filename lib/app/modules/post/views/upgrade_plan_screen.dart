@@ -152,7 +152,7 @@ class UpgradePlanScreen extends StatelessWidget {
 
               const SizedBox(height: 24),
               const Text(
-                'Just \$15.99/month',
+                'Just \$99/month',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 16),

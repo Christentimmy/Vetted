@@ -64,17 +64,44 @@ class PostService {
     required String token,
     required int currentPage,
     String? type,
+    String? personName,
+    List<int>? ageRange,
+    String? personLocation,
+    String? sort,
+    bool? onlyGreen,
+    bool? onlyRed,
   }) async {
     try {
-      var queryParams = {"page": currentPage.toString()};
-      if (type != null) {
+      final queryParams = <String, String>{"page": currentPage.toString()};
+
+      if (type != null && type.isNotEmpty) {
         queryParams["type"] = type;
       }
+      if (personName != null && personName.isNotEmpty) {
+        queryParams["personName"] = personName;
+      }
+      if (ageRange != null && ageRange.isNotEmpty) {
+        // Convert list to comma-separated string: e.g. "18,25"
+        queryParams["ageRange"] = ageRange.join(",");
+      }
+      if (personLocation != null && personLocation.isNotEmpty) {
+        queryParams["personLocation"] = personLocation;
+      }
+      if (sort != null && sort.isNotEmpty) {
+        queryParams["sort"] = sort;
+      }
+      if (onlyGreen != null) {
+        queryParams["onlyGreen"] = onlyGreen.toString(); // "true" or "false"
+      }
+      if (onlyRed != null) {
+        queryParams["onlyRed"] = onlyRed.toString(); // "true" or "false"
+      }
+
       final uri = Uri.parse(
         "$baseUrl/post/feed",
       ).replace(queryParameters: queryParams);
 
-      var response = await http
+      final response = await http
           .get(
             uri,
             headers: {
@@ -82,14 +109,15 @@ class PostService {
               "Content-Type": "application/json",
             },
           )
-          .timeout(const Duration(seconds: 120));
+          .timeout(const Duration(seconds: 40));
+
       return response;
     } on SocketException catch (e) {
-      debugPrint("No internet connection $e");
+      debugPrint("❌ No internet connection $e");
     } on TimeoutException {
-      debugPrint("Request timeout");
+      debugPrint("❌ Request timeout");
     } catch (e) {
-      debugPrint(e.toString());
+      debugPrint("❌ Error: $e");
     }
     return null;
   }
@@ -473,16 +501,18 @@ class PostService {
     return null;
   }
 
-  Future<http.Response?> getSavedPosts({required String token})async{
+  Future<http.Response?> getSavedPosts({required String token}) async {
     try {
       var uri = Uri.parse("$baseUrl/post/get-saved-posts");
-      var response = await http.get(
-        uri,
-        headers: {
-          "Authorization": "Bearer $token",
-          "Content-Type": "application/json",
-        },
-      ).timeout(const Duration(seconds: 20));
+      var response = await http
+          .get(
+            uri,
+            headers: {
+              "Authorization": "Bearer $token",
+              "Content-Type": "application/json",
+            },
+          )
+          .timeout(const Duration(seconds: 20));
       return response;
     } on SocketException catch (e) {
       debugPrint("No internet connection $e");
@@ -493,5 +523,4 @@ class PostService {
     }
     return null;
   }
-
 }

@@ -28,10 +28,10 @@ class _HomeScreenState extends State<HomeScreen> {
   RxBool isLoadingMore = false.obs;
   ScrollController scrollController = ScrollController();
 
-  String sortBy = 'newest';
-  bool showRedFlag = true;
-  bool showGreenFlag = true;
-  RangeValues ageRange = const RangeValues(18, 75);
+  RxString sortBy = 'newest'.obs;
+  RxBool showRedFlag = true.obs;
+  RxBool showGreenFlag = true.obs;
+  Rx<RangeValues> ageRange = const RangeValues(18, 75).obs;
 
   final locationAddressController = TextEditingController();
   final nameController = TextEditingController();
@@ -40,7 +40,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // postController.startTimer();
       if (postController.posts.isEmpty) {
         postController.getFeed();
       }
@@ -50,7 +49,17 @@ class _HomeScreenState extends State<HomeScreen> {
       if (scrollController.position.pixels >=
           scrollController.position.maxScrollExtent - 1000) {
         isLoadingMore.value = true;
-        await postController.getFeed(loadMore: true, showLoader: false);
+        await postController.getFeed(
+          loadMore: true,
+          showLoader: false,
+          type: "woman",
+          personName: nameController.text,
+          ageRange: [ageRange.value.start.round(), ageRange.value.end.round()],
+          personLocation: locationAddressController.text,
+          sort: sortBy.value,
+          onlyGreen: showGreenFlag.value,
+          onlyRed: showRedFlag.value,
+        );
         isLoadingMore.value = false;
       }
     });
@@ -97,12 +106,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
-            // child: ListView(
-            //   controller: scrollController,
-            //   physics: const AlwaysScrollableScrollPhysics(),
-            //   children: [
-            //   ],
-            // ),
           ),
         ),
       ),
@@ -173,10 +176,10 @@ class _HomeScreenState extends State<HomeScreen> {
       builder: (context) {
         return Padding(
           padding: EdgeInsets.only(
+            top: 24,
             left: 24,
             right: 24,
-            top: 24,
-            bottom: MediaQuery.of(context).viewInsets.bottom + 36,
+            bottom: MediaQuery.of(context).viewInsets.bottom + 35,
           ),
           child: SingleChildScrollView(
             child: Column(
@@ -231,26 +234,30 @@ class _HomeScreenState extends State<HomeScreen> {
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                   ),
                 ),
-                RangeSlider(
-                  activeColor: AppColors.primaryColor,
-                  values: ageRange,
-                  min: 18,
-                  max: 75,
-                  divisions: 57,
-                  labels: RangeLabels(
-                    "${ageRange.start.round()}",
-                    "${ageRange.end.round()}",
-                  ),
-                  onChanged: (values) {
-                    setState(() => ageRange = values);
-                  },
-                ),
+                Obx(() {
+                  return RangeSlider(
+                    activeColor: AppColors.primaryColor,
+                    values: ageRange.value,
+                    min: 18,
+                    max: 75,
+                    divisions: 57,
+                    labels: RangeLabels(
+                      "${ageRange.value.start.round()}",
+                      "${ageRange.value.end.round()}",
+                    ),
+                    onChanged: (values) {
+                      ageRange.value = values;
+                    },
+                  );
+                }),
                 Align(
                   alignment: Alignment.centerLeft,
-                  child: Text(
-                    "From ${ageRange.start.round()} to ${ageRange.end.round()}",
-                    style: const TextStyle(color: Colors.black54),
-                  ),
+                  child: Obx(() {
+                    return Text(
+                      "From ${ageRange.value.start.round()} to ${ageRange.value.end.round()}",
+                      style: const TextStyle(color: Colors.black54),
+                    );
+                  }),
                 ),
 
                 const SizedBox(height: 20),
@@ -264,24 +271,26 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 const SizedBox(height: 8),
-                Row(
-                  children: [
-                    Radio<String>(
-                      activeColor: AppColors.primaryColor,
-                      value: 'newest',
-                      groupValue: sortBy,
-                      onChanged: (value) => setState(() => sortBy = value!),
-                    ),
-                    const Text('Newest'),
-                    Radio<String>(
-                      activeColor: AppColors.primaryColor,
-                      value: 'oldest',
-                      groupValue: sortBy,
-                      onChanged: (value) => setState(() => sortBy = value!),
-                    ),
-                    const Text('Oldest'),
-                  ],
-                ),
+                Obx(() {
+                  return Row(
+                    children: [
+                      Radio<String>(
+                        activeColor: AppColors.primaryColor,
+                        value: 'newest',
+                        groupValue: sortBy.value,
+                        onChanged: (value) => sortBy.value = value!,
+                      ),
+                      const Text('Newest'),
+                      Radio<String>(
+                        activeColor: AppColors.primaryColor,
+                        value: 'oldest',
+                        groupValue: sortBy.value,
+                        onChanged: (value) => sortBy.value = value!,
+                      ),
+                      const Text('Oldest'),
+                    ],
+                  );
+                }),
 
                 const SizedBox(height: 8),
 
@@ -290,7 +299,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     Expanded(
                       child: InkWell(
-                        onTap: () => setState(() => showRedFlag = !showRedFlag),
+                        onTap: () => showRedFlag.value = !showRedFlag.value,
                         child: Container(
                           padding: const EdgeInsets.symmetric(vertical: 12),
                           decoration: BoxDecoration(
@@ -301,23 +310,29 @@ class _HomeScreenState extends State<HomeScreen> {
                             children: [
                               const Text("Post has"),
                               const SizedBox(height: 6),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.flag,
-                                    size: 20,
-                                    color:
-                                        showRedFlag ? Colors.red : Colors.grey,
-                                  ),
-                                  const SizedBox(width: 6),
-                                  Icon(
-                                    Icons.flag,
-                                    size: 20,
-                                    color:
-                                        showRedFlag ? Colors.red : Colors.grey,
-                                  ),
-                                ],
+                              Obx(
+                                () => Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.flag,
+                                      size: 20,
+                                      color:
+                                          showRedFlag.value
+                                              ? Colors.red
+                                              : Colors.grey,
+                                    ),
+                                    const SizedBox(width: 6),
+                                    Icon(
+                                      Icons.flag,
+                                      size: 20,
+                                      color:
+                                          showRedFlag.value
+                                              ? Colors.red
+                                              : Colors.grey,
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
                           ),
@@ -327,9 +342,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     const SizedBox(width: 16),
                     Expanded(
                       child: InkWell(
-                        onTap:
-                            () =>
-                                setState(() => showGreenFlag = !showGreenFlag),
+                        onTap: () => showGreenFlag.value = !showGreenFlag.value,
                         child: Container(
                           padding: const EdgeInsets.symmetric(vertical: 12),
                           decoration: BoxDecoration(
@@ -340,27 +353,29 @@ class _HomeScreenState extends State<HomeScreen> {
                             children: [
                               const Text("Post has"),
                               const SizedBox(height: 6),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.flag,
-                                    size: 20,
-                                    color:
-                                        showGreenFlag
-                                            ? Colors.green
-                                            : Colors.grey,
-                                  ),
-                                  const SizedBox(width: 6),
-                                  Icon(
-                                    Icons.flag,
-                                    size: 20,
-                                    color:
-                                        showGreenFlag
-                                            ? Colors.green
-                                            : Colors.grey,
-                                  ),
-                                ],
+                              Obx(
+                                () => Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.flag,
+                                      size: 20,
+                                      color:
+                                          showGreenFlag.value
+                                              ? Colors.green
+                                              : Colors.grey,
+                                    ),
+                                    const SizedBox(width: 6),
+                                    Icon(
+                                      Icons.flag,
+                                      size: 20,
+                                      color:
+                                          showGreenFlag.value
+                                              ? Colors.green
+                                              : Colors.grey,
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
                           ),
@@ -381,10 +396,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         Get.back();
                         nameController.clear();
                         locationAddressController.clear();
-                        ageRange = const RangeValues(18, 75);
-                        sortBy = 'newest';
-                        showRedFlag = true;
-                        showGreenFlag = true;
+                        ageRange.value = const RangeValues(18, 75);
+                        sortBy.value = 'newest';
+                        showRedFlag.value = true;
+                        showGreenFlag.value = true;
                         await postController.getFeed();
                       },
                       isLoading: false.obs,
@@ -403,64 +418,20 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
-                          onPressed: () {
-                            final postController = Get.find<PostController>();
-                            List<PostModel> filteredPosts = List.from(
-                              postController.posts,
+                          onPressed: () async {
+                            Get.back();
+                            await postController.getFeed(
+                              type: "woman",
+                              personName: nameController.text,
+                              ageRange: [
+                                ageRange.value.start.round(),
+                                ageRange.value.end.round(),
+                              ],
+                              personLocation: locationAddressController.text,
+                              sort: sortBy.value,
+                              onlyGreen: showGreenFlag.value,
+                              onlyRed: showRedFlag.value,
                             );
-
-                            // Filter by location if provided
-                            if (locationAddressController.text.isNotEmpty) {
-                              final locationQuery =
-                                  locationAddressController.text.toLowerCase();
-                              filteredPosts =
-                                  filteredPosts.where((post) {
-                                    return post.personLocation
-                                            ?.toLowerCase()
-                                            .contains(locationQuery) ??
-                                        false;
-                                  }).toList();
-                            }
-
-                            // Filter by name if provided
-                            if (nameController.text.isNotEmpty) {
-                              final nameQuery =
-                                  nameController.text.toLowerCase();
-                              filteredPosts =
-                                  filteredPosts.where((post) {
-                                    return post.personName
-                                            ?.toLowerCase()
-                                            .contains(nameQuery) ??
-                                        false;
-                                  }).toList();
-                            }
-
-                            // Filter by age range
-                            filteredPosts =
-                                filteredPosts.where((post) {
-                                  if (post.personAge == null) return false;
-                                  final age =
-                                      int.tryParse(post.personAge!) ?? 0;
-                                  return age >= ageRange.start &&
-                                      age <= ageRange.end;
-                                }).toList();
-
-                            // Sort by selected option (newest/oldest)
-                            if (sortBy == 'newest') {
-                              filteredPosts.sort(
-                                (a, b) => b.createdAt!.compareTo(a.createdAt!),
-                              );
-                            } else {
-                              filteredPosts.sort(
-                                (a, b) => a.createdAt!.compareTo(b.createdAt!),
-                              );
-                            }
-
-                            // Update the posts list in the controller
-                            postController.posts.value = filteredPosts.obs;
-
-                            // Close the bottom sheet
-                            Navigator.pop(context);
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.primaryColor,

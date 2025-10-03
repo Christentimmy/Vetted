@@ -85,6 +85,12 @@ class PostController extends GetxController {
     bool showLoader = true,
     bool? loadMore = false,
     String? type,
+    String? personName,
+    List<int>? ageRange,
+    String? personLocation,
+    String? sort,
+    bool? onlyGreen,
+    bool? onlyRed,
   }) async {
     isloading.value = showLoader;
     try {
@@ -100,6 +106,12 @@ class PostController extends GetxController {
         token: token,
         currentPage: currentPage.value,
         type: type ?? "woman",
+        personName: personName,
+        ageRange: ageRange,
+        personLocation: personLocation,
+        sort: sort,
+        onlyGreen: onlyGreen,
+        onlyRed: onlyRed,
       );
       if (response == null) return;
       final decoded = json.decode(response.body);

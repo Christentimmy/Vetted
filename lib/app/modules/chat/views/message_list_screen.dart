@@ -1,7 +1,7 @@
 import 'package:Vetted/app/controller/message_controller.dart';
 import 'package:Vetted/app/resources/colors.dart';
 import 'package:Vetted/app/routes/app_routes.dart';
-import 'package:Vetted/screens/add_friends_screen.dart';
+// import 'package:Vetted/screens/add_friends_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -118,19 +118,19 @@ class _MessageListScreenState extends State<MessageListScreen> {
         color: Colors.black,
         onPressed: () => Navigator.pop(context),
       ),
-      actions: [
-        IconButton(
-          icon: const Icon(Icons.add),
-          color: Colors.black,
-          onPressed: () {
-            // ✅ Navigate to AddFriendsScreen
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const AddFriendsScreen()),
-            );
-          },
-        ),
-      ],
+      // actions: [
+      //   IconButton(
+      //     icon: const Icon(Icons.add),
+      //     color: Colors.black,
+      //     onPressed: () {
+      //       // ✅ Navigate to AddFriendsScreen
+      //       Navigator.push(
+      //         context,
+      //         MaterialPageRoute(builder: (_) => const AddFriendsScreen()),
+      //       );
+      //     },
+      //   ),
+      // ],
       elevation: 0.5,
       backgroundColor: Colors.white,
     );
