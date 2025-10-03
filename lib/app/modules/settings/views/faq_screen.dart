@@ -13,19 +13,11 @@ class _FAQScreenState extends State<FAQScreen> {
   static const Color primaryColor = Color(0xFF9A2B2B);
 
   final List<FAQItem> faqItems = [
-    // FAQItem(
-    //   question: "How does the matching system work?",
-    //   answer: "Our advanced algorithm considers your preferences, location, and compatibility factors to suggest meaningful connections. The more you use the app, the better it gets at understanding your preferences.",
-    // ),
     FAQItem(
       question: "Is my privacy protected?",
       answer:
           "Yes, we take privacy seriously. Your personal information is encrypted and never shared without your consent. You control what information is visible on your profile.",
     ),
-    // FAQItem(
-    //   question: "How can I improve my profile visibility?",
-    //   answer: "Complete your profile with recent photos, write a genuine bio, and stay active on the app. Profiles with more information tend to get better matches.",
-    // ),
     FAQItem(
       question: "What should I do if I encounter inappropriate behavior?",
       answer:
@@ -35,19 +27,6 @@ class _FAQScreenState extends State<FAQScreen> {
       question: "How do I delete my account?",
       answer:
           "You can delete your account anytime from Settings > Account > Delete Account. This action is permanent and cannot be undone.",
-    ),
-    // FAQItem(
-    //   question: "Why am I not getting matches?",
-    //   answer: "Try expanding your search criteria, updating your photos, or being more active. Sometimes it takes time to find the right connections.",
-    // ),
-    // FAQItem(
-    //   question: "How does the premium subscription work?",
-    //   answer: "Premium gives you unlimited likes, advanced filters, read receipts, and priority support. You can cancel anytime from your account settings.",
-    // ),
-    FAQItem(
-      question: "Can I use the app in multiple locations?",
-      answer:
-          "Yes, the app works globally. When you travel, your location updates automatically to show nearby matches in your new area.",
     ),
   ];
 
