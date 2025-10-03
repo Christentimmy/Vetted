@@ -96,32 +96,33 @@ class BackgroundCheckScreen extends StatelessWidget {
               ],
             ),
 
-            // const SizedBox(height: 24),
+            const SizedBox(height: 24),
 
-            // const Text(
-            //   "Sex Offenders Map",
-            //   style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
-            // ),
-            // const SizedBox(height: 12),
-            // ClipRRect(
-            //   borderRadius: BorderRadius.circular(12),
-            //   child: GestureDetector(
-            //     onTap: () {
-            //       Navigator.push(
-            //         context,
-            //         MaterialPageRoute(
-            //           builder: (context) => const SexOffendersMapScreen(),
-            //         ),
-            //       );
-            //     },
-            //     child: Image.asset(
-            //       'assets/images/map_sample.png',
-            //       height: 160,
-            //       width: double.infinity,
-            //       fit: BoxFit.cover,
-            //     ),
-            //   ),
-            // ),
+            const Text(
+              "Sex Offenders Map",
+              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+            ),
+            const SizedBox(height: 12),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: GestureDetector(
+                onTap: () {
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //     builder: (context) => const SexOffendersMapScreen(),
+                  //   ),
+                  // );
+                  Get.toNamed(AppRoutes.sexOffendersMapScreen);
+                },
+                child: Image.asset(
+                  'assets/images/map_sample.png',
+                  height: 160,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
             const SizedBox(height: 24),
 
             const Text(
@@ -130,7 +131,7 @@ class BackgroundCheckScreen extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             const Text(
-              "Find his social media profiles",
+              "Find her social media profiles",
               style: TextStyle(color: Colors.black54),
             ),
             const SizedBox(height: 12),

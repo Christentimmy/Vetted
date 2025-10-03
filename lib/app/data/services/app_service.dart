@@ -97,4 +97,30 @@ class AppService {
     return null;
   }
 
+  Future<http.Response?> getOffendersMap({
+    required String token,
+    required double lat,
+    required double lng,
+    required double radius,
+  }) async {
+    try {
+      final response = await client.get(
+        Uri.parse(
+          "$baseUrl/services/offenders?lat=$lat&lng=$lng&radius=$radius",
+        ),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+      return response;
+    } on SocketException catch (e) {
+      debugPrint("No internet connection $e");
+    } on TimeoutException {
+      debugPrint("Request timeout");
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
 }

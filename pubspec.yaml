@@ -69,6 +69,7 @@ dependencies:
   url_launcher: ^6.3.2
   app_links: ^6.4.1
   flutter_staggered_animations: ^1.1.1
+  google_maps_flutter: ^2.13.1
  
 
 dev_dependencies:

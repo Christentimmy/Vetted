@@ -2,6 +2,7 @@ import 'package:Vetted/app/controller/app_service_controller.dart';
 import 'package:Vetted/app/data/models/search_image_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ReverseImageScreen extends StatefulWidget {
@@ -38,19 +39,51 @@ class _ReverseImageScreenState extends State<ReverseImageScreen> {
 
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-        child: GridView.builder(
-          itemCount: appServiceController.images.length,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 20,
-          ),
-          itemBuilder: (context, index) {
-            final image = appServiceController.images[index];
-            return _MatchTile(searchImage: image);
-          },
-        ),
+        child: Obx(() {
+          if (appServiceController.isloadingImage.value) {
+            return buildLoader();
+          }
+          if (appServiceController.images.isEmpty) {
+            return const Center(child: Text("No data found"));
+          }
+          return GridView.builder(
+            itemCount: appServiceController.images.length,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 20,
+            ),
+            itemBuilder: (context, index) {
+              final image = appServiceController.images[index];
+              return _MatchTile(searchImage: image);
+            },
+          );
+        }),
       ),
+    );
+  }
+
+  GridView buildLoader() {
+    return GridView.builder(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 10,
+        mainAxisSpacing: 20,
+      ),
+      itemBuilder: (context, index) {
+        return Shimmer.fromColors(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
+          child: Container(
+            height: 200,
+            width: 200,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+        );
+      },
     );
   }
 }

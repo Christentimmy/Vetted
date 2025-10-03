@@ -22,12 +22,15 @@ Future<List<File>?> pickMultipleImages() async {
 
 pickImage() async {
   try {
+    //ImageQuality: 50
     final picker = ImagePicker();
-    XFile? pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    XFile? pickedFile = await picker.pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 20,
+    );
     if (pickedFile == null) return null;
     return File(pickedFile.path);
   } catch (e) {
-    print('Error picking image: $e');
     return null;
   }
 }

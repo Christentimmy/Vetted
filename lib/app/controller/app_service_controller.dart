@@ -19,12 +19,19 @@ class AppServiceController extends GetxController {
 
   Future<void> reverseImageSearch({required File file}) async {
     isloadingImage.value = true;
+
     try {
+      Get.toNamed(AppRoutes.reverseImageScreen);
       final storageController = Get.find<StorageController>();
       final String? token = await storageController.getToken();
       if (token == null) return;
+
+      final stopWatch = Stopwatch()..start();
       final response = await appService.imageSearch(file: file, token: token);
+      stopWatch.stop();
+      debugPrint("Time taken: ${stopWatch.elapsed}");
       if (response == null) return;
+
       final data = json.decode(response.body);
       String message = data["message"] ?? "";
       if (response.statusCode != 200) {
@@ -39,7 +46,7 @@ class AppServiceController extends GetxController {
       List<SearchImage> images =
           result.map((e) => SearchImage.fromJson(e)).toList();
       this.images.value = images;
-      Get.toNamed(AppRoutes.reverseImageScreen);
+      // Get.toNamed(AppRoutes.reverseImageScreen);
     } catch (e) {
       debugPrint(e.toString());
     } finally {
@@ -125,4 +132,42 @@ class AppServiceController extends GetxController {
       isloading.value = false;
     }
   }
+
+  Future<List<PersonModel>?> getOffendersOnMap({
+    required double lat,
+    required double lng,
+  }) async {
+    try {
+      final storageController = Get.find<StorageController>();
+      final String? token = await storageController.getToken();
+      if (token == null) return null;
+      final response = await appService.getOffendersMap(
+        lat: lat,
+        lng: lng,
+        radius: 50,
+        token: token,
+      );
+      if (response == null) return null;
+      final data = json.decode(response.body);
+      String message = data["message"] ?? "";
+      if (response.statusCode != 200) {
+        CustomSnackbar.showErrorToast(message);
+        return null;
+      }
+      List result = data["data"] ?? [];
+      if (result.isEmpty) {
+        CustomSnackbar.showErrorToast("No data found");
+        return null;
+      }
+      List<PersonModel> peopleOnMap =
+          result.map((e) => PersonModel.fromJson(e)).toList();
+      return peopleOnMap;
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      isloading.value = false;
+    }
+    return null;
+  }
+
 }
