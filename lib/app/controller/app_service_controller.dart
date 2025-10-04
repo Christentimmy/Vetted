@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:Vetted/app/controller/storage_controller.dart';
 import 'package:Vetted/app/data/models/person_model.dart';
 import 'package:Vetted/app/data/models/search_image_model.dart';
+import 'package:Vetted/app/data/models/sex_offender_model.dart';
 import 'package:Vetted/app/data/services/app_service.dart';
 import 'package:Vetted/app/routes/app_routes.dart';
 import 'package:Vetted/app/widgets/snack_bar.dart';
@@ -133,21 +134,25 @@ class AppServiceController extends GetxController {
     }
   }
 
-  Future<List<PersonModel>?> getOffendersOnMap({
+  Future<List<OffenderModel>?> getOffendersOnMap({
     required double lat,
     required double lng,
+    bool showLoader = true,
   }) async {
+    isloading.value = showLoader;
     try {
       final storageController = Get.find<StorageController>();
       final String? token = await storageController.getToken();
       if (token == null) return null;
+
       final response = await appService.getOffendersMap(
         lat: lat,
         lng: lng,
-        radius: 50,
+        radius: 5,
         token: token,
       );
       if (response == null) return null;
+
       final data = json.decode(response.body);
       String message = data["message"] ?? "";
       if (response.statusCode != 200) {
@@ -159,8 +164,8 @@ class AppServiceController extends GetxController {
         CustomSnackbar.showErrorToast("No data found");
         return null;
       }
-      List<PersonModel> peopleOnMap =
-          result.map((e) => PersonModel.fromJson(e)).toList();
+      List<OffenderModel> peopleOnMap =
+          result.map((e) => OffenderModel.fromJson(e)).toList();
       return peopleOnMap;
     } catch (e) {
       debugPrint(e.toString());
@@ -169,5 +174,4 @@ class AppServiceController extends GetxController {
     }
     return null;
   }
-
 }

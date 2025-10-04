@@ -106,7 +106,7 @@ class AppService {
     try {
       final response = await client.get(
         Uri.parse(
-          "$baseUrl/services/offenders?lat=$lat&lng=$lng&radius=$radius",
+          "$baseUrl/services/get-sex-offenders?lat=$lat&lng=$lng&radius=$radius",
         ),
         headers: {
           'Authorization': 'Bearer $token',

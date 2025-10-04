@@ -52,8 +52,6 @@ class PersonModel {
   final String? linkedinUrl;
   final String? companyName;
   final String? jobTitle;
-  final double lat;
-  final double lon;
 
   PersonModel({
     required this.id,
@@ -67,8 +65,6 @@ class PersonModel {
     this.linkedinUrl,
     this.companyName,
     this.jobTitle,
-    required this.lat,
-    required this.lon,
   });
 
   factory PersonModel.fromJson(Map<String, dynamic> json) {
@@ -88,8 +84,6 @@ class PersonModel {
       linkedinUrl: json['linkedin_url'],
       companyName: json['company_name'],
       jobTitle: json['job_title'],
-      lat: json['lat'] ?? 0,
-      lon: json['lon'] ?? 0,
     );
   }
 
@@ -105,7 +99,5 @@ class PersonModel {
         'linkedin_url': linkedinUrl,
         'company_name': companyName,
         'job_title': jobTitle,
-        'lat': lat,
-        'lon': lon,
         };
 }

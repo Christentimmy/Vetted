@@ -1,76 +1,51 @@
-import 'package:Vetted/app/controller/app_service_controller.dart';
-import 'package:Vetted/app/data/models/person_model.dart';
+// ignore_for_file: invalid_use_of_protected_member
+
+import 'package:Vetted/app/modules/app_services/controller/offenders_map_controller.dart';
+import 'package:Vetted/app/widgets/loaders.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class SexOffendersMapScreen extends StatefulWidget {
+class SexOffendersMapScreen extends StatelessWidget {
   const SexOffendersMapScreen({super.key});
 
   @override
-  State<SexOffendersMapScreen> createState() => _SexOffendersMapScreenState();
-}
-
-class _SexOffendersMapScreenState extends State<SexOffendersMapScreen> {
-  late GoogleMapController mapController;
-  final appServiceController = Get.find<AppServiceController>();
-
-  final Set<Marker> _markers = {};
-
-  Future<void> fetchOffenders(double lat, double lng) async {
-    List<PersonModel>? offenders = await appServiceController.getOffendersOnMap(
-      lat: lat,
-      lng: lng,
-    );
-    if (offenders == null) return;
-
-    setState(() {
-      _markers.clear();
-      for (var offender in offenders) {
-        final latitude = offender.lat;
-        final longitude = offender.lon;
-        // final name = offender.name ?? "Unknown";
-        final name = "Unknown";
-
-        _markers.add(
-          Marker(
-            markerId: MarkerId(offender.id),
-            position: LatLng(latitude, longitude),
-            infoWindow: InfoWindow(
-              title: name,
-              snippet: "Unknow offense",
-              // snippet: offender.offense ?? "Unknown offense",
-            ),
-          ),
-        );
-      }
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    const startLatLng = LatLng(37.7749, -122.4194);
+    final controller = Get.put(OffendersMapController());
+
     return Scaffold(
       appBar: AppBar(title: const Text("Offenders Map")),
-      body: GoogleMap(
-        initialCameraPosition: const CameraPosition(
-          target: startLatLng,
-          zoom: 12,
-        ),
-        onMapCreated: (controller) {
-          mapController = controller;
-          fetchOffenders(startLatLng.latitude, startLatLng.longitude);
-        },
-        markers: _markers,
-        onCameraIdle: () async {
-          final center = await mapController.getLatLng(
-            ScreenCoordinate(
-              x: MediaQuery.of(context).size.width ~/ 2,
-              y: MediaQuery.of(context).size.height ~/ 2,
-            ),
-          );
-          await fetchOffenders(center.latitude, center.longitude);
-        },
+      body: Stack(
+        children: [
+          Obx(() {
+            return GoogleMap(
+              initialCameraPosition: CameraPosition(
+                target: controller.startLatLng,
+                zoom: 12,
+              ),
+              onMapCreated: (mapCtrl) {
+                if (controller.mapInitialized.value) return;
+                controller.mapController = mapCtrl;
+                controller.mapInitialized.value = true;
+                controller.fetchOffenders(
+                  controller.startLatLng.latitude,
+                  controller.startLatLng.longitude,
+                  showLoader: true,
+                );
+              },
+              onTap: (position) => controller.handleTap(position),
+              onCameraIdle: () => controller.handleCameraIdle(context),
+              markers: controller.markers.value,
+            );
+          }),
+
+          /// Loader overlay
+          Obx(() {
+            return controller.appServiceController.isloading.value
+                ? const Center(child: Loader2())
+                : const SizedBox.shrink();
+          }),
+        ],
       ),
     );
   }
