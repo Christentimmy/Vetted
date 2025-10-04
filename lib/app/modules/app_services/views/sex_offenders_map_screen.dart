@@ -15,11 +15,10 @@ class SexOffendersMapScreen extends StatelessWidget {
   SexOffendersMapScreen({super.key});
 
   final appServiceController = Get.find<AppServiceController>();
-
+  final controller = Get.put(OffendersMapController());
+  
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(OffendersMapController());
-
     return Scaffold(
       appBar: AppBar(title: const Text("Offenders Map")),
       resizeToAvoidBottomInset: false,
@@ -99,7 +98,8 @@ class SexOffendersMapScreen extends StatelessWidget {
 
           Obx(() {
             final offender = controller.sexOffender.value;
-            if (offender == null) return const SizedBox.shrink();;
+            if (offender == null) return const SizedBox.shrink();
+            ;
             return BuildOffenderCard(
               controller: controller,
               offender: offender,

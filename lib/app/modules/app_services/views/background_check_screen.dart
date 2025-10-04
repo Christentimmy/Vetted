@@ -164,6 +164,9 @@ class BackgroundCheckScreen extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: AppColors.primaryColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: AppColors.primaryColor.withValues(alpha: 0.2),
+                  ),
                 ),
                 child: Center(
                   child: Obx(() {
@@ -174,12 +177,19 @@ class BackgroundCheckScreen extends StatelessWidget {
                     }
                     return Column(
                       mainAxisSize: MainAxisSize.min,
-                      children: const [
-                        Icon(Icons.add_photo_alternate_outlined, size: 60),
+                      children: [
+                        Icon(
+                          Icons.image,
+                          size: 60,
+                          color: AppColors.primaryColor,
+                        ),
                         SizedBox(height: 12),
                         Text(
                           "Choose Photo",
-                          style: TextStyle(fontWeight: FontWeight.w500),
+                          style: GoogleFonts.fredoka(
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.primaryColor,
+                          ),
                         ),
                       ],
                     );

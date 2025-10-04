@@ -232,4 +232,20 @@ class OffendersMapController extends GetxController {
       ),
     );
   }
+
+  @override
+  void onClose() {
+    markers.value.clear();
+    holdMarkers.value.clear();
+    sexOffender.value = null;
+    searchText.value = '';
+    searchController.clear();
+    mapController.dispose();
+    isFetching.value = false;
+    mapInitialized.value = false;
+    lastFetchLatLng = null;
+    appServiceController.isloading.value = false;
+    super.onClose();
+  }
+
 }
