@@ -42,16 +42,15 @@ class AppService {
     required String token,
   }) async {
     try {
-      final uri = Uri.parse(
-        "$baseUrl/services/phone-lookup?phone=$phoneNumber",
-      );
-      final response = await client.get(
+      final uri = Uri.parse("$baseUrl/services/enformion-number-search");
+      final response = await client.post(
         uri,
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
-      );
+        body: jsonEncode({'number': phoneNumber}),
+      ).timeout(const Duration(seconds: 30));
       return response;
     } on SocketException catch (e) {
       debugPrint("No internet connection $e");

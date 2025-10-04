@@ -5,6 +5,7 @@ import 'package:Vetted/app/data/models/person_model.dart';
 import 'package:Vetted/app/modules/app_services/views/background_check_search_result_screen.dart';
 import 'package:Vetted/app/modules/app_services/views/background_check_search_screen.dart';
 import 'package:Vetted/app/modules/app_services/views/background_result_more_details_done_screen.dart';
+import 'package:Vetted/app/modules/app_services/views/new_number_info_screen.dart';
 import 'package:Vetted/app/modules/app_services/views/number_check_screen.dart';
 import 'package:Vetted/app/modules/app_services/views/reverse_image_screen.dart';
 import 'package:Vetted/app/modules/app_services/views/sex_offenders_map_screen.dart';
@@ -204,5 +205,6 @@ class AppPages {
     ),
     GetPage(name: AppRoutes.chatList, page: () => MessageListScreen()),
     GetPage(name: AppRoutes.sexOffendersMapScreen, page: () => SexOffendersMapScreen()),
+    GetPage(name: AppRoutes.newNumberInfoScreen, page: () => NewNumberInfoScreen()),
   ];
 }

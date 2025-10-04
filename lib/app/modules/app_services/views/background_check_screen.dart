@@ -88,7 +88,7 @@ class BackgroundCheckScreen extends StatelessWidget {
                       await appServiceController.getNumberInfo(
                         number: phoneNumberController.text,
                       );
-                      phoneNumberController.clear();
+                      // phoneNumberController.clear();
                     },
                     child: Obx(
                       () =>

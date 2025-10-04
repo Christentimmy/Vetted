@@ -40,4 +40,5 @@ class AppRoutes {
   static const String faqScreen = '/faqScreen';
   static const String newVerificationScreen = '/newVerificationScreen';
   static const String sexOffendersMapScreen = '/sexOffendersMapScreen';
+  static const String newNumberInfoScreen = '/newNumberInfoScreen';
 }

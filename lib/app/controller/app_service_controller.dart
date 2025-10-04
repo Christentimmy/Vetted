@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:Vetted/app/controller/storage_controller.dart';
+import 'package:Vetted/app/data/models/eniform_phone_info_model.dart';
 import 'package:Vetted/app/data/models/person_model.dart';
 import 'package:Vetted/app/data/models/search_image_model.dart';
 import 'package:Vetted/app/data/models/sex_offender_model.dart';
@@ -12,12 +13,17 @@ import 'package:get/get.dart';
 
 class AppServiceController extends GetxController {
   final isloading = false.obs;
-  final isloadingByName  = false.obs;
+  final isloadingByName = false.obs;
   final isloadingImage = false.obs;
   final AppService appService = AppService();
   RxList<PersonModel> persons = <PersonModel>[].obs;
   RxList<SearchImage> images = <SearchImage>[].obs;
   RxList<PersonModel> personsBackground = <PersonModel>[].obs;
+
+  //new number data
+  final eniformPhoneInfoModel = EniformPhoneInfoModel().obs;
+  RxList<ReverseInfoOnPhoneSearchModel> reverseInfoList =
+      <ReverseInfoOnPhoneSearchModel>[].obs;
 
   Future<void> reverseImageSearch({required File file}) async {
     isloadingImage.value = true;
@@ -67,21 +73,33 @@ class AppServiceController extends GetxController {
         token: token,
       );
       if (response == null) return;
-      final data = json.decode(response.body);
-      String message = data["message"] ?? "";
+      final responseBody = json.decode(response.body);
+      String message = responseBody["message"] ?? "";
       if (response.statusCode != 200) {
         CustomSnackbar.showErrorToast(message);
         return;
       }
-      List result = data["data"] ?? [];
-      if (result.isEmpty) {
-        CustomSnackbar.showErrorToast("No data found");
+      final data = responseBody["data"];
+      final enifromData = data["data"];
+      print("EniformData: =============== $enifromData");
+      if (enifromData == null) {
+        CustomSnackbar.showErrorToast(message);
         return;
       }
-      List<PersonModel> persons =
-          result.map((e) => PersonModel.fromJson(e)).toList();
-      this.persons.value = persons;
-      Get.toNamed(AppRoutes.numberCheckScreen);
+      final eniformPhoneInfoModel = EniformPhoneInfoModel.fromJson(enifromData);
+      this.eniformPhoneInfoModel.value = eniformPhoneInfoModel;
+
+      List<dynamic> reverseInfoData = data["reverseInfo"];
+      print("ReverseInfoData: =============== $reverseInfoData");
+      if (reverseInfoData.isNotEmpty) {
+        List<ReverseInfoOnPhoneSearchModel> mapped =
+            reverseInfoData
+                .map((e) => ReverseInfoOnPhoneSearchModel.fromJson(e))
+                .toList();
+        reverseInfoList.value = mapped;
+      }
+      print("FullName: =============== ${eniformPhoneInfoModel.fullName}");
+      Get.toNamed(AppRoutes.newNumberInfoScreen);
     } catch (e) {
       debugPrint(e.toString());
     } finally {
@@ -213,5 +231,4 @@ class AppServiceController extends GetxController {
     }
     return null;
   }
-
 }
