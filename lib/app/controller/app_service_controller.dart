@@ -12,6 +12,7 @@ import 'package:get/get.dart';
 
 class AppServiceController extends GetxController {
   final isloading = false.obs;
+  final isloadingByName  = false.obs;
   final isloadingImage = false.obs;
   final AppService appService = AppService();
   RxList<PersonModel> persons = <PersonModel>[].obs;
@@ -174,4 +175,43 @@ class AppServiceController extends GetxController {
     }
     return null;
   }
+
+  Future<List<OffenderModel>?> getSexOffenderByName({
+    required String name,
+    bool showLoader = true,
+  }) async {
+    isloadingByName.value = showLoader;
+    try {
+      final storageController = Get.find<StorageController>();
+      final String? token = await storageController.getToken();
+      if (token == null) return null;
+
+      final response = await appService.getSexOffenderByName(
+        token: token,
+        name: name,
+      );
+      if (response == null) return null;
+
+      final data = json.decode(response.body);
+      String message = data["message"] ?? "";
+      if (response.statusCode != 200) {
+        CustomSnackbar.showErrorToast(message);
+        return null;
+      }
+      List result = data["data"] ?? [];
+      if (result.isEmpty) {
+        CustomSnackbar.showErrorToast("No data found");
+        return null;
+      }
+      List<OffenderModel> peopleOnMap =
+          result.map((e) => OffenderModel.fromJson(e)).toList();
+      return peopleOnMap;
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      isloadingByName.value = false;
+    }
+    return null;
+  }
+
 }

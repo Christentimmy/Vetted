@@ -104,15 +104,42 @@ class AppService {
     required double radius,
   }) async {
     try {
-      final response = await client.get(
-        Uri.parse(
-          "$baseUrl/services/get-sex-offenders?lat=$lat&lng=$lng&radius=$radius",
-        ),
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json',
-        },
-      );
+      final response = await client
+          .get(
+            Uri.parse(
+              "$baseUrl/services/get-sex-offenders?lat=$lat&lng=$lng&radius=$radius",
+            ),
+            headers: {
+              'Authorization': 'Bearer $token',
+              'Content-Type': 'application/json',
+            },
+          )
+          .timeout(const Duration(seconds: 30));
+      return response;
+    } on SocketException catch (e) {
+      debugPrint("No internet connection $e");
+    } on TimeoutException {
+      debugPrint("Request timeout");
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
+
+  Future<http.Response?> getSexOffenderByName({
+    required String token,
+    required String name,
+  }) async {
+    try {
+      final response = await client
+          .get(
+            Uri.parse("$baseUrl/services/get-sex-offender-by-name?name=$name"),
+            headers: {
+              'Authorization': 'Bearer $token',
+              'Content-Type': 'application/json',
+            },
+          )
+          .timeout(const Duration(seconds: 30));
       return response;
     } on SocketException catch (e) {
       debugPrint("No internet connection $e");
