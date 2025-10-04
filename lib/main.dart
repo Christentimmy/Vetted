@@ -39,6 +39,10 @@ class _VettedAppState extends State<VettedApp> {
       title: 'Vetted',
       theme: ThemeData(
         primaryColor: AppColors.primaryColor,
+        textSelectionTheme: const TextSelectionThemeData(
+          cursorColor: AppColors.primaryColor,
+          selectionHandleColor: AppColors.primaryColor,
+        ),
         textTheme: GoogleFonts.poppinsTextTheme(),
       ),
       debugShowCheckedModeBanner: false,

@@ -1,4 +1,5 @@
 import 'package:Vetted/app/controller/app_service_controller.dart';
+import 'package:Vetted/app/resources/colors.dart';
 import 'package:Vetted/app/routes/app_routes.dart';
 import 'package:Vetted/app/utils/image_picker.dart';
 import 'package:Vetted/app/widgets/snack_bar.dart';
@@ -41,8 +42,15 @@ class BackgroundCheckScreen extends StatelessWidget {
                     child: TextField(
                       keyboardType: TextInputType.phone,
                       controller: phoneNumberController,
+                      cursorColor: AppColors.primaryColor,
+
                       decoration: InputDecoration(
                         hintText: "(353) 745-8736",
+                        hintStyle: GoogleFonts.fredoka(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 12,
+                          color: Colors.grey,
+                        ),
                         filled: true,
                         fillColor: Colors.grey.shade100,
                         border: OutlineInputBorder(
@@ -55,10 +63,10 @@ class BackgroundCheckScreen extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
                 SizedBox(
-                  height: 48,
+                  height: 56,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
+                      backgroundColor: AppColors.primaryColor,
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
