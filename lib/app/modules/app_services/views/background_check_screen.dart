@@ -4,6 +4,7 @@ import 'package:Vetted/app/routes/app_routes.dart';
 import 'package:Vetted/app/utils/image_picker.dart';
 import 'package:Vetted/app/widgets/snack_bar.dart';
 import 'package:Vetted/app/widgets/top_bar.dart';
+import 'package:Vetted/screens/criminal_record_search_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -28,9 +29,12 @@ class BackgroundCheckScreen extends StatelessWidget {
             buildTopBar(context),
             const SizedBox(height: 24),
 
-            const Text(
+            Text(
               "Check Phone Number",
-              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+              style: GoogleFonts.poppins(
+                fontWeight: FontWeight.w600,
+                fontSize: 16,
+              ),
             ),
             const SizedBox(height: 10),
             Row(
@@ -106,36 +110,39 @@ class BackgroundCheckScreen extends StatelessWidget {
 
             const SizedBox(height: 24),
 
-            const Text(
+            Text(
               "Sex Offenders Map",
-              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+              style: GoogleFonts.poppins(
+                fontWeight: FontWeight.w600,
+                fontSize: 16,
+              ),
             ),
             const SizedBox(height: 12),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: GestureDetector(
-                onTap: () {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (context) => const SexOffendersMapScreen(),
-                  //   ),
-                  // );
-                  Get.toNamed(AppRoutes.sexOffendersMapScreen);
-                },
-                child: Image.asset(
-                  'assets/images/map_sample.png',
-                  height: 160,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
+            GestureDetector(
+              onTap: () => Get.toNamed(AppRoutes.sexOffendersMapScreen),
+              child: Container(
+                height: 160,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  image: DecorationImage(
+                    colorFilter: ColorFilter.mode(
+                      AppColors.primaryColor.withValues(alpha: 0.3),
+                      BlendMode.darken,
+                    ),
+                    image: AssetImage('assets/images/map_sample.png'),
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             ),
             const SizedBox(height: 24),
 
-            const Text(
+            Text(
               "Reverse Image Search",
-              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+              style: GoogleFonts.poppins(
+                fontWeight: FontWeight.w600,
+                fontSize: 16,
+              ),
             ),
             const SizedBox(height: 4),
             const Text(
@@ -155,7 +162,7 @@ class BackgroundCheckScreen extends StatelessWidget {
               child: Container(
                 height: 180,
                 decoration: BoxDecoration(
-                  color: Colors.greenAccent.shade100,
+                  color: AppColors.primaryColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Center(
@@ -187,33 +194,27 @@ class BackgroundCheckScreen extends StatelessWidget {
             _customButton(
               "Background Check",
               "Get Started",
-              Colors.green,
+              AppColors.primaryColor,
               () => Get.toNamed(AppRoutes.backgroundCheckSearchScreen),
             ),
-            // _customButton(
-            //   "Criminal Record Search",
-            //   "Search Now",
-            //   Colors.green,
-            //   () {
-            //     Navigator.push(
-            //       context,
-            //       MaterialPageRoute(
-            //         builder: (_) => const CriminalRecordSearchScreen(),
-            //       ),
-            //     );
-            //   },
-            // ),
+            _customButton(
+              "Criminal Record Search",
+              "Search Now",
+              AppColors.primaryColor,
+              () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const CriminalRecordSearchScreen(),
+                  ),
+                );
+              },
+            ),
             _customButton(
               "Court Search Resources",
               "View Resources",
-              Colors.green,
+              AppColors.primaryColor,
               () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (_) => const CourtSearchResourceScreen(),
-                //   ),
-                // );
                 Get.toNamed(AppRoutes.courtStateResources);
               },
             ),
@@ -243,7 +244,7 @@ class BackgroundCheckScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 16),
             width: double.infinity,
             alignment: Alignment.center,
-            child: Text(title, style: const TextStyle(fontSize: 16)),
+            child: Text(title, style: GoogleFonts.fredoka(fontSize: 16)),
           ),
           InkWell(
             onTap: onTap,
@@ -259,9 +260,9 @@ class BackgroundCheckScreen extends StatelessWidget {
               alignment: Alignment.center,
               child: Text(
                 actionText,
-                style: const TextStyle(
+                style: GoogleFonts.poppins(
                   color: Colors.white,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ),
