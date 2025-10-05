@@ -1,5 +1,7 @@
 import 'package:Vetted/app/data/models/person_model.dart';
+import 'package:Vetted/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class BackgroundResultMoreDetailsScreen extends StatelessWidget {
   final PersonModel person;
@@ -63,9 +65,18 @@ class BackgroundResultMoreDetailsScreen extends StatelessWidget {
             // CONTACT INFORMATION
             _buildSectionTitle("CONTACT INFORMATION"),
             _buildInfoBox([
-              _buildInfoRow("Phone Numbers", person.phones.map((e) => e.number).join("\n")),
-              _buildInfoRow("Email Address", person.emails.map((e) => e.toString()).join("\n")),
-              _buildInfoRow("Home Address", person.currentAddresses.map((e) => e.address).join("\n")),
+              _buildInfoRow(
+                "Phone Numbers",
+                person.phones.map((e) => e.number).join("\n"),
+              ),
+              _buildInfoRow(
+                "Email Address",
+                person.emails.map((e) => e.toString()).join("\n"),
+              ),
+              _buildInfoRow(
+                "Home Address",
+                person.currentAddresses.map((e) => e.address).join("\n"),
+              ),
             ]),
 
             const SizedBox(height: 12),
@@ -114,12 +125,7 @@ class BackgroundResultMoreDetailsScreen extends StatelessWidget {
                     ),
                   ),
                   onPressed: () {
-                    // Later hook up navigation
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text("Ask about her on Vetted clicked"),
-                      ),
-                    );
+                    Get.offAllNamed(AppRoutes.bottomNavigationWidget);
                   },
                   child: const Text(
                     "Ask about her on Vetted",

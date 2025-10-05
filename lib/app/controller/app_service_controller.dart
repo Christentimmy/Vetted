@@ -46,15 +46,19 @@ class AppServiceController extends GetxController {
         CustomSnackbar.showErrorToast(message);
         return;
       }
-      List<dynamic> result = data["data"]?["images"] ?? [];
+      List<dynamic> result = data["data"]?["similarImages"] ?? [];
       if (result.isEmpty) {
         CustomSnackbar.showErrorToast("No data found");
         return;
       }
       List<SearchImage> images =
-          result.map((e) => SearchImage.fromJson(e)).toList();
+          result.map((e) {
+            final url = Uri.parse(e.toString());
+            final host = url.host.replaceAll('www.', '');
+            return SearchImage(imageUrl: e.toString(), source: host);
+          }).toList();
       this.images.value = images;
-      // Get.toNamed(AppRoutes.reverseImageScreen);
+      Get.toNamed(AppRoutes.reverseImageScreen);
     } catch (e) {
       debugPrint(e.toString());
     } finally {

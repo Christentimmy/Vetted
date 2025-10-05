@@ -25,17 +25,7 @@ class _ReverseImageScreenState extends State<ReverseImageScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: const Text("Reverse Image Search"),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
-        elevation: 1,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
+      appBar: buildAppBar(context),
 
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
@@ -59,6 +49,20 @@ class _ReverseImageScreenState extends State<ReverseImageScreen> {
             },
           );
         }),
+      ),
+    );
+  }
+
+  AppBar buildAppBar(BuildContext context) {
+    return AppBar(
+      title: const Text("Reverse Image Search"),
+      centerTitle: true,
+      backgroundColor: Colors.white,
+      foregroundColor: Colors.black,
+      elevation: 1,
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back),
+        onPressed: () => Navigator.pop(context),
       ),
     );
   }
@@ -123,27 +127,32 @@ class _MatchTile extends StatelessWidget {
               showDialog(
                 context: context,
                 builder: (context) {
-                  return Dialog(child: Image.network(searchImage.imageUrl));
+                  return Dialog(
+                    child: Image.network(searchImage.imageUrl ?? ""),
+                  );
                 },
               );
             },
             child: Image.network(
-              searchImage.imageUrl,
+              searchImage.imageUrl ?? "",
               fit: BoxFit.cover,
               width: double.infinity,
               height: double.infinity,
+              errorBuilder: (context, error, stackTrace) {
+                return const Icon(Icons.error);
+              },
             ),
           ),
           InkWell(
             onTap: () async {
-              await urlLauncher(searchImage.link);
+              await urlLauncher(searchImage.imageUrl ?? "");
             },
             child: Container(
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 6),
               color: Colors.white,
               child: Text(
-                searchImage.source,
+                searchImage.source ?? "",
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   color: Colors.red,

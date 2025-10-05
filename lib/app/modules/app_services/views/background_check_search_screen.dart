@@ -99,14 +99,6 @@ class _BackgroundCheckSearchScreenState
                             city: _cityController.text,
                             zipCode: _phoneController.text,
                           );
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //     builder:
-                          //         (context) =>
-                          //             const BackgroundCheckSearchResultScreen(),
-                          //   ),
-                          // );
                         }
                         : null,
                 style: ElevatedButton.styleFrom(

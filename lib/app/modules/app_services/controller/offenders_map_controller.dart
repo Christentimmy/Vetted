@@ -124,7 +124,7 @@ class OffendersMapController extends GetxController {
     final zoom = await mapController.getZoomLevel();
 
     if (zoom < 10) {
-      CustomSnackbar.showErrorToast("Zoom in to fetch offenders");
+      // CustomSnackbar.showErrorToast("Zoom in to fetch offenders");
       return;
     }
 
@@ -179,8 +179,6 @@ class OffendersMapController extends GetxController {
   void cleanField() {
     searchText.value = '';
     searchController.clear();
-    markers.value = holdMarkers;
-    holdMarkers.value.clear();
     return;
   }
 
@@ -197,7 +195,7 @@ class OffendersMapController extends GetxController {
     );
     if (allOffendersList == null) return;
     holdMarkers.value = markers;
-    markers.clear();
+    markers.value = {};
 
     final icon = await _createCircleMarker(size: 50, color: Colors.redAccent);
     for (var element in allOffendersList) {
@@ -235,8 +233,8 @@ class OffendersMapController extends GetxController {
 
   @override
   void onClose() {
-    markers.value.clear();
-    holdMarkers.value.clear();
+    markers.value = {};
+    holdMarkers.value = {};
     sexOffender.value = null;
     searchText.value = '';
     searchController.clear();
@@ -247,5 +245,4 @@ class OffendersMapController extends GetxController {
     appServiceController.isloading.value = false;
     super.onClose();
   }
-
 }

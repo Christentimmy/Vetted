@@ -4,7 +4,7 @@ import 'package:Vetted/app/routes/app_routes.dart';
 import 'package:Vetted/app/utils/image_picker.dart';
 import 'package:Vetted/app/widgets/snack_bar.dart';
 import 'package:Vetted/app/widgets/top_bar.dart';
-import 'package:Vetted/screens/criminal_record_search_screen.dart';
+import 'package:cherry_toast/cherry_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -88,7 +88,7 @@ class BackgroundCheckScreen extends StatelessWidget {
                       await appServiceController.getNumberInfo(
                         number: phoneNumberController.text,
                       );
-                      // phoneNumberController.clear();
+                      phoneNumberController.clear();
                     },
                     child: Obx(
                       () =>
@@ -212,12 +212,18 @@ class BackgroundCheckScreen extends StatelessWidget {
               "Search Now",
               AppColors.primaryColor,
               () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => const CriminalRecordSearchScreen(),
+                CherryToast.info(
+                  title: const Text('Feature'),
+                  description: const Text(
+                    'This feature will be available soon',
                   ),
-                );
+                ).show(context);
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (_) => const CriminalRecordSearchScreen(),
+                //   ),
+                // );
               },
             ),
             _customButton(
