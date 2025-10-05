@@ -115,6 +115,7 @@ class InputNameScreen extends StatelessWidget {
 
   void updateName() {
     HapticFeedback.lightImpact();
+    FocusManager.instance.primaryFocus?.unfocus();
     if (!formKey.value.currentState!.validate()) return;
     userController.updateName(name: _nameController.text, whatNext: whatNext);
   }

@@ -1,6 +1,8 @@
 import 'package:Vetted/app/controller/auth_controller.dart';
+import 'package:Vetted/app/controller/user_controller.dart';
 import 'package:Vetted/app/routes/app_routes.dart';
 import 'package:Vetted/app/widgets/top_bar.dart';
+// import 'package:Vetted/screens/invite_friends_screen.dart';
 // import 'package:Vetted/screens/my_alerts_screen.dart';
 // import 'package:Vetted/screens/my_post_screen.dart';
 import 'package:Vetted/screens/notification_menu_screen.dart';
@@ -9,6 +11,7 @@ import 'package:Vetted/screens/safety_resources_screen.dart';
 // import 'package:Vetted/screens/upgrade_plan_screen.dart';
 // import 'package:Vetted/screens/support_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -41,12 +44,27 @@ class SettingScreen extends StatelessWidget {
               },
             ),
             _menuItem(
-              icon: Icons.person_outline,
+              icon: FontAwesomeIcons.userGroup,
+              iconSize: 15,
               title: "Invite Friends",
               onTap: () {
-                // Get.toNamed(AppRoutes.editProfileScreen);
+                final userController = Get.find<UserController>();
+                final userModel = userController.userModel.value;
+                if (userModel == null) return;
+                if (userModel.inviteCode?.isEmpty == true) {
+                  Get.toNamed(AppRoutes.inviteScreen);
+                } else {
+                  Get.toNamed(AppRoutes.inviteStatsScreen);
+                }
               },
             ),
+            // _menuItem(
+            //   icon: Icons.qr_code_2_rounded,
+            //   title: "Redeem Code",
+            //   onTap: () {
+            //     Get.toNamed(AppRoutes.redeemCodeScreen);
+            //   },
+            // ),
             _menuItem(
               icon: Icons.edit_note_outlined,
               title: "My Post",
@@ -155,11 +173,13 @@ class SettingScreen extends StatelessWidget {
     bool isBold = false,
     Color color = Colors.black54,
     VoidCallback? onTap,
+    double? iconSize,
   }) {
     return ListTile(
       contentPadding: EdgeInsets.zero,
       dense: true,
-      leading: icon != null ? Icon(icon, size: 22, color: color) : null,
+      leading:
+          icon != null ? Icon(icon, size: iconSize ?? 22, color: color) : null,
       title: Text(
         title,
         style: GoogleFonts.poppins(
@@ -167,7 +187,7 @@ class SettingScreen extends StatelessWidget {
           fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
         ),
       ),
-      trailing: const Icon(Icons.chevron_right, size: 20, color: Colors.grey),
+      trailing: Icon(Icons.chevron_right, size: 20, color: Colors.grey),
       onTap: onTap,
     );
   }

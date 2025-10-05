@@ -18,6 +18,10 @@ class UserModel {
   final LocationModel? location;
   final Subscription? subscription;
 
+  final String? inviteCode;
+  final String? totalInvites;
+  final String? premiumCredits;
+
   UserModel({
     this.id,
     this.phone,
@@ -37,6 +41,10 @@ class UserModel {
     this.followingCount,
     this.location,
     this.subscription,
+
+    this.inviteCode,
+    this.totalInvites,
+    this.premiumCredits,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -67,6 +75,10 @@ class UserModel {
           json['subscription'] != null
               ? Subscription.fromJson(json['subscription'])
               : null,
+
+      inviteCode: json['inviteCode']?.toString() ?? '',
+      totalInvites: json['totalInvites']?.toString() ?? '',
+      premiumCredits: json['premiumCredits']?.toString() ?? '',
     );
   }
 

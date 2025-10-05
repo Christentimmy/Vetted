@@ -199,11 +199,7 @@ class UserController extends GetxController {
         CustomSnackbar.showErrorToast(message);
         return;
       }
-      CustomSnackbar.showSuccessToast(
-        "Gender application submitted successfully. You will be notified once it is approved.",
-        toastDuration: Duration(seconds: 10),
-      );
-      Get.offAllNamed(AppRoutes.onboardingScreen);
+      Get.toNamed(AppRoutes.redeemCodeScreen);
     } catch (e) {
       debugPrint(e.toString());
     } finally {

@@ -41,4 +41,7 @@ class AppRoutes {
   static const String newVerificationScreen = '/newVerificationScreen';
   static const String sexOffendersMapScreen = '/sexOffendersMapScreen';
   static const String newNumberInfoScreen = '/newNumberInfoScreen';
+  static const String inviteStatsScreen = '/inviteStatsScreen';
+  static const String inviteScreen = '/inviteScreen';
+  static const String redeemCodeScreen = '/redeemCodeScreen';
 }
