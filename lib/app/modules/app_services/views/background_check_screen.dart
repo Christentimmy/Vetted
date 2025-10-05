@@ -1,5 +1,4 @@
 import 'package:Vetted/app/controller/app_service_controller.dart';
-import 'package:Vetted/app/controller/user_controller.dart';
 import 'package:Vetted/app/resources/colors.dart';
 import 'package:Vetted/app/routes/app_routes.dart';
 import 'package:Vetted/app/utils/image_picker.dart';
@@ -16,7 +15,6 @@ class BackgroundCheckScreen extends StatelessWidget {
 
   final appServiceController = Get.find<AppServiceController>();
   final phoneNumberController = TextEditingController();
-  final userController = Get.find<UserController>();
 
   @override
   Widget build(BuildContext context) {
@@ -80,15 +78,6 @@ class BackgroundCheckScreen extends StatelessWidget {
                     onPressed: () async {
                       HapticFeedback.lightImpact();
                       FocusManager.instance.primaryFocus?.unfocus();
-                      final user = userController.userModel.value;
-                      if (user == null) return;
-                      if (user.isPremium == false) {
-                        CustomSnackbar.showErrorToast(
-                          "You don't have access to this feature",
-                        );
-                        Get.offNamed(AppRoutes.upgradePlanScreen);
-                        return;
-                      }
                       if (phoneNumberController.text.isEmpty) {
                         CustomSnackbar.showErrorToast(
                           "Please enter a phone number",

@@ -13,8 +13,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class AppServiceController extends GetxController {
-
-
   //TODO: Pesons, personsBackground, Delete
 
   final isloading = false.obs;
@@ -30,8 +28,7 @@ class AppServiceController extends GetxController {
 
   //new number data
   final eniformPhoneInfoModel = EniformPhoneInfoModel().obs;
-  RxList<ReverseInfoOnPhoneSearchModel> reverseInfoList =
-      <ReverseInfoOnPhoneSearchModel>[].obs;
+  final reverseInfoList = <ReverseInfoOnPhoneSearchModel>[].obs;
 
   Future<void> reverseImageSearch({required File file}) async {
     isloadingImage.value = true;
@@ -82,23 +79,32 @@ class AppServiceController extends GetxController {
   Future<void> getNumberInfo({required String number}) async {
     isloading.value = true;
     try {
+
       final storageController = Get.find<StorageController>();
       final String? token = await storageController.getToken();
       if (token == null) return;
+
       final response = await appService.getNumberInfo(
         phoneNumber: number,
         token: token,
       );
       if (response == null) return;
+
       final responseBody = json.decode(response.body);
       String message = responseBody["message"] ?? "";
+
+      if (response.statusCode == 403) {
+        CustomSnackbar.showErrorToast("You don't have access to this feature");
+        Get.toNamed(AppRoutes.upgradePlanScreen);
+        return;
+      }
+
       if (response.statusCode != 200) {
         CustomSnackbar.showErrorToast(message);
         return;
       }
       final data = responseBody["data"];
       final enifromData = data["data"];
-      print("EniformData: =============== $enifromData");
       if (enifromData == null) {
         CustomSnackbar.showErrorToast(message);
         return;
@@ -107,7 +113,6 @@ class AppServiceController extends GetxController {
       this.eniformPhoneInfoModel.value = eniformPhoneInfoModel;
 
       List<dynamic> reverseInfoData = data["reverseInfo"];
-      print("ReverseInfoData: =============== $reverseInfoData");
       if (reverseInfoData.isNotEmpty) {
         List<ReverseInfoOnPhoneSearchModel> mapped =
             reverseInfoData
@@ -151,10 +156,16 @@ class AppServiceController extends GetxController {
       if (response == null) return;
       final data = json.decode(response.body);
       String message = data["message"] ?? "";
+      if (response.statusCode == 403) {
+        CustomSnackbar.showErrorToast("You don't have access to this feature");
+        Get.offNamed(AppRoutes.upgradePlanScreen);
+        return;
+      }
       if (response.statusCode != 200) {
         CustomSnackbar.showErrorToast(message);
         return;
       }
+
       List result = data["data"] ?? [];
       if (result.isEmpty) {
         CustomSnackbar.showErrorToast("No data found");
@@ -195,6 +206,11 @@ class AppServiceController extends GetxController {
 
       final data = json.decode(response.body);
       String message = data["message"] ?? "";
+      if (response.statusCode == 403) {
+        CustomSnackbar.showErrorToast("You don't have access to this feature");
+        Get.offNamed(AppRoutes.upgradePlanScreen);
+        return null;
+      }
       if (response.statusCode != 200) {
         CustomSnackbar.showErrorToast(message);
         return null;
