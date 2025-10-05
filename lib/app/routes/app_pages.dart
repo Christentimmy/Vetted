@@ -23,7 +23,7 @@ import 'package:Vetted/app/modules/onboarding/views/our_safety_tools_screen.dart
 import 'package:Vetted/app/modules/post/views/create_post_screen.dart';
 import 'package:Vetted/app/modules/post/views/poll_post_screen.dart';
 import 'package:Vetted/app/modules/post/views/post_screen.dart';
-import 'package:Vetted/app/modules/post/views/upgrade_plan_screen.dart';
+import 'package:Vetted/app/modules/settings/views/upgrade_plan_screen.dart';
 import 'package:Vetted/app/modules/post/views/woman_post_screen.dart';
 import 'package:Vetted/app/modules/profile/views/date_of_birth_screen.dart';
 import 'package:Vetted/app/modules/profile/views/edit_profile_screen.dart';

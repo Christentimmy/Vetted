@@ -19,7 +19,7 @@ class VettedApp extends StatefulWidget {
   const VettedApp({super.key});
 
   @override
-  State<VettedApp> createState() => _VettedAppState();
+  State<VettedApp> createState() => _VettedAppState();  
 }
 
 class _VettedAppState extends State<VettedApp> {

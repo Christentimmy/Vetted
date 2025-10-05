@@ -41,6 +41,13 @@ class SettingScreen extends StatelessWidget {
               },
             ),
             _menuItem(
+              icon: Icons.person_outline,
+              title: "Invite Friends",
+              onTap: () {
+                // Get.toNamed(AppRoutes.editProfileScreen);
+              },
+            ),
+            _menuItem(
               icon: Icons.edit_note_outlined,
               title: "My Post",
               onTap: () {
@@ -58,10 +65,6 @@ class SettingScreen extends StatelessWidget {
               icon: Icons.warning_amber_outlined,
               title: "My Alerts",
               onTap: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(builder: (_) => const MyAlertsScreen()),
-                // );
                 Get.toNamed(AppRoutes.myAlertsScreen);
               },
             ),
@@ -91,7 +94,6 @@ class SettingScreen extends StatelessWidget {
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 16),
-            // _menuItem(icon: Icons.face_unlock_outlined, title: "Face ID"),
             _menuItem(
               icon: Icons.help_outline,
               title: "Frequently Asked Questions",
@@ -103,10 +105,6 @@ class SettingScreen extends StatelessWidget {
               icon: Icons.support_agent_outlined,
               title: "Support",
               onTap: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(builder: (_) => const SupportScreen()),
-                // );
                 Get.toNamed(AppRoutes.supportScreen);
               },
             ),

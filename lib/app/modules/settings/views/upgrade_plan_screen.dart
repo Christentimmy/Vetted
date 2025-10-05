@@ -1,11 +1,14 @@
 import 'package:Vetted/app/controller/subscription_controller.dart';
+import 'package:Vetted/app/controller/user_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class UpgradePlanScreen extends StatelessWidget {
   UpgradePlanScreen({super.key});
 
   final subscriptionController = Get.find<SubscriptionController>();
+  final userController = Get.find<UserController>();
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +26,6 @@ class UpgradePlanScreen extends StatelessWidget {
       "Find social media profiles",
       "Boost your posts",
     ];
-
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -160,9 +162,21 @@ class UpgradePlanScreen extends StatelessWidget {
               // 🔓 Unlock Features Button
               SizedBox(
                 width: double.infinity,
+                // height: 55,
                 child: ElevatedButton(
                   onPressed: () async {
-                    await subscriptionController.createSubscription();
+                    final userModel = userController.userModel.value;
+                    final subscription = userModel?.subscription;
+
+                    if (subscription?.status == "active" &&
+                        subscription?.cancelAtPeriodEnd == true) {
+                      await subscriptionController.resumeSubscription();
+                    } else if (subscription?.status == "active" &&
+                        subscription?.cancelAtPeriodEnd == false) {
+                      await subscriptionController.cancelSubscription();
+                    } else {
+                      await subscriptionController.createSubscription();
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.red.shade700,
@@ -172,18 +186,46 @@ class UpgradePlanScreen extends StatelessWidget {
                     ),
                   ),
                   child: Obx(() {
+                    String text = "";
+                    final userModel = userController.userModel.value;
+                    final subscription = userModel?.subscription;
+                    if (subscription?.status == "active" &&
+                        subscription?.cancelAtPeriodEnd == false) {
+                      text = "Cancel Subscription";
+                    } else if (subscription?.status == "active" &&
+                        subscription?.cancelAtPeriodEnd == true) {
+                      text = "Resume Subscription";
+                    } else if (subscription?.status == "past_due") {
+                      text = "Resume Subscription";
+                    } else {
+                      text = "Upgrade to Premium";
+                    }
                     if (subscriptionController.isLoading.value) {
                       return const Center(
                         child: CircularProgressIndicator(color: Colors.white),
                       );
                     }
-                    return const Text(
-                      'Unlock All Features',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                        color: Colors.white,
-                      ),
+                    return Column(
+                      children: [
+                        Text(
+                          text,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: Colors.white,
+                          ),
+                        ),
+                        if (subscription?.status == "past_due")
+                          Text(
+                            "Your subscription is past due",
+                            style: GoogleFonts.fredoka(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 11,
+                              fontStyle: FontStyle.italic,
+                              color: Colors.white,
+                            ),
+                          ),
+                      ],
                     );
                   }),
                 ),

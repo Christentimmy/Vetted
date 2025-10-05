@@ -16,6 +16,7 @@ class UserModel {
   final int? followerCount;
   final int? followingCount;
   final LocationModel? location;
+  final Subscription? subscription;
 
   UserModel({
     this.id,
@@ -35,6 +36,7 @@ class UserModel {
     this.followerCount,
     this.followingCount,
     this.location,
+    this.subscription,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -60,6 +62,10 @@ class UserModel {
       location:
           json['location'] != null
               ? LocationModel.fromJson(json['location'])
+              : null,
+      subscription:
+          json['subscription'] != null
+              ? Subscription.fromJson(json['subscription'])
               : null,
     );
   }
@@ -96,5 +102,30 @@ class LocationModel {
   @override
   String toString() {
     return 'LocationModel(type: $type, address: $address, coordinates: $coordinates)';
+  }
+}
+
+class Subscription {
+  String? planId;
+  String? status;
+  DateTime? currentPeriodEnd;
+  bool? cancelAtPeriodEnd;
+
+  Subscription({
+    this.planId,
+    this.status,
+    this.currentPeriodEnd,
+    this.cancelAtPeriodEnd,
+  });
+
+  factory Subscription.fromJson(Map<String, dynamic> json) {
+    return Subscription(
+      planId: json['planId'] ?? '',
+      status: json['status'] ?? '',
+      currentPeriodEnd:
+          DateTime.tryParse(json['currentPeriodEnd'].toString()) ??
+          DateTime.now(),
+      cancelAtPeriodEnd: json['cancelAtPeriodEnd'] ?? false,
+    );
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:Vetted/app/controller/storage_controller.dart';
+import 'package:Vetted/app/controller/user_controller.dart';
 import 'package:Vetted/app/data/services/subscription_service.dart';
 import 'package:Vetted/app/widgets/snack_bar.dart';
 import 'package:flutter/material.dart';
@@ -39,4 +40,56 @@ class SubscriptionController extends GetxController {
       isLoading.value = false;
     }
   }
+
+  Future<void> cancelSubscription() async {
+    isLoading.value = true;
+    try {
+      final storageController = Get.find<StorageController>();
+      final String? token = await storageController.getToken();
+      if (token == null) return;
+      final response = await _subscriptionService.cancelSubscription(
+        token: token,
+      );
+      if (response == null) return;
+      final decoded = json.decode(response.body);
+      String message = decoded["message"] ?? "";
+      if (response.statusCode != 200) {
+        CustomSnackbar.showErrorToast(message);
+        return;
+      }
+      await Get.find<UserController>().getUserDetails();
+      CustomSnackbar.showSuccessToast(message);
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> resumeSubscription() async {
+    isLoading.value = true;
+    try {
+      final storageController = Get.find<StorageController>();
+      final String? token = await storageController.getToken();
+      if (token == null) return;
+      final response = await _subscriptionService.resumeSubscription(
+        token: token,
+      );
+      if (response == null) return;
+      final decoded = json.decode(response.body);
+      String message = decoded["message"] ?? "";
+      if (response.statusCode != 200) {
+        CustomSnackbar.showErrorToast(message);
+        return;
+      }
+      await Get.find<UserController>().getUserDetails();
+      CustomSnackbar.showSuccessToast(message);
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+
 }

@@ -13,9 +13,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class AppServiceController extends GetxController {
+
+
+  //TODO: Pesons, personsBackground, Delete
+
   final isloading = false.obs;
   final isloadingByName = false.obs;
   final isloadingImage = false.obs;
+
   final AppService appService = AppService();
   RxList<PersonModel> persons = <PersonModel>[].obs;
   RxList<SearchImage> images = <SearchImage>[].obs;
@@ -45,6 +50,11 @@ class AppServiceController extends GetxController {
 
       final data = json.decode(response.body);
       String message = data["message"] ?? "";
+      if (response.statusCode == 403) {
+        CustomSnackbar.showErrorToast("You don't have access to this feature");
+        Get.offNamed(AppRoutes.upgradePlanScreen);
+        return;
+      }
       if (response.statusCode != 200) {
         CustomSnackbar.showErrorToast(message);
         return;
