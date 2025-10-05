@@ -35,8 +35,7 @@ class _BackgroundCheckSearchScreenState
     setState(() {
       _isFormValid =
           _firstNameController.text.isNotEmpty &&
-          _lastNameController.text.isNotEmpty &&
-          _phoneController.text.isNotEmpty;
+          _lastNameController.text.isNotEmpty;
     });
   }
 
@@ -92,12 +91,13 @@ class _BackgroundCheckSearchScreenState
                     _isFormValid
                         ? () async {
                           await appServiceController.backgroundCheck(
-                            name:
-                                "${_firstNameController.text} ${_lastNameController.text}",
-                            street: _cityController.text,
-                            stateCode: _stateController.text,
-                            city: _cityController.text,
-                            zipCode: _phoneController.text,
+                            firstName: _firstNameController.text.trim(),
+                            lastName: _lastNameController.text.trim(),
+                            middleName: _middleNameController.text.trim(),
+                            street: _cityController.text.trim(),
+                            stateCode: _stateController.text.trim(),
+                            city: _cityController.text.trim(),
+                            zipCode: _phoneController.text.trim(),
                           );
                         }
                         : null,

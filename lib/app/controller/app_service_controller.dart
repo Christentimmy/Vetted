@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:Vetted/app/controller/storage_controller.dart';
+import 'package:Vetted/app/data/models/background_check_model.dart';
 import 'package:Vetted/app/data/models/eniform_phone_info_model.dart';
 import 'package:Vetted/app/data/models/person_model.dart';
 import 'package:Vetted/app/data/models/search_image_model.dart';
@@ -19,6 +20,8 @@ class AppServiceController extends GetxController {
   RxList<PersonModel> persons = <PersonModel>[].obs;
   RxList<SearchImage> images = <SearchImage>[].obs;
   RxList<PersonModel> personsBackground = <PersonModel>[].obs;
+
+  final backgroundCheckList = <BackgroundCheckModel>[].obs;
 
   //new number data
   final eniformPhoneInfoModel = EniformPhoneInfoModel().obs;
@@ -112,11 +115,13 @@ class AppServiceController extends GetxController {
   }
 
   Future<void> backgroundCheck({
-    required String name,
-    required String street,
-    required String stateCode,
-    required String city,
-    required String zipCode,
+    required String firstName,
+    required String lastName,
+    String? middleName,
+    String? street,
+    String? stateCode,
+    String? city,
+    String? zipCode,
   }) async {
     isloading.value = true;
     try {
@@ -124,7 +129,9 @@ class AppServiceController extends GetxController {
       final String? token = await storageController.getToken();
       if (token == null) return;
       final response = await appService.backgroundCheck(
-        name: name,
+        firstName: firstName,
+        lastName: lastName,
+        middleName: middleName,
         street: street,
         stateCode: stateCode,
         city: city,
@@ -143,12 +150,12 @@ class AppServiceController extends GetxController {
         CustomSnackbar.showErrorToast("No data found");
         return;
       }
-      List<PersonModel> incomingPersons =
-          result.map((e) => PersonModel.fromJson(e)).toList();
-      personsBackground.value = incomingPersons;
+      List<BackgroundCheckModel> incomingPersons =
+          result.map((e) => BackgroundCheckModel.fromJson(e)).toList();
+      backgroundCheckList.value = incomingPersons;
       Get.toNamed(
         AppRoutes.backgroundCheckSearchResultScreen,
-        arguments: {"name": name},
+        arguments: {"name": firstName},
       );
     } catch (e) {
       debugPrint(e.toString());

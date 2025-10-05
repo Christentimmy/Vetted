@@ -43,14 +43,16 @@ class AppService {
   }) async {
     try {
       final uri = Uri.parse("$baseUrl/services/enformion-number-search");
-      final response = await client.post(
-        uri,
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode({'number': phoneNumber}),
-      ).timeout(const Duration(seconds: 30));
+      final response = await client
+          .post(
+            uri,
+            headers: {
+              'Authorization': 'Bearer $token',
+              'Content-Type': 'application/json',
+            },
+            body: jsonEncode({'number': phoneNumber}),
+          )
+          .timeout(const Duration(seconds: 30));
       return response;
     } on SocketException catch (e) {
       debugPrint("No internet connection $e");
@@ -64,27 +66,33 @@ class AppService {
 
   Future<http.Response?> backgroundCheck({
     required String token,
-    required String name,
-    required String street,
-    required String stateCode,
-    required String city,
-    required String zipCode,
+    required String firstName,
+    required String lastName,
+    String? middleName,
+    String? street,
+    String? stateCode,
+    String? city,
+    String? zipCode,
   }) async {
     try {
       final response = await client.post(
-        Uri.parse("$baseUrl/services/name-lookup"),
+        Uri.parse("$baseUrl/services/enformion-background-search"),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
         body: jsonEncode({
-          'name': name,
+          'firstName': firstName,
+          'lastName': lastName,
+          'middleName': middleName,
           'street': street,
-          'stateCode': stateCode,
+          'state_code': stateCode,
           'city': city,
           'zipCode': zipCode,
         }),
-      );
+      ).timeout(const Duration(seconds: 30));
+
+      
       return response;
     } on SocketException catch (e) {
       debugPrint("No internet connection $e");
