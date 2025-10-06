@@ -45,7 +45,6 @@ class UserController extends GetxController {
       }
 
       var userData = decoded["data"];
-      print("-------------------------------------------------------$userData");
       UserModel mapped = UserModel.fromJson(userData);
       userModel.value = mapped;
       userModel.refresh();

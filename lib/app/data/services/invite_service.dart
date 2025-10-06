@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class InviteService {
+  
   Future<http.Response?> getMyInviteCode({required String token}) async {
     try {
       final response = await http
@@ -17,7 +18,7 @@ class InviteService {
               "Content-Type": "application/json",
             },
           )
-          .timeout(const Duration(seconds: 15));
+          .timeout(const Duration(seconds: 10));
       return response;
     } on SocketException catch (e) {
       debugPrint("No internet connection $e");

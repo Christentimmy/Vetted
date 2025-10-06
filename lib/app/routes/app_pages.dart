@@ -30,6 +30,7 @@ import 'package:Vetted/app/modules/post/views/post_screen.dart';
 import 'package:Vetted/app/modules/settings/views/invite_friends_screen.dart';
 import 'package:Vetted/app/modules/settings/views/invite_screen.dart';
 import 'package:Vetted/app/modules/settings/views/redeem_code_screen.dart';
+import 'package:Vetted/app/modules/settings/views/safety_resources_screen.dart';
 import 'package:Vetted/app/modules/settings/views/upgrade_plan_screen.dart';
 import 'package:Vetted/app/modules/post/views/woman_post_screen.dart';
 import 'package:Vetted/app/modules/profile/views/date_of_birth_screen.dart';
@@ -240,6 +241,10 @@ class AppPages {
     GetPage(
       name: AppRoutes.allCriminalRecordsScreen,
       page: () => AllCriminalRecordsScreen(),
+    ),
+    GetPage(
+      name: AppRoutes.safetyResourcesScreen,
+      page: () => SafetyResourcesScreen(),
     ),
   ];
 }

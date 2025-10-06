@@ -2,14 +2,7 @@ import 'package:Vetted/app/controller/auth_controller.dart';
 import 'package:Vetted/app/controller/user_controller.dart';
 import 'package:Vetted/app/routes/app_routes.dart';
 import 'package:Vetted/app/widgets/top_bar.dart';
-// import 'package:Vetted/screens/invite_friends_screen.dart';
-// import 'package:Vetted/screens/my_alerts_screen.dart';
-// import 'package:Vetted/screens/my_post_screen.dart';
 import 'package:Vetted/screens/notification_menu_screen.dart';
-import 'package:Vetted/screens/safety_resources_screen.dart';
-// import 'package:Vetted/screens/saved_post_screen.dart';
-// import 'package:Vetted/screens/upgrade_plan_screen.dart';
-// import 'package:Vetted/screens/support_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -58,13 +51,6 @@ class SettingScreen extends StatelessWidget {
                 }
               },
             ),
-            // _menuItem(
-            //   icon: Icons.qr_code_2_rounded,
-            //   title: "Redeem Code",
-            //   onTap: () {
-            //     Get.toNamed(AppRoutes.redeemCodeScreen);
-            //   },
-            // ),
             _menuItem(
               icon: Icons.edit_note_outlined,
               title: "My Post",
@@ -90,12 +76,7 @@ class SettingScreen extends StatelessWidget {
               icon: Icons.shield_outlined,
               title: "Safety Resources",
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => const SafetyResourcesScreen(),
-                  ),
-                );
+                Get.toNamed(AppRoutes.safetyResourcesScreen);
               },
             ),
             _menuItem(
