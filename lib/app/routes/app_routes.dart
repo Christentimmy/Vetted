@@ -45,4 +45,5 @@ class AppRoutes {
   static const String inviteScreen = '/inviteScreen';
   static const String redeemCodeScreen = '/redeemCodeScreen';
   static const String criminalRecordSearchScreen = '/criminalRecordSearchScreen';
+  static const String criminalRecordScreen = '/criminalRecordScreen';
 }

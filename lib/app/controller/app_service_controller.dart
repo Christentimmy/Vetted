@@ -275,6 +275,7 @@ class AppServiceController extends GetxController {
     required String lastName,
     String? middleName,
   }) async {
+    isloading.value = true;
     try {
       final storageController = Get.find<StorageController>();
       final String? token = await storageController.getToken();
@@ -302,8 +303,12 @@ class AppServiceController extends GetxController {
       List<CriminalRecordModel> criminals =
           result.map((e) => CriminalRecordModel.fromJson(e)).toList();
       criminalList.value = criminals;
+
+      Get.toNamed(AppRoutes.criminalRecordScreen);
     } catch (e) {
       debugPrint(e.toString());
+    } finally {
+      isloading.value = false;
     }
   }
 }

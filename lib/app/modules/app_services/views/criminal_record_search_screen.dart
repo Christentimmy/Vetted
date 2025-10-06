@@ -1,6 +1,5 @@
 import 'package:Vetted/app/controller/app_service_controller.dart';
 import 'package:Vetted/app/widgets/custom_button.dart';
-import 'package:Vetted/screens/criminal_record_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -93,16 +92,15 @@ class CriminalRecordSearchScreen extends StatelessWidget {
 
             /// Start Check Button
             CustomButton(
-              ontap: () {
+              ontap: () async {
                 if (!formKey.currentState!.validate()) return;
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const CriminalRecordScreen(),
-                  ),
+                await appServiceController.getCriminalRecords(
+                  firstName: _firstNameController.text.trim(),
+                  middleName: _middleNameController.text.trim(),
+                  lastName: _lastNameController.text.trim(),
                 );
               },
-              isLoading: false.obs,
+              isLoading: appServiceController.isloading,
               child: Text(
                 "Start Check",
                 style: GoogleFonts.fredoka(
