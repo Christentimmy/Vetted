@@ -53,45 +53,6 @@ class CriminalRecordScreen extends StatelessWidget {
                     ),
                   );
                 },
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress == null) {
-                    return child; // Image fully loaded
-                  }
-
-                  final expected = loadingProgress.expectedTotalBytes;
-                  final loaded = loadingProgress.cumulativeBytesLoaded;
-                  final progress = expected != null ? loaded / expected : null;
-
-                  return Container(
-                    height: 220,
-                    width: double.infinity,
-                    color: Colors.grey.shade200,
-                    child: Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          CircularProgressIndicator(
-                            value: progress, // null = indeterminate
-                            strokeWidth: 3,
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              Colors.blueAccent,
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          Text(
-                            progress != null
-                                ? "${(progress * 100).toStringAsFixed(0)}%"
-                                : "Loading...",
-                            style: const TextStyle(
-                              fontSize: 13,
-                              color: Colors.black54,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
               ),
             ),
             const SizedBox(height: 10),
