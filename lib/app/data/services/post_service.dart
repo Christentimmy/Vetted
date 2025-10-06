@@ -279,7 +279,7 @@ class PostService {
     try {
       var uri = Uri.parse("$baseUrl/post/react-to-comment");
       var response = await http
-          .post(
+          .patch(
             uri,
             headers: {
               "Authorization": "Bearer $token",
