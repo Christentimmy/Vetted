@@ -21,6 +21,7 @@ class UserModel {
   final String? inviteCode;
   final String? totalInvites;
   final String? premiumCredits;
+  final NotificationSettings? notificationSettings;
 
   UserModel({
     this.id,
@@ -45,6 +46,7 @@ class UserModel {
     this.inviteCode,
     this.totalInvites,
     this.premiumCredits,
+    this.notificationSettings,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -79,6 +81,10 @@ class UserModel {
       inviteCode: json['inviteCode']?.toString() ?? '',
       totalInvites: json['totalInvites']?.toString() ?? '',
       premiumCredits: json['premiumCredits']?.toString() ?? '',
+      notificationSettings:
+          json['notificationSettings'] != null
+              ? NotificationSettings.fromJson(json['notificationSettings'])
+              : NotificationSettings(),
     );
   }
 
@@ -138,6 +144,32 @@ class Subscription {
           DateTime.tryParse(json['currentPeriodEnd'].toString()) ??
           DateTime.now(),
       cancelAtPeriodEnd: json['cancelAtPeriodEnd'] ?? false,
+    );
+  }
+}
+
+class NotificationSettings {
+  bool? general;
+  bool? trendingPost;
+  bool? newComments;
+  bool? alertForWomenNames;
+  bool? reactions;
+
+  NotificationSettings({
+    this.general,
+    this.trendingPost,
+    this.newComments,
+    this.alertForWomenNames,
+    this.reactions,
+  });
+
+  factory NotificationSettings.fromJson(Map<String, dynamic> json) {
+    return NotificationSettings(
+      general: json['general'] ?? false,
+      trendingPost: json['trendingPost'] ?? false,
+      newComments: json['newComments'] ?? false,
+      alertForWomenNames: json['alertForWomenNames'] ?? false,
+      reactions: json['reactions'] ?? false,
     );
   }
 }

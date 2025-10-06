@@ -1,4 +1,6 @@
+import 'package:Vetted/app/controller/user_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class NotificationMenuScreen extends StatefulWidget {
   const NotificationMenuScreen({super.key});
@@ -8,6 +10,8 @@ class NotificationMenuScreen extends StatefulWidget {
 }
 
 class _NotificationMenuScreenState extends State<NotificationMenuScreen> {
+  final userController = Get.find<UserController>();
+
   // toggle states
   bool general = true;
   bool trendingPost = true;

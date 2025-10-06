@@ -2,7 +2,6 @@ import 'package:Vetted/app/controller/auth_controller.dart';
 import 'package:Vetted/app/controller/user_controller.dart';
 import 'package:Vetted/app/routes/app_routes.dart';
 import 'package:Vetted/app/widgets/top_bar.dart';
-import 'package:Vetted/screens/notification_menu_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -111,12 +110,7 @@ class SettingScreen extends StatelessWidget {
               icon: Icons.notifications_outlined,
               title: "Notifications",
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => const NotificationMenuScreen(),
-                  ),
-                );
+               Get.toNamed(AppRoutes.notificationMenuScreen);
               },
             ),
             _menuItem(

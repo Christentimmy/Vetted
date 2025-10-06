@@ -48,4 +48,5 @@ class AppRoutes {
   static const String criminalRecordScreen = '/criminalRecordScreen';
   static const String allCriminalRecordsScreen = '/allCriminalRecordsScreen';
   static const String safetyResourcesScreen = '/safetyResourcesScreen';
+  static const String notificationMenuScreen = '/notificationMenuScreen';
 }

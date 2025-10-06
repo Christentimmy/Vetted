@@ -29,6 +29,7 @@ import 'package:Vetted/app/modules/post/views/poll_post_screen.dart';
 import 'package:Vetted/app/modules/post/views/post_screen.dart';
 import 'package:Vetted/app/modules/settings/views/invite_friends_screen.dart';
 import 'package:Vetted/app/modules/settings/views/invite_screen.dart';
+import 'package:Vetted/app/modules/settings/views/notification_menu_screen.dart';
 import 'package:Vetted/app/modules/settings/views/redeem_code_screen.dart';
 import 'package:Vetted/app/modules/settings/views/safety_resources_screen.dart';
 import 'package:Vetted/app/modules/settings/views/upgrade_plan_screen.dart';
@@ -246,5 +247,10 @@ class AppPages {
       name: AppRoutes.safetyResourcesScreen,
       page: () => SafetyResourcesScreen(),
     ),
+    GetPage(
+      name: AppRoutes.notificationMenuScreen,
+      page: () => NotificationMenuScreen(),
+    ),
+
   ];
 }

@@ -690,6 +690,39 @@ class UserController extends GetxController {
     }
   }
 
+  Future<void> changeNotificationSetting({
+    required bool general,
+    required bool trendingPost,
+    required bool newComments,
+    required bool alertForWomenNames,
+    required bool reactions,
+  }) async {
+    try {
+      final storageController = Get.find<StorageController>();
+      final token = await storageController.getToken();
+      if (token == null) return;
+      final response = await _userService.changeNotificationSetting(
+        token: token,
+        general: general,
+        trendingPost: trendingPost,
+        newComments: newComments,
+        alertForWomenNames: alertForWomenNames,
+        reactions: reactions,
+      );
+      if (response == null) return;
+      final decoded = await json.decode(response.body);
+      String message = decoded["message"] ?? "";
+      if (response.statusCode != 200) {
+        CustomSnackbar.showErrorToast(message);
+        return;
+      }
+      CustomSnackbar.showSuccessToast(message);
+      
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
   void clean() {
     userModel.value = null;
     alertList.clear();
