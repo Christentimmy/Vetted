@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:Vetted/app/controller/storage_controller.dart';
 import 'package:Vetted/app/data/models/background_check_model.dart';
+import 'package:Vetted/app/data/models/criminal_record_model.dart';
 import 'package:Vetted/app/data/models/eniform_phone_info_model.dart';
 import 'package:Vetted/app/data/models/person_model.dart';
 import 'package:Vetted/app/data/models/search_image_model.dart';
@@ -25,6 +26,7 @@ class AppServiceController extends GetxController {
   RxList<PersonModel> personsBackground = <PersonModel>[].obs;
 
   final backgroundCheckList = <BackgroundCheckModel>[].obs;
+  final criminalList = <CriminalRecordModel>[].obs;
 
   //new number data
   final eniformPhoneInfoModel = EniformPhoneInfoModel().obs;
@@ -79,7 +81,6 @@ class AppServiceController extends GetxController {
   Future<void> getNumberInfo({required String number}) async {
     isloading.value = true;
     try {
-
       final storageController = Get.find<StorageController>();
       final String? token = await storageController.getToken();
       if (token == null) return;
@@ -267,5 +268,42 @@ class AppServiceController extends GetxController {
       isloadingByName.value = false;
     }
     return null;
+  }
+
+  Future<void> getCriminalRecords({
+    required String firstName,
+    required String lastName,
+    String? middleName,
+  }) async {
+    try {
+      final storageController = Get.find<StorageController>();
+      final String? token = await storageController.getToken();
+      if (token == null) return;
+
+      final response = await appService.getCriminalRecord(
+        token: token,
+        firstName: firstName,
+        lastName: lastName,
+        middleName: middleName,
+      );
+      if (response == null) return;
+
+      final data = json.decode(response.body);
+      String message = data["message"] ?? "";
+      if (response.statusCode != 200) {
+        CustomSnackbar.showErrorToast(message);
+        return;
+      }
+      List result = data["data"] ?? [];
+      if (result.isEmpty) {
+        CustomSnackbar.showErrorToast("No data found");
+        return;
+      }
+      List<CriminalRecordModel> criminals =
+          result.map((e) => CriminalRecordModel.fromJson(e)).toList();
+      criminalList.value = criminals;
+    } catch (e) {
+      debugPrint(e.toString());
+    }
   }
 }
