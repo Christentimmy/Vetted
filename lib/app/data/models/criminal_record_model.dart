@@ -1,12 +1,12 @@
 
-class CriminalRecord {
+class CriminalRecordModel {
   final String? name;
   final List<OffenderAttribute>? offenderAttributes;
   final CaseDetails? caseDetails;
   final String? offense;
   final String? image;
 
-  CriminalRecord({
+  CriminalRecordModel({
     this.name,
     this.offenderAttributes,
     this.caseDetails,
@@ -14,8 +14,8 @@ class CriminalRecord {
     this.image,
   });
 
-  factory CriminalRecord.fromJson(Map<String, dynamic> json) {
-    return CriminalRecord(
+  factory CriminalRecordModel.fromJson(Map<String, dynamic> json) {
+    return CriminalRecordModel(
       name: json['name'] ?? '',
       offenderAttributes: (json['offenderAttributes'] as List<dynamic>?)
               ?.map((e) => OffenderAttribute.fromJson(e))
