@@ -10,16 +10,14 @@ class CriminalRecordScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-
       appBar: buildAppBar(),
-
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+        child: ListView(
           children: [
             // 🔴 Name tag
             Container(
+              alignment: Alignment.center,
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
               decoration: BoxDecoration(
                 color: Colors.red,
@@ -44,8 +42,59 @@ class CriminalRecordScreen extends StatelessWidget {
                 height: 220,
                 width: double.infinity,
                 fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    height: 220,
+                    color: Colors.grey.shade300,
+                    child: const Icon(
+                      Icons.broken_image,
+                      size: 40,
+                      color: Colors.grey,
+                    ),
+                  );
+                },
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) {
+                    return child; // Image fully loaded
+                  }
+
+                  final expected = loadingProgress.expectedTotalBytes;
+                  final loaded = loadingProgress.cumulativeBytesLoaded;
+                  final progress = expected != null ? loaded / expected : null;
+
+                  return Container(
+                    height: 220,
+                    width: double.infinity,
+                    color: Colors.grey.shade200,
+                    child: Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          CircularProgressIndicator(
+                            value: progress, // null = indeterminate
+                            strokeWidth: 3,
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              Colors.blueAccent,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Text(
+                            progress != null
+                                ? "${(progress * 100).toStringAsFixed(0)}%"
+                                : "Loading...",
+                            style: const TextStyle(
+                              fontSize: 13,
+                              color: Colors.black54,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
+            const SizedBox(height: 10),
             _infoBox("Offense:", criminal.offense ?? ""),
 
             const SizedBox(height: 24),

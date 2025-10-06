@@ -1,4 +1,5 @@
 import 'package:Vetted/app/controller/app_service_controller.dart';
+import 'package:Vetted/app/resources/colors.dart';
 import 'package:Vetted/app/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -20,8 +21,7 @@ class CriminalRecordSearchScreen extends StatelessWidget {
       appBar: buildAppBar(context),
       body: Padding(
         padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+        child: ListView(
           children: [
             const SizedBox(height: 10),
             const Text(
@@ -53,6 +53,13 @@ class CriminalRecordSearchScreen extends StatelessWidget {
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(6),
                       ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(6),
+                        borderSide: BorderSide(
+                          color: AppColors.primaryColor,
+                          width: 2,
+                        ),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 15),
@@ -65,6 +72,13 @@ class CriminalRecordSearchScreen extends StatelessWidget {
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(6),
                       ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(6),
+                        borderSide: BorderSide(
+                          color: AppColors.primaryColor,
+                          width: 2,
+                        ),
+                      ),  
                     ),
                   ),
                   const SizedBox(height: 15),
@@ -83,6 +97,13 @@ class CriminalRecordSearchScreen extends StatelessWidget {
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(6),
                       ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(6),
+                        borderSide: BorderSide(
+                          color: AppColors.primaryColor,
+                          width: 2,
+                        ),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 30),
@@ -99,6 +120,9 @@ class CriminalRecordSearchScreen extends StatelessWidget {
                   middleName: _middleNameController.text.trim(),
                   lastName: _lastNameController.text.trim(),
                 );
+                _firstNameController.clear();
+                _middleNameController.clear();
+                _lastNameController.clear();
               },
               isLoading: appServiceController.isloading,
               child: Text(
