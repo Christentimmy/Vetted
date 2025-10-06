@@ -522,4 +522,35 @@ class UserService {
     }
     return null;
   }
+
+  Future<http.Response?> changeNotificationSetting({
+    required String token,
+    required bool general,
+    required bool trendingPost,
+    required bool newComments,
+    required bool alertForWomenNames,
+    required bool reactions,
+  }) async {
+    try {
+      final response = await client.post(
+        Uri.parse("$baseUrl/user/change-notification-settings"),
+        headers: {
+          "Authorization": "Bearer $token",
+          "Content-Type": "application/json",
+        },
+        body: jsonEncode({
+          "general": general,
+          "trendingPost": trendingPost,
+          "newComments": newComments,
+          "alertForWomenNames": alertForWomenNames,
+          "reactions": reactions,
+        }),
+      );
+      return response;
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
+
 }
