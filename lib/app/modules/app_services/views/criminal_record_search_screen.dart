@@ -1,49 +1,19 @@
 import 'package:Vetted/app/controller/app_service_controller.dart';
+import 'package:Vetted/app/widgets/custom_button.dart';
 import 'package:Vetted/screens/criminal_record_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
+class CriminalRecordSearchScreen extends StatelessWidget {
+  CriminalRecordSearchScreen({super.key});
 
-class CriminalRecordSearchScreen extends StatefulWidget {
-  const CriminalRecordSearchScreen({super.key});
-
-  @override
-  State<CriminalRecordSearchScreen> createState() =>
-      _CriminalRecordSearchScreenState();
-}
-
-class _CriminalRecordSearchScreenState
-    extends State<CriminalRecordSearchScreen> {
-  final TextEditingController _firstNameController = TextEditingController();
-  final TextEditingController _middleNameController = TextEditingController();
-  final TextEditingController _lastNameController = TextEditingController();
+  final _firstNameController = TextEditingController();
+  final _middleNameController = TextEditingController();
+  final _lastNameController = TextEditingController();
 
   final appServiceController = Get.find<AppServiceController>();
-
-  bool isFormValid = false;
-
-  void _validateForm() {
-    setState(() {
-      isFormValid =
-          _firstNameController.text.trim().isNotEmpty &&
-          _lastNameController.text.trim().isNotEmpty;
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _firstNameController.addListener(_validateForm);
-    _lastNameController.addListener(_validateForm);
-  }
-
-  @override
-  void dispose() {
-    _firstNameController.dispose();
-    _middleNameController.dispose();
-    _lastNameController.dispose();
-    super.dispose();
-  }
+  final formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -67,69 +37,78 @@ class _CriminalRecordSearchScreenState
             const SizedBox(height: 20),
 
             /// First Name
-            TextField(
-              controller: _firstNameController,
-              decoration: InputDecoration(
-                hintText: "First Name",
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(6),
-                ),
-              ),
-            ),
-            const SizedBox(height: 15),
+            Form(
+              key: formKey,
+              child: Column(
+                children: [
+                  TextFormField(
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'First name is required';
+                      }
+                      return null;
+                    },
+                    controller: _firstNameController,
+                    decoration: InputDecoration(
+                      hintText: "First Name",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 15),
 
-            /// Middle Name (optional)
-            TextField(
-              controller: _middleNameController,
-              decoration: InputDecoration(
-                hintText: "Middle Name (optional)",
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(6),
-                ),
-              ),
-            ),
-            const SizedBox(height: 15),
+                  /// Middle Name (optional)
+                  TextFormField(
+                    controller: _middleNameController,
+                    decoration: InputDecoration(
+                      hintText: "Middle Name (optional)",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 15),
 
-            /// Last Name
-            TextField(
-              controller: _lastNameController,
-              decoration: InputDecoration(
-                hintText: "Last Name",
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(6),
-                ),
+                  /// Last Name
+                  TextFormField(
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Last name is required';
+                      }
+                      return null;
+                    },
+                    controller: _lastNameController,
+                    decoration: InputDecoration(
+                      hintText: "Last Name",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                ],
               ),
             ),
-            const SizedBox(height: 30),
 
             /// Start Check Button
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed:
-                    isFormValid
-                        ? () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder:
-                                  (context) => const CriminalRecordScreen(),
-                            ),
-                          );
-                        }
-                        : null,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor:
-                      isFormValid ? const Color(0xFF8B1E1E) : Colors.grey[300],
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 20),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+            CustomButton(
+              ontap: () {
+                if (!formKey.currentState!.validate()) return;
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const CriminalRecordScreen(),
                   ),
-                ),
-                child: const Text(
-                  "Start Check",
-                  style: TextStyle(fontSize: 16),
+                );
+              },
+              isLoading: false.obs,
+              child: Text(
+                "Start Check",
+                style: GoogleFonts.fredoka(
+                  fontSize: 16,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ),
