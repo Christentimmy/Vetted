@@ -300,6 +300,7 @@ class AppServiceController extends GetxController {
         CustomSnackbar.showErrorToast("No data found");
         return;
       }
+      
       List<CriminalRecordModel> criminals =
           result.map((e) => CriminalRecordModel.fromJson(e)).toList();
       criminalList.value = criminals;

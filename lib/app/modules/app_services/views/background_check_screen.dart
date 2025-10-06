@@ -4,7 +4,6 @@ import 'package:Vetted/app/routes/app_routes.dart';
 import 'package:Vetted/app/utils/image_picker.dart';
 import 'package:Vetted/app/widgets/snack_bar.dart';
 import 'package:Vetted/app/widgets/top_bar.dart';
-import 'package:cherry_toast/cherry_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -156,7 +155,7 @@ class BackgroundCheckScreen extends StatelessWidget {
                 HapticFeedback.lightImpact();
                 final im = await pickImage();
                 if (im == null) return;
-               await appServiceController.reverseImageSearch(file: im);
+                await appServiceController.reverseImageSearch(file: im);
               },
               child: Container(
                 height: 180,
@@ -210,20 +209,7 @@ class BackgroundCheckScreen extends StatelessWidget {
               "Criminal Record Search",
               "Search Now",
               AppColors.primaryColor,
-              () {
-                CherryToast.info(
-                  title: const Text('Feature'),
-                  description: const Text(
-                    'This feature will be available soon',
-                  ),
-                ).show(context);
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (_) => const CriminalRecordSearchScreen(),
-                //   ),
-                // );
-              },
+              () => Get.toNamed(AppRoutes.criminalRecordScreen),
             ),
             _customButton(
               "Court Search Resources",
