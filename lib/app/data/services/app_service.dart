@@ -75,24 +75,25 @@ class AppService {
     String? zipCode,
   }) async {
     try {
-      final response = await client.post(
-        Uri.parse("$baseUrl/services/enformion-background-search"),
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode({
-          'firstName': firstName,
-          'lastName': lastName,
-          'middleName': middleName,
-          'street': street,
-          'state_code': stateCode,
-          'city': city,
-          'zipCode': zipCode,
-        }),
-      ).timeout(const Duration(seconds: 30));
+      final response = await client
+          .post(
+            Uri.parse("$baseUrl/services/enformion-background-search"),
+            headers: {
+              'Authorization': 'Bearer $token',
+              'Content-Type': 'application/json',
+            },
+            body: jsonEncode({
+              'firstName': firstName,
+              'lastName': lastName,
+              'middleName': middleName,
+              'street': street,
+              'state_code': stateCode,
+              'city': city,
+              'zipCode': zipCode,
+            }),
+          )
+          .timeout(const Duration(seconds: 30));
 
-      
       return response;
     } on SocketException catch (e) {
       debugPrint("No internet connection $e");
@@ -145,6 +146,38 @@ class AppService {
               'Authorization': 'Bearer $token',
               'Content-Type': 'application/json',
             },
+          )
+          .timeout(const Duration(seconds: 30));
+      return response;
+    } on SocketException catch (e) {
+      debugPrint("No internet connection $e");
+    } on TimeoutException {
+      debugPrint("Request timeout");
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
+
+  Future<http.Response?> getCriminalRecord({
+    required String token,
+    required String firstName,
+    required String lastName,
+    String? middleName,
+  }) async {
+    try {
+      final response = await client
+          .post(
+            Uri.parse("$baseUrl/services/enformion-criminal-search"),
+            headers: {
+              'Authorization': 'Bearer $token',
+              'Content-Type': 'application/json',
+            },
+            body: jsonEncode({
+              'firstName': firstName,
+              'lastName': lastName,
+              'middleName': middleName,
+            }),
           )
           .timeout(const Duration(seconds: 30));
       return response;
