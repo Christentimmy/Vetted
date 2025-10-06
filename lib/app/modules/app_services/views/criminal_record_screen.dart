@@ -1,7 +1,10 @@
+import 'package:Vetted/app/data/models/criminal_record_model.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CriminalRecordScreen extends StatelessWidget {
-  const CriminalRecordScreen({super.key});
+  final CriminalRecordModel criminal;
+  const CriminalRecordScreen({super.key, required this.criminal});
 
   @override
   Widget build(BuildContext context) {
@@ -22,8 +25,8 @@ class CriminalRecordScreen extends StatelessWidget {
                 color: Colors.red,
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: const Text(
-                'Jonny Kate',
+              child: Text(
+                criminal.name ?? "",
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -36,21 +39,54 @@ class CriminalRecordScreen extends StatelessWidget {
             // 🖼️ Image
             ClipRRect(
               borderRadius: BorderRadius.circular(12),
-              child: Image.asset(
-                'assets/images/record.png', // update path accordingly
+              child: Image.network(
+                criminal.image ?? "",
                 height: 220,
                 width: double.infinity,
                 fit: BoxFit.cover,
               ),
             ),
+            _infoBox("Offense:", criminal.offense ?? ""),
 
             const SizedBox(height: 24),
+            Text(
+              "Offender Attributes",
+              style: GoogleFonts.fredoka(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            _infoBox("Date of Birth:", criminal.offenderAttributes?.dob ?? ""),
+            _infoBox("Hair:", criminal.offenderAttributes?.hair ?? ""),
+            _infoBox("Eye:", criminal.offenderAttributes?.eye ?? ""),
+            _infoBox("Height:", criminal.offenderAttributes?.height ?? ""),
+            _infoBox("Weight:", criminal.offenderAttributes?.weight ?? ""),
+            _infoBox("Race:", criminal.offenderAttributes?.race ?? ""),
+            _infoBox("Sex:", criminal.offenderAttributes?.sex ?? ""),
+            _infoBox("Skin Tone:", criminal.offenderAttributes?.skinTone ?? ""),
+            _infoBox(
+              "Military Service:",
+              criminal.offenderAttributes?.militaryService ?? "",
+            ),
+            _infoBox(
+              "Scars Marks:",
+              criminal.offenderAttributes?.scarsMarks ?? "",
+            ),
 
-            // 📝 Details
-            _infoBox("Convictions:", "Murder"),
-            _infoBox("Sentence:", "15 Months"),
-            _infoBox("Age:", "29"),
-            _infoBox("Address:", "New York City"),
+            const SizedBox(height: 24),
+            Text(
+              "Case Details",
+              style: GoogleFonts.fredoka(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            _infoBox("Case Number:", criminal.caseDetails?.caseNumber ?? ""),
+            _infoBox("Raw Category:", criminal.caseDetails?.rawCategory ?? ""),
+            _infoBox("Court County:", criminal.caseDetails?.courtCounty ?? ""),
+            _infoBox("Fees:", criminal.caseDetails?.fees ?? ""),
+            _infoBox("Fines:", criminal.caseDetails?.fines ?? ""),
+            _infoBox("Case Date:", criminal.caseDetails?.caseDate ?? ""),
           ],
         ),
       ),

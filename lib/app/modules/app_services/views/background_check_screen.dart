@@ -209,7 +209,7 @@ class BackgroundCheckScreen extends StatelessWidget {
               "Criminal Record Search",
               "Search Now",
               AppColors.primaryColor,
-              () => Get.toNamed(AppRoutes.criminalRecordScreen),
+              () => Get.toNamed(AppRoutes.criminalRecordSearchScreen),
             ),
             _customButton(
               "Court Search Resources",

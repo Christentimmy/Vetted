@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:Vetted/app/data/models/chat_list_model.dart';
+import 'package:Vetted/app/data/models/criminal_record_model.dart';
 import 'package:Vetted/app/data/models/person_model.dart';
 import 'package:Vetted/app/modules/app_services/views/background_check_search_result_screen.dart';
 import 'package:Vetted/app/modules/app_services/views/background_check_search_screen.dart';
@@ -209,12 +210,31 @@ class AppPages {
       page: () => NewVerificationScreen(),
     ),
     GetPage(name: AppRoutes.chatList, page: () => MessageListScreen()),
-    GetPage(name: AppRoutes.sexOffendersMapScreen, page: () => SexOffendersMapScreen()),
-    GetPage(name: AppRoutes.newNumberInfoScreen, page: () => NewNumberInfoScreen()),
+    GetPage(
+      name: AppRoutes.sexOffendersMapScreen,
+      page: () => SexOffendersMapScreen(),
+    ),
+    GetPage(
+      name: AppRoutes.newNumberInfoScreen,
+      page: () => NewNumberInfoScreen(),
+    ),
     GetPage(name: AppRoutes.inviteStatsScreen, page: () => InviteStatsScreen()),
     GetPage(name: AppRoutes.inviteScreen, page: () => InviteFriendsScreen()),
     GetPage(name: AppRoutes.redeemCodeScreen, page: () => RedeemCodeScreen()),
-    GetPage(name: AppRoutes.criminalRecordSearchScreen, page: () => CriminalRecordSearchScreen()),
-    GetPage(name: AppRoutes.criminalRecordScreen, page: () => CriminalRecordScreen()),
+    GetPage(
+      name: AppRoutes.criminalRecordSearchScreen,
+      page: () => CriminalRecordSearchScreen(),
+    ),
+    GetPage(
+      name: AppRoutes.criminalRecordScreen,
+      page: () {
+        final arguments = Get.arguments as Map<String, dynamic>? ?? {};
+        final criminal = arguments['criminal'] as CriminalRecordModel?;
+        if (criminal == null) {
+          throw Exception("Criminal is required");
+        }
+        return CriminalRecordScreen(criminal: criminal);
+      },
+    ),
   ];
 }

@@ -1,7 +1,6 @@
-
 class CriminalRecordModel {
   final String? name;
-  final List<OffenderAttribute>? offenderAttributes;
+  final OffenderAttribute? offenderAttributes;
   final CaseDetails? caseDetails;
   final String? offense;
   final String? image;
@@ -17,13 +16,14 @@ class CriminalRecordModel {
   factory CriminalRecordModel.fromJson(Map<String, dynamic> json) {
     return CriminalRecordModel(
       name: json['name'] ?? '',
-      offenderAttributes: (json['offenderAttributes'] as List<dynamic>?)
-              ?.map((e) => OffenderAttribute.fromJson(e))
-              .toList() ??
-          [],
-      caseDetails: json['caseDetails'] != null
-          ? CaseDetails.fromJson(json['caseDetails'])
-          : null,
+      offenderAttributes:
+          json['offenderAttributes'] != null
+              ? OffenderAttribute.fromJson(json['offenderAttributes'])
+              : null,
+      caseDetails:
+          json['caseDetails'] != null
+              ? CaseDetails.fromJson(json['caseDetails'])
+              : null,
       offense: json['offense'] ?? "",
       image: json['image'] ?? "",
     );
