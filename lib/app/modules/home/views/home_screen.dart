@@ -8,7 +8,7 @@ import 'package:Vetted/app/widgets/loaders.dart';
 import 'package:Vetted/app/widgets/staggered_column_animation.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+// import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -461,50 +461,61 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Obx buildFeed() {
-    return Obx(() {
-      if (postController.isloading.value) {
-        return SizedBox(
-          width: Get.width,
-          height: Get.height * 0.65,
-          child: const Center(child: Loader2()),
-        );
-      }
-      if (postController.posts.isEmpty) {
-        return SizedBox(
-          width: Get.width,
-          height: Get.height * 0.65,
-          child: const Center(child: Text("No posts found")),
-        );
-      }
-      return AnimationLimiter(
-        child: GridView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: postController.posts.length,
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 12,
-            mainAxisSpacing: 12,
-            childAspectRatio: 0.8,
-          ),
-          itemBuilder: (context, index) {
-            final post = postController.posts[index];
-            return AnimationConfiguration.staggeredGrid(
-              position: index,
-              columnCount: 2, // same as crossAxisCount
-              duration: const Duration(milliseconds: 500),
-              child: SlideAnimation(
-                verticalOffset: 50.0,
-                child: FadeInAnimation(
-                  child: buildDisplayCard(context, post, index),
-                ),
-              ),
-            );
-          },
-        ),
+  Widget buildFeed() {
+    final controller = postController;
+
+    if (controller.isloading.value) {
+      return SizedBox(
+        width: Get.width,
+        height: Get.height * 0.65,
+        child: const Center(child: Loader2()),
       );
-    });
+    }
+
+    final posts = controller.posts;
+    if (posts.isEmpty) {
+      return SizedBox(
+        width: Get.width,
+        height: Get.height * 0.65,
+        child: const Center(child: Text("No posts found")),
+      );
+    }
+
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 400),
+      switchInCurve: Curves.easeOutCubic,
+      switchOutCurve: Curves.easeInCubic,
+      child: GridView.builder(
+        key: ValueKey(posts.length),
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: posts.length,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 12,
+          mainAxisSpacing: 12,
+          childAspectRatio: 0.8,
+        ),
+        itemBuilder: (context, index) {
+          final post = posts[index];
+          return TweenAnimationBuilder<double>(
+            tween: Tween(begin: 0, end: 1),
+            duration: Duration(milliseconds: 450 + (index * 50)),
+            curve: Curves.easeOutCubic,
+            builder: (context, value, child) {
+              return Opacity(
+                opacity: value,
+                child: Transform.translate(
+                  offset: Offset(0, 40 * (1 - value)),
+                  child: child,
+                ),
+              );
+            },
+            child: buildDisplayCard(context, post, index),
+          );
+        },
+      ),
+    );
   }
 
   Widget buildDisplayCard(BuildContext context, PostModel post, int index) {
