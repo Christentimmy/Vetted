@@ -257,7 +257,8 @@ class AppPages {
       name: AppRoutes.termsAndConditionScreen,
       page: (){
         final arguments = Get.arguments ?? {};
-        final justAScreen = arguments["justAScreen"];
+        final justAScreen = arguments["justAScreen"] as bool;
+        print(justAScreen);
         return TermsAndConditionScreen(justAScreen: justAScreen);
       },
     ),

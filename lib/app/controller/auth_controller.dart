@@ -37,7 +37,10 @@ class AuthController extends GetxController {
       if (response == null) return;
       if (response.statusCode != 200) {
         // await googleAuthSignUp(idToken: idToken);
-        Get.toNamed(AppRoutes.termsAndConditionScreen);
+        Get.toNamed(
+          AppRoutes.termsAndConditionScreen,
+          arguments: {"justAScreen": true},
+        );
         return;
       }
       await googleAuthSignIn(idToken: idToken);

@@ -128,7 +128,7 @@ class SettingScreen extends StatelessWidget {
               onTap: () {
                 Get.toNamed(
                   AppRoutes.termsAndConditionScreen,
-                  arguments: {"justAScreen": true},
+                  arguments: {"justAScreen": false},
                 );
               },
             ),
