@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class BackgroundCheckResultDoneScreen extends StatelessWidget {
+class BackgroundEachResultScreen extends StatelessWidget {
   final String personName;
 
-  const BackgroundCheckResultDoneScreen({super.key, required this.personName});
+  const BackgroundEachResultScreen({super.key, required this.personName});
 
   @override
   Widget build(BuildContext context) {

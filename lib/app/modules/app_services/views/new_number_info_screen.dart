@@ -8,18 +8,34 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class NewNumberInfoScreen extends StatelessWidget {
+class NewNumberInfoScreen extends StatefulWidget {
   const NewNumberInfoScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final controller = Get.find<AppServiceController>();
+  State<NewNumberInfoScreen> createState() => _NewNumberInfoScreenState();
+}
 
+class _NewNumberInfoScreenState extends State<NewNumberInfoScreen> {
+
+  final controller = Get.find<AppServiceController>();
+
+  @override
+  void dispose() {
+    controller.eniformPhoneInfoModel.value = null;
+    controller.reverseInfoList.clear();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: buildAppBar(),
       body: Obx(() {
         final phoneInfo = controller.eniformPhoneInfoModel.value;
+        if (phoneInfo == null) {
+          return const SizedBox.shrink();
+        }
         final reverseInfoList = controller.reverseInfoList;
         final reverseInfo =
             reverseInfoList.isNotEmpty ? reverseInfoList.first : null;
@@ -138,34 +154,7 @@ class NewNumberInfoScreen extends StatelessWidget {
   ) {
     return Column(
       children: [
-        // Section Header if multiple results
-        if (totalCount > 1)
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            decoration: BoxDecoration(
-              color: AppColors.primaryColor.withOpacity(0.05),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Row(
-              children: [
-                Icon(
-                  Icons.info_outline,
-                  size: 16,
-                  color: AppColors.primaryColor,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  'Result ${index + 1} of $totalCount',
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.primaryColor,
-                  ),
-                ),
-              ],
-            ),
-          ),
+
 
         // Phone Number Card
         if (info.phone != null && info.phone!.isNotEmpty)
@@ -594,3 +583,5 @@ class NewNumberInfoScreen extends StatelessWidget {
     );
   }
 }
+
+

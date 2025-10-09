@@ -74,34 +74,34 @@ class AppService {
     String? city,
     String? zipCode,
   }) async {
+    final url = Uri.parse("$baseUrl/services/name-lookup");
+
+    final headers = {
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'application/json',
+    };
+    final body = jsonEncode({
+      'name': "$firstName $lastName",
+      'street': street,
+      'state_code': stateCode,
+      'city': city,
+      'zipCode': zipCode,
+    });
+
     try {
       final response = await client
-          .post(
-            Uri.parse("$baseUrl/services/enformion-background-search"),
-            headers: {
-              'Authorization': 'Bearer $token',
-              'Content-Type': 'application/json',
-            },
-            body: jsonEncode({
-              'firstName': firstName,
-              'lastName': lastName,
-              'middleName': middleName,
-              'street': street,
-              'state_code': stateCode,
-              'city': city,
-              'zipCode': zipCode,
-            }),
-          )
+          .post(url, headers: headers, body: body)
           .timeout(const Duration(seconds: 30));
 
       return response;
     } on SocketException catch (e) {
-      debugPrint("No internet connection $e");
+      debugPrint("No internet connection: $e");
     } on TimeoutException {
       debugPrint("Request timeout");
     } catch (e) {
-      debugPrint(e.toString());
+      debugPrint("Unexpected error: $e");
     }
+
     return null;
   }
 
@@ -190,5 +190,4 @@ class AppService {
     }
     return null;
   }
-
 }

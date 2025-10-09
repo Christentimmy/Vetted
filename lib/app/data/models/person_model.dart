@@ -1,4 +1,3 @@
-
 class AddressModel {
   final String id;
   final String address;
@@ -6,16 +5,10 @@ class AddressModel {
   AddressModel({required this.id, required this.address});
 
   factory AddressModel.fromJson(Map<String, dynamic> json) {
-    return AddressModel(
-      id: json['id'] ?? '',
-      address: json['address'] ?? '',
-    );
+    return AddressModel(id: json['id'] ?? '', address: json['address'] ?? '');
   }
 
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'address': address,
-      };
+  Map<String, dynamic> toJson() => {'id': id, 'address': address};
 }
 
 class PhoneModel {
@@ -34,24 +27,25 @@ class PhoneModel {
   }
 
   Map<String, dynamic> toJson() => {
-        'number': number,
-        'type': type,
-        'score': score,
-      };
+    'number': number,
+    'type': type,
+    'score': score,
+  };
 }
 
 class PersonModel {
   final String id;
   final String name;
   final bool isDead;
-  final List<AddressModel> currentAddresses;
+  final String currentAddresses;
   final List<dynamic> ownedProperties;
-  final List<PhoneModel> phones;
+  final List<String> phones;
   final List<String> emails;
   final String dateOfBirth;
   final String? linkedinUrl;
   final String? companyName;
   final String? jobTitle;
+  final List<String>? relatives;
 
   PersonModel({
     required this.id,
@@ -65,6 +59,7 @@ class PersonModel {
     this.linkedinUrl,
     this.companyName,
     this.jobTitle,
+    this.relatives,
   });
 
   factory PersonModel.fromJson(Map<String, dynamic> json) {
@@ -72,32 +67,29 @@ class PersonModel {
       id: json['id'] ?? '',
       name: json['name'] ?? '',
       isDead: json['is_dead'] ?? false,
-      currentAddresses: (json['current_addresses'] as List<dynamic>? ?? [])
-          .map((e) => AddressModel.fromJson(e))
-          .toList(),
+      currentAddresses: json["current_addresses"] ?? "",
       ownedProperties: json['owned_properties'] ?? [],
-      phones: (json['phones'] as List<dynamic>? ?? [])
-          .map((e) => PhoneModel.fromJson(e))
-          .toList(),
+      // phones:
+      //     (json['phones'] as List<dynamic>? ?? [])
+      //         .map((e) => PhoneModel.fromJson(e))
+      //         .toList(),
+      phones:
+          json["phones"] != null
+              ? (json['phones'] as List<dynamic>)
+                  .map((e) => e.toString())
+                  .toList()
+              : [],
       emails: (json['emails'] as List<dynamic>? ?? []).cast<String>(),
       dateOfBirth: json['date_of_birth'] ?? '',
       linkedinUrl: json['linkedin_url'],
       companyName: json['company_name'],
       jobTitle: json['job_title'],
+      relatives:
+          json["relatives"] != null
+              ? (json["relatives"] as List<dynamic>)
+                  .map((e) => e.toString())
+                  .toList()
+              : [],
     );
   }
-
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'name': name,
-        'is_dead': isDead,
-        'current_addresses': currentAddresses.map((e) => e.toJson()).toList(),
-        'owned_properties': ownedProperties,
-        'phones': phones.map((e) => e.toJson()).toList(),
-        'emails': emails,
-        'date_of_birth': dateOfBirth,
-        'linkedin_url': linkedinUrl,
-        'company_name': companyName,
-        'job_title': jobTitle,
-        };
 }

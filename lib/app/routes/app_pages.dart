@@ -24,6 +24,7 @@ import 'package:Vetted/app/modules/notificaton/views/allow_notification_screen.d
 import 'package:Vetted/app/modules/onboarding/views/how_it_work_screen.dart';
 import 'package:Vetted/app/modules/onboarding/views/onboarding_screen.dart';
 import 'package:Vetted/app/modules/onboarding/views/our_safety_tools_screen.dart';
+import 'package:Vetted/app/modules/policy/terms_and_condition_screen.dart';
 import 'package:Vetted/app/modules/post/views/create_post_screen.dart';
 import 'package:Vetted/app/modules/post/views/poll_post_screen.dart';
 import 'package:Vetted/app/modules/post/views/post_screen.dart';
@@ -52,6 +53,7 @@ import 'package:Vetted/app/modules/verification/views/new_verification_screen.da
 import 'package:Vetted/app/modules/verification/views/selfie_disclaimer_screen.dart';
 import 'package:Vetted/app/routes/app_routes.dart';
 import 'package:Vetted/app/widgets/bottom_navigation_widget.dart';
+import 'package:Vetted/screens/background_check_result_done_screen.dart';
 import 'package:get/get.dart';
 
 class AppPages {
@@ -177,7 +179,7 @@ class AppPages {
         final arguments = Get.arguments as Map<String, dynamic>? ?? {};
         final person = arguments['person'] as PersonModel?;
         if (person == null) {
-          throw Exception("Name is required");
+          throw Exception("Person is required");
         }
         return BackgroundResultMoreDetailsScreen(person: person);
       },
@@ -251,6 +253,17 @@ class AppPages {
       name: AppRoutes.notificationMenuScreen,
       page: () => NotificationMenuScreen(),
     ),
-
+    GetPage(
+      name: AppRoutes.termsAndConditionScreen,
+      page: () => TermsAndConditionScreen(),
+    ),
+    GetPage(name: AppRoutes.backgroundEachPersonResult, page: (){
+      final arguments = Get.arguments ?? {};
+      final personName = arguments["personName"];
+      if(personName == null){
+        throw Exception("personName is required");
+      }
+      return BackgroundEachResultScreen(personName: personName);
+    })
   ];
 }

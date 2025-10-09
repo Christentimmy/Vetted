@@ -99,6 +99,12 @@ class _BackgroundCheckSearchScreenState
                             city: _cityController.text.trim(),
                             zipCode: _phoneController.text.trim(),
                           );
+                          _firstNameController.clear();
+                          _middleNameController.clear();
+                          _lastNameController.clear();
+                          _phoneController.clear();
+                          _cityController.clear();
+                          _stateController.clear();
                         }
                         : null,
                 style: ElevatedButton.styleFrom(

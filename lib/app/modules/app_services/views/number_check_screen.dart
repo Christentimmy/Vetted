@@ -15,7 +15,7 @@ class _NumberCheckScreenState extends State<NumberCheckScreen> {
 
   @override
   void dispose() {
-    appServiceController.persons.clear();
+    appServiceController.numberInfoList.clear();
     super.dispose();
   }
 
@@ -36,9 +36,9 @@ class _NumberCheckScreenState extends State<NumberCheckScreen> {
       body: Padding(
         padding: const EdgeInsets.all(24),
         child: ListView.builder(
-          itemCount: appServiceController.persons.length,
+          itemCount: appServiceController.numberInfoList.length,
           itemBuilder: (context, index) {
-            final person = appServiceController.persons[index];
+            final person = appServiceController.numberInfoList[index];
             // return _infoRow(person.name, person.phone);
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -62,7 +62,7 @@ class _NumberCheckScreenState extends State<NumberCheckScreen> {
                           padding: const EdgeInsets.only(right: 8),
                           child: Chip(
                             label: Text(
-                              phone.number,
+                              phone,
                               style: GoogleFonts.poppins(fontSize: 10),
                             ),
                           ),
@@ -121,7 +121,7 @@ class _NumberCheckScreenState extends State<NumberCheckScreen> {
                 ),
                 Text(
                   person.currentAddresses.isNotEmpty
-                      ? person.currentAddresses[0].address
+                      ? person.currentAddresses
                       : "",
                   style: GoogleFonts.poppins(
                     color: Colors.black54,

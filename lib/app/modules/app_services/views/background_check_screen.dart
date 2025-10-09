@@ -45,7 +45,7 @@ class BackgroundCheckScreen extends StatelessWidget {
                       keyboardType: TextInputType.phone,
                       controller: phoneNumberController,
                       cursorColor: AppColors.primaryColor,
-
+                      inputFormatters: [UsPhoneNumberFormatter()],
                       decoration: InputDecoration(
                         hintText: "(353) 745-8736",
                         hintStyle: GoogleFonts.fredoka(
@@ -83,8 +83,13 @@ class BackgroundCheckScreen extends StatelessWidget {
                         );
                         return;
                       }
+                      String formattedNumber = phoneNumberController.text;
+                      String rawNumber = formattedNumber.replaceAll(
+                        RegExp(r'[^\d]'),
+                        '',
+                      );
                       await appServiceController.getNumberInfo(
-                        number: phoneNumberController.text,
+                        number: rawNumber,
                       );
                       phoneNumberController.clear();
                     },
@@ -270,6 +275,47 @@ class BackgroundCheckScreen extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class UsPhoneNumberFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    final text = newValue.text.replaceAll(
+      RegExp(r'[^\d]'),
+      '',
+    ); // Keep only digits
+    if (text.isEmpty) {
+      return newValue;
+    }
+
+    final buffer = StringBuffer();
+    if (text.length > 0) {
+      buffer.write('(');
+      buffer.write(text.substring(0, 3 > text.length ? text.length : 3));
+    }
+    if (text.length >= 4) {
+      buffer.write(') ');
+      buffer.write(text.substring(3, 6 > text.length ? text.length : 6));
+    }
+    if (text.length >= 7) {
+      buffer.write('-');
+      buffer.write(text.substring(6, 10 > text.length ? text.length : 10));
+    }
+
+    // Don't allow more than 10 digits
+    if (text.length > 10) {
+      return oldValue;
+    }
+
+    final newText = buffer.toString();
+    return newValue.copyWith(
+      text: newText,
+      selection: TextSelection.collapsed(offset: newText.length),
     );
   }
 }

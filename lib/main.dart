@@ -9,7 +9,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:app_links/app_links.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   OneSignal.initialize("2fa250e8-3569-45a5-9c27-db2be9b84c36");
   runApp(const VettedApp());
@@ -19,7 +19,7 @@ class VettedApp extends StatefulWidget {
   const VettedApp({super.key});
 
   @override
-  State<VettedApp> createState() => _VettedAppState();  
+  State<VettedApp> createState() => _VettedAppState();
 }
 
 class _VettedAppState extends State<VettedApp> {

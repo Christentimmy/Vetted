@@ -19,6 +19,9 @@ class AuthController extends GetxController {
   final _userService = UserService();
   final _storageController = Get.find<StorageController>();
 
+  //hold on idtoken
+  final RxString tempToken = "".obs;
+
   Future<void> googleLoginOrSignUp() async {
     isGoogleLoading.value = true;
     try {
@@ -26,14 +29,15 @@ class AuthController extends GetxController {
       if (googleUser == null) {
         return;
       }
-      print(googleUser);
       final googleAuth = googleUser.authentication;
       final String? idToken = googleAuth.idToken;
       if (idToken == null) return;
+      tempToken.value = idToken;
       final response = await _userService.userExist(email: googleUser.email);
       if (response == null) return;
       if (response.statusCode != 200) {
-        await googleAuthSignUp(idToken: idToken);
+        // await googleAuthSignUp(idToken: idToken);
+        Get.toNamed(AppRoutes.termsAndConditionScreen);
         return;
       }
       await googleAuthSignIn(idToken: idToken);
@@ -44,11 +48,11 @@ class AuthController extends GetxController {
     }
   }
 
-  Future<void> googleAuthSignUp({required String idToken}) async {
+  Future<void> googleAuthSignUp() async {
     isGoogleLoading.value = true;
     try {
       final response = await _authService.sendGoogleToken(
-        token: idToken,
+        token: tempToken.value,
         isRegister: true,
       );
       if (response == null) return;
@@ -65,7 +69,9 @@ class AuthController extends GetxController {
       final socketController = Get.find<SocketController>();
       socketController.initializeSocket();
       await userController.getUserDetails();
+
       Get.toNamed(AppRoutes.howItWorksScreen);
+      tempToken.value = "";
     } catch (e) {
       debugPrint(e.toString());
     } finally {

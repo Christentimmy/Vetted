@@ -67,7 +67,7 @@ class BackgroundResultMoreDetailsScreen extends StatelessWidget {
             _buildInfoBox([
               _buildInfoRow(
                 "Phone Numbers",
-                person.phones.map((e) => e.number).join("\n"),
+                person.phones.join("\n"),
               ),
               _buildInfoRow(
                 "Email Address",
@@ -75,7 +75,7 @@ class BackgroundResultMoreDetailsScreen extends StatelessWidget {
               ),
               _buildInfoRow(
                 "Home Address",
-                person.currentAddresses.map((e) => e.address).join("\n"),
+                person.currentAddresses,
               ),
             ]),
 
@@ -98,15 +98,11 @@ class BackgroundResultMoreDetailsScreen extends StatelessWidget {
 
             // FAMILY & ASSOCIATES
             _buildSectionTitle("FAMILY & ASSOCIATES"),
-            // _buildInfoBox([
-            //   _buildInfoRow("RELATIVE #1", "Ackmed Selah\nFamily\n3/04/1998"),
-            //   _buildInfoRow("RELATIVE #2", "Ackmed Selah\nFamily\n3/04/1998"),
-            //   _buildInfoRow("RELATIVE #3", "Ackmed Selah\nFamily\n3/04/1998"),
-            // ]),
             _buildInfoBox([
-              _buildInfoRow("RELATIVE #1", "NONE FOUND"),
-              _buildInfoRow("RELATIVE #2", "NONE FOUND"),
-              _buildInfoRow("RELATIVE #3", "NONE FOUND"),
+              _buildInfoRow(
+                "RELATIVE",
+                person.relatives?.join("\n") ?? "NONE FOUND",
+              ),
             ]),
 
             const SizedBox(height: 24),

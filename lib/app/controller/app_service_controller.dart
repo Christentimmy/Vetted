@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:Vetted/app/controller/storage_controller.dart';
-import 'package:Vetted/app/data/models/background_check_model.dart';
+// import 'package:Vetted/app/data/models/background_check_model.dart';
 import 'package:Vetted/app/data/models/criminal_record_model.dart';
 import 'package:Vetted/app/data/models/eniform_phone_info_model.dart';
 import 'package:Vetted/app/data/models/person_model.dart';
@@ -21,15 +21,15 @@ class AppServiceController extends GetxController {
   final isloadingImage = false.obs;
 
   final AppService appService = AppService();
-  RxList<PersonModel> persons = <PersonModel>[].obs;
+  RxList<PersonModel> numberInfoList = <PersonModel>[].obs;
   RxList<SearchImage> images = <SearchImage>[].obs;
   RxList<PersonModel> personsBackground = <PersonModel>[].obs;
 
-  final backgroundCheckList = <BackgroundCheckModel>[].obs;
+  // final backgroundCheckList = <BackgroundCheckModel>[].obs;
   final criminalList = <CriminalRecordModel>[].obs;
 
   //new number data
-  final eniformPhoneInfoModel = EniformPhoneInfoModel().obs;
+  final eniformPhoneInfoModel = Rxn<EniformPhoneInfoModel>(null);
   final reverseInfoList = <ReverseInfoOnPhoneSearchModel>[].obs;
 
   Future<void> reverseImageSearch({required File file}) async {
@@ -106,10 +106,12 @@ class AppServiceController extends GetxController {
       }
       final data = responseBody["data"];
       final enifromData = data["data"];
-      if (enifromData == null) {
+      String fullName = enifromData["fullName"];
+      if (enifromData == null || fullName.contains("undefined")) {
         CustomSnackbar.showErrorToast(message);
         return;
       }
+      
       final eniformPhoneInfoModel = EniformPhoneInfoModel.fromJson(enifromData);
       this.eniformPhoneInfoModel.value = eniformPhoneInfoModel;
 
@@ -121,7 +123,6 @@ class AppServiceController extends GetxController {
                 .toList();
         reverseInfoList.value = mapped;
       }
-      print("FullName: =============== ${eniformPhoneInfoModel.fullName}");
       Get.toNamed(AppRoutes.newNumberInfoScreen);
     } catch (e) {
       debugPrint(e.toString());
@@ -172,9 +173,9 @@ class AppServiceController extends GetxController {
         CustomSnackbar.showErrorToast("No data found");
         return;
       }
-      List<BackgroundCheckModel> incomingPersons =
-          result.map((e) => BackgroundCheckModel.fromJson(e)).toList();
-      backgroundCheckList.value = incomingPersons;
+      List<PersonModel> incomingPersons =
+          result.map((e) => PersonModel.fromJson(e)).toList();
+      personsBackground.value = incomingPersons;
       Get.toNamed(
         AppRoutes.backgroundCheckSearchResultScreen,
         arguments: {"name": firstName},

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'background_check_result_done_screen.dart';
+// import 'background_check_result_done_screen.dart';
 
 class BackgroundCheckSearchResultScreen extends StatelessWidget {
   const BackgroundCheckSearchResultScreen({super.key});
@@ -72,15 +72,15 @@ class BackgroundCheckSearchResultScreen extends StatelessWidget {
                     subtitle: Text(person['location'] ?? ""),
                     trailing: const Icon(Icons.chevron_right),
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder:
-                              (context) => BackgroundCheckResultDoneScreen(
-                                personName: person['name']!,
-                              ),
-                        ),
-                      );
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder:
+                      //         (context) => BackgroundCheckResultDoneScreen(
+                      //           personName: person['name']!,
+                      //         ),
+                      //   ),
+                      // );
                     },
                   ),
                 );
