@@ -29,7 +29,7 @@ class OffendersMapController extends GetxController {
   LatLng? lastFetchLatLng;
   static const double minDistanceThreshold = 1000;
 
-  final LatLng startLatLng = const LatLng(41.9777476245164, -87.6472903440513);
+  final LatLng startLatLng = const LatLng(39.73915, -104.9847);
 
   //My tactics
   final RxSet<Marker> holdMarkers = <Marker>{}.obs;
@@ -190,8 +190,12 @@ class OffendersMapController extends GetxController {
       CustomSnackbar.showErrorToast("Please enter a name");
       return;
     }
+    final name = searchText.value.split(" ");
+    final firstName = name.first;
+    final lastName = name.last;
     final allOffendersList = await appServiceController.getSexOffenderByName(
-      name: searchText.value,
+      firstName: firstName,
+      lastName: lastName,
     );
     if (allOffendersList == null) return;
     holdMarkers.value = markers;

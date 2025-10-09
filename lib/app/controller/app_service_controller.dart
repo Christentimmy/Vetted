@@ -234,7 +234,8 @@ class AppServiceController extends GetxController {
   }
 
   Future<List<OffenderModel>?> getSexOffenderByName({
-    required String name,
+    required String firstName,
+    required String lastName,
     bool showLoader = true,
   }) async {
     isloadingByName.value = showLoader;
@@ -245,7 +246,8 @@ class AppServiceController extends GetxController {
 
       final response = await appService.getSexOffenderByName(
         token: token,
-        name: name,
+        firstName: firstName,
+        lastName: lastName,
       );
       if (response == null) return null;
 

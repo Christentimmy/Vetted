@@ -136,16 +136,18 @@ class AppService {
 
   Future<http.Response?> getSexOffenderByName({
     required String token,
-    required String name,
+    required String firstName,
+    required String lastName,
   }) async {
     try {
       final response = await client
-          .get(
-            Uri.parse("$baseUrl/services/get-sex-offender-by-name?name=$name"),
+          .post(
+            Uri.parse("$baseUrl/services/search-offender"),
             headers: {
               'Authorization': 'Bearer $token',
               'Content-Type': 'application/json',
             },
+            body: jsonEncode({'firstName': firstName, 'lastName': lastName}),
           )
           .timeout(const Duration(seconds: 30));
       return response;

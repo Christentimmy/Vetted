@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
 
 class BuildOffenderCard extends StatelessWidget {
@@ -48,6 +49,8 @@ class BuildOffenderCard extends StatelessWidget {
   }
 
   Container buildCardContent() {
+    final isExpand = false.obs;
+
     return Container(
       margin: const EdgeInsets.all(16),
       padding: const EdgeInsets.all(16),
@@ -69,7 +72,7 @@ class BuildOffenderCard extends StatelessWidget {
               buildNameAndAddress(),
             ],
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Container(
             width: Get.width,
             padding: const EdgeInsets.all(16),
@@ -89,16 +92,56 @@ class BuildOffenderCard extends StatelessWidget {
                     color: AppColors.primaryColor,
                   ),
                 ),
-                Text(
-                  offender.sexOffenderCharges,
-                  style: GoogleFonts.fredoka(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 14,
-                  ),
-                ),
+                Obx(() {
+                  final text = offender.sexOffenderCharges;
+                  final isLong = text.length > 150;
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      AnimatedCrossFade(
+                        firstChild: Text(
+                          isLong ? "${text.substring(0, 150)}..." : text,
+                          style: GoogleFonts.fredoka(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 14,
+                          ),
+                        ),
+                        secondChild: Text(
+                          text,
+                          style: GoogleFonts.fredoka(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 14,
+                          ),
+                        ),
+                        crossFadeState:
+                            isExpand.value
+                                ? CrossFadeState.showSecond
+                                : CrossFadeState.showFirst,
+                        duration: const Duration(milliseconds: 200),
+                      ),
+                      if (isLong)
+                        GestureDetector(
+                          onTap: () => isExpand.value = !isExpand.value,
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 6),
+                            child: Text(
+                              isExpand.value ? "Read less" : "Read more",
+                              style: GoogleFonts.fredoka(
+                                color: AppColors.primaryColor,
+                                fontWeight: FontWeight.w600,
+                                fontStyle: FontStyle.italic,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
+                  );
+                }),
                 const SizedBox(height: 10),
                 Text(
-                  "Aliases",
+                  "Date of birth",
                   style: GoogleFonts.fredoka(
                     fontWeight: FontWeight.w600,
                     fontSize: 16,
@@ -106,7 +149,23 @@ class BuildOffenderCard extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  offender.sexOffenderAliases,
+                  DateFormat.yMMMd().format(offender.sexOffenderBirthdate),
+                  style: GoogleFonts.fredoka(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 14,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  "RiskLevel",
+                  style: GoogleFonts.fredoka(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                    color: AppColors.primaryColor,
+                  ),
+                ),
+                Text(
+                  offender.riskLevel,
                   style: GoogleFonts.fredoka(
                     fontWeight: FontWeight.w400,
                     fontSize: 14,
@@ -135,9 +194,7 @@ class BuildOffenderCard extends StatelessWidget {
           ),
           const SizedBox(height: 5),
           Text(
-            offender.sexOffenderAddressLine1.isEmpty
-                ? offender.sexOffenderAddressLine2
-                : offender.sexOffenderAddressLine1,
+            offender.sexOffenderAddressLine1,
             style: GoogleFonts.fredoka(
               fontWeight: FontWeight.w400,
               fontSize: 14,
@@ -171,6 +228,9 @@ class BuildOffenderCard extends StatelessWidget {
                 ),
               ),
             );
+          },
+          errorWidget: (context, url, error) {
+            return Placeholder();
           },
         ),
       ),

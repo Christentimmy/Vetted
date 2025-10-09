@@ -27,10 +27,7 @@ class OffenderModel {
   final bool sexOffenderIsPredator;
   final bool sexOffenderIsAbsconder;
   final String sexOffenderImageUrl;
-  final DateTime sexOffenderLastUpdated;
-  final DateTime sexOffenderCreated;
-  final DateTime sexOffenderLastSynced;
-  final bool sexOffenderIsSynced;
+  final String riskLevel;
 
   OffenderModel({
     required this.sexOffenderState,
@@ -59,44 +56,38 @@ class OffenderModel {
     required this.sexOffenderIsPredator,
     required this.sexOffenderIsAbsconder,
     required this.sexOffenderImageUrl,
-    required this.sexOffenderLastUpdated,
-    required this.sexOffenderCreated,
-    required this.sexOffenderLastSynced,
-    required this.sexOffenderIsSynced,
+    required this.riskLevel,
   });
 
   factory OffenderModel.fromJson(Map<String, dynamic> json) {
     return OffenderModel(
-      sexOffenderState: json['sex_offender_state'] ?? '',
+      sexOffenderState: json['state'] ?? '',
       sexOffenderLocation: json['sex_offender_location'] ?? '',
-      sexOffenderZipcode: json['sex_offender_zipcode'] ?? '',
-      sexOffenderLat: (json['sex_offender_lat'] as num?)?.toDouble() ?? 0.0,
-      sexOffenderLon: (json['sex_offender_lon'] as num?)?.toDouble() ?? 0.0,
-      sexOffenderName: json['sex_offender_name'] ?? '',
-      sexOffenderFirstName: json['sex_offender_first_name'] ?? '',
-      sexOffenderMiddleName: json['sex_offender_middle_name'] ?? '',
-      sexOffenderLastName: json['sex_offender_last_name'] ?? '',
-      sexOffenderBirthdate: DateTime.tryParse(json['sex_offender_birthdate'] ?? '') ?? DateTime(1970),
-      sexOffenderAge: json['sex_offender_age'] ?? 0,
-      sexOffenderAddressLine1: json['sex_offender_address_line1'] ?? '',
-      sexOffenderAddressLine2: json['sex_offender_address_line2'] ?? '',
-      sexOffenderSex: json['sex_offender_sex'] ?? '',
-      sexOffenderRace: json['sex_offender_race'] ?? '',
-      sexOffenderHeight: json['sex_offender_height'] ?? '',
-      sexOffenderWeight: json['sex_offender_weight'] ?? '',
-      sexOffenderHair: json['sex_offender_hair'] ?? '',
-      sexOffenderEyes: json['sex_offender_eyes'] ?? '',
-      sexOffenderMarks: json['sex_offender_marks'] ?? '',
-      sexOffenderAliases: json['sex_offender_aliases'] ?? '',
-      sexOffenderCharges: json['sex_offender_charges'] ?? '',
-      sexOffenderChanges: json['sex_offender_changes'] ?? '',
-      sexOffenderIsPredator: json['sex_offender_is_predator'] == 'true' || json['sex_offender_is_predator'] == true,
-      sexOffenderIsAbsconder: json['sex_offender_is_absconder'] == 'true' || json['sex_offender_is_absconder'] == true,
-      sexOffenderImageUrl: json['sex_offender_image_url'] ?? '',
-      sexOffenderLastUpdated: DateTime.tryParse(json['sex_offender_last_updated'] ?? '') ?? DateTime(1970),
-      sexOffenderCreated: DateTime.tryParse(json['sex_offender_created'] ?? '') ?? DateTime(1970),
-      sexOffenderLastSynced: DateTime.tryParse(json['sex_offender_last_synced'] ?? '') ?? DateTime(1970),
-      sexOffenderIsSynced: json['sex_offender_is_synced'] == true,
+      sexOffenderZipcode: json['zipcode'] ?? '',
+      sexOffenderLat: (json['lat'] as num?)?.toDouble() ?? 0.0,
+      sexOffenderLon: (json['lng'] as num?)?.toDouble() ?? 0.0,
+      sexOffenderName: json['name'] ?? '',
+      sexOffenderFirstName: json['firstName'] ?? '',
+      sexOffenderMiddleName: json['middleName'] ?? '',
+      sexOffenderLastName: json['lastName'] ?? '',
+      sexOffenderBirthdate: DateTime.tryParse(json['dob'] ?? '') ?? DateTime(1970),
+      sexOffenderAge: int.tryParse(json['age'].toString()) ?? 0,
+      sexOffenderAddressLine1: json['address'] ?? '',
+      sexOffenderAddressLine2: json[''] ?? '',
+      sexOffenderSex: json['sex'] ?? '',
+      sexOffenderRace: json['race'] ?? '',
+      sexOffenderHeight: json['height'] ?? '',
+      sexOffenderWeight: json['weight'] ?? '',
+      sexOffenderHair: json['hairColor'] ?? '',
+      sexOffenderEyes: json['eyeColor'] ?? '',
+      sexOffenderMarks: json['marks'] ?? '',
+      sexOffenderAliases: json[''] ?? '',
+      sexOffenderCharges: json['crime'] ?? '',
+      sexOffenderChanges: json[''] ?? '',
+      sexOffenderIsPredator: json['isPredator'] == true,
+      sexOffenderIsAbsconder: json['isAbsconder'] == true,
+      sexOffenderImageUrl: json['offenderImageUrl'] ?? '',
+      riskLevel: json['riskLevel'] ?? '',
     );
   }
 }

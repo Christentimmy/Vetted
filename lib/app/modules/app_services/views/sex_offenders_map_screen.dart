@@ -34,14 +34,14 @@ class SexOffendersMapScreen extends StatelessWidget {
                 if (controller.mapInitialized.value) return;
                 controller.mapController = mapCtrl;
                 controller.mapInitialized.value = true;
-                controller.fetchOffenders(
-                  controller.startLatLng.latitude,
-                  controller.startLatLng.longitude,
-                  showLoader: true,
-                );
+                // controller.fetchOffenders(
+                //   controller.startLatLng.latitude,
+                //   controller.startLatLng.longitude,
+                //   showLoader: true,
+                // );
               },
-              onTap: (position) => controller.handleTap(position),
-              onCameraIdle: () => controller.handleCameraIdle(context),
+              // onTap: (position) => controller.handleTap(position),
+              // onCameraIdle: () => controller.handleCameraIdle(context),
               markers: controller.markers.value,
             );
           }),
