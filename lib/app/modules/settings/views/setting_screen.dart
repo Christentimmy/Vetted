@@ -110,7 +110,7 @@ class SettingScreen extends StatelessWidget {
               icon: Icons.notifications_outlined,
               title: "Notifications",
               onTap: () {
-               Get.toNamed(AppRoutes.notificationMenuScreen);
+                Get.toNamed(AppRoutes.notificationMenuScreen);
               },
             ),
             _menuItem(
@@ -122,9 +122,18 @@ class SettingScreen extends StatelessWidget {
             ),
 
             const SizedBox(height: 24),
-            _menuItem(title: "Terms of use", isBold: true),
-            _menuItem(title: "Privacy policy", isBold: true),
+            _menuItem(
+              title: "Terms of use",
+              isBold: true,
+              onTap: () {
+                Get.toNamed(
+                  AppRoutes.termsAndConditionScreen,
+                  arguments: {"justAScreen": true},
+                );
+              },
+            ),
 
+            // _menuItem(title: "Privacy policy", isBold: true),
             const SizedBox(height: 16),
             _menuItem(
               icon: Icons.logout,

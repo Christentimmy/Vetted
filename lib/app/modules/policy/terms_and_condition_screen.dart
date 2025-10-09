@@ -1,5 +1,3 @@
-
-
 import 'package:Vetted/app/controller/auth_controller.dart';
 import 'package:Vetted/app/resources/colors.dart';
 import 'package:Vetted/app/widgets/custom_button.dart';
@@ -8,7 +6,8 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class TermsAndConditionScreen extends StatelessWidget {
-  TermsAndConditionScreen({super.key});
+  final bool? justAScreen;
+  TermsAndConditionScreen({super.key, this.justAScreen});
 
   final RxBool isChecked = false.obs;
   final authController = Get.find<AuthController>();
@@ -37,51 +36,53 @@ class TermsAndConditionScreen extends StatelessWidget {
               ),
             ),
             SizedBox(height: Get.height * 0.05),
-            Row(
-              children: [
-                Obx(() {
-                  return Checkbox(
-                    value: isChecked.value,
-                    onChanged: (value) => isChecked.toggle(),
-                    side: BorderSide(color: AppColors.primaryColor),
-                    activeColor: AppColors.primaryColor,
-                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    visualDensity: VisualDensity.compact,
-                  );
-                }),
-                Expanded(
-                  child: Text(
-                    "I confirm that I have read and accept the terms and conditions and privacy policy.",
-                    style: GoogleFonts.poppins(
-                      color: Colors.black,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w400,
+            if (justAScreen == true) ...[
+              Row(
+                children: [
+                  Obx(() {
+                    return Checkbox(
+                      value: isChecked.value,
+                      onChanged: (value) => isChecked.toggle(),
+                      side: BorderSide(color: AppColors.primaryColor),
+                      activeColor: AppColors.primaryColor,
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      visualDensity: VisualDensity.compact,
+                    );
+                  }),
+                  Expanded(
+                    child: Text(
+                      "I confirm that I have read and accept the terms and conditions and privacy policy.",
+                      style: GoogleFonts.poppins(
+                        color: Colors.black,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-            SizedBox(height: Get.height * 0.05),
-            Obx(() {
-              return Opacity(
-                opacity: isChecked.value ? 1 : 0.5,
-                child: CustomButton(
-                  ontap: () async {
-                    if (!isChecked.value) return;
-                    await authController.googleAuthSignUp();
-                  },
-                  isLoading: authController.isGoogleLoading,
-                  child: Text(
-                    "Accept",
-                    style: GoogleFonts.poppins(
-                      color: Colors.white,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
+                ],
+              ),
+              SizedBox(height: Get.height * 0.05),
+              Obx(() {
+                return Opacity(
+                  opacity: isChecked.value ? 1 : 0.5,
+                  child: CustomButton(
+                    ontap: () async {
+                      if (!isChecked.value) return;
+                      await authController.googleAuthSignUp();
+                    },
+                    isLoading: authController.isGoogleLoading,
+                    child: Text(
+                      "Accept",
+                      style: GoogleFonts.poppins(
+                        color: Colors.white,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
-                ),
-              );
-            }),
+                );
+              }),
+            ],
             SizedBox(height: Get.height * 0.02),
           ],
         ),

@@ -255,7 +255,11 @@ class AppPages {
     ),
     GetPage(
       name: AppRoutes.termsAndConditionScreen,
-      page: () => TermsAndConditionScreen(),
+      page: (){
+        final arguments = Get.arguments ?? {};
+        final justAScreen = arguments["justAScreen"];
+        return TermsAndConditionScreen(justAScreen: justAScreen);
+      },
     ),
     GetPage(name: AppRoutes.backgroundEachPersonResult, page: (){
       final arguments = Get.arguments ?? {};

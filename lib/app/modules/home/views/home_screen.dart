@@ -461,35 +461,26 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget buildFeed() {
-    final controller = postController;
-
-    if (controller.isloading.value) {
-      return SizedBox(
-        width: Get.width,
-        height: Get.height * 0.65,
-        child: const Center(child: Loader2()),
-      );
-    }
-
-    final posts = controller.posts;
-    if (posts.isEmpty) {
-      return SizedBox(
-        width: Get.width,
-        height: Get.height * 0.65,
-        child: const Center(child: Text("No posts found")),
-      );
-    }
-
-    return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 400),
-      switchInCurve: Curves.easeOutCubic,
-      switchOutCurve: Curves.easeInCubic,
-      child: GridView.builder(
-        key: ValueKey(posts.length),
+  Obx buildFeed() {
+    return Obx(() {
+      if (postController.isloading.value) {
+        return SizedBox(
+          width: Get.width,
+          height: Get.height * 0.65,
+          child: const Center(child: Loader2()),
+        );
+      }
+      if (postController.posts.isEmpty) {
+        return SizedBox(
+          width: Get.width,
+          height: Get.height * 0.65,
+          child: const Center(child: Text("No posts found")),
+        );
+      }
+      return GridView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
-        itemCount: posts.length,
+        itemCount: postController.posts.length,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           crossAxisSpacing: 12,
@@ -497,25 +488,11 @@ class _HomeScreenState extends State<HomeScreen> {
           childAspectRatio: 0.8,
         ),
         itemBuilder: (context, index) {
-          final post = posts[index];
-          return TweenAnimationBuilder<double>(
-            tween: Tween(begin: 0, end: 1),
-            duration: Duration(milliseconds: 450 + (index * 50)),
-            curve: Curves.easeOutCubic,
-            builder: (context, value, child) {
-              return Opacity(
-                opacity: value,
-                child: Transform.translate(
-                  offset: Offset(0, 40 * (1 - value)),
-                  child: child,
-                ),
-              );
-            },
-            child: buildDisplayCard(context, post, index),
-          );
+          final post = postController.posts[index];
+          return buildDisplayCard(context, post, index);
         },
-      ),
-    );
+      );
+    });
   }
 
   Widget buildDisplayCard(BuildContext context, PostModel post, int index) {
