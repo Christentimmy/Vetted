@@ -79,33 +79,4 @@ class _MyPostScreenState extends State<MyPostScreen> {
       }),
     );
   }
-
-  Widget buildOldCode() {
-    return GridView.builder(
-      padding: const EdgeInsets.all(12),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3, // 3 per row
-        crossAxisSpacing: 8,
-        mainAxisSpacing: 8,
-      ),
-      itemCount: posts.length,
-      itemBuilder: (context, index) {
-        return GestureDetector(
-          // onTap: () {
-          //   Navigator.push(
-          //     context,
-          //     MaterialPageRoute(
-          //       builder:
-          //           (_) => ViewPostAndCommentsScreen(imagePath: posts[index]),
-          //     ),
-          //   );
-          // },
-          // child: ClipRRect(
-          //   borderRadius: BorderRadius.circular(8),
-          //   child: Image.asset(posts[index], fit: BoxFit.cover),
-          // ),
-        );
-      },
-    );
-  }
 }

@@ -1,5 +1,6 @@
 import 'package:Vetted/app/controller/app_service_controller.dart';
 import 'package:Vetted/app/data/models/search_image_model.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
@@ -17,7 +18,8 @@ class _ReverseImageScreenState extends State<ReverseImageScreen> {
 
   @override
   void dispose() {
-    appServiceController.images.clear();
+    // appServiceController.images.clear();
+    appServiceController.tinEyeImages.clear();
     super.dispose();
   }
 
@@ -33,18 +35,18 @@ class _ReverseImageScreenState extends State<ReverseImageScreen> {
           if (appServiceController.isloadingImage.value) {
             return buildLoader();
           }
-          if (appServiceController.images.isEmpty) {
+          if (appServiceController.tinEyeImages.isEmpty) {
             return const Center(child: Text("No data found"));
           }
           return GridView.builder(
-            itemCount: appServiceController.images.length,
+            itemCount: appServiceController.tinEyeImages.length,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               crossAxisSpacing: 10,
               mainAxisSpacing: 20,
             ),
             itemBuilder: (context, index) {
-              final image = appServiceController.images[index];
+              final image = appServiceController.tinEyeImages[index];
               return _MatchTile(searchImage: image);
             },
           );
@@ -93,7 +95,7 @@ class _ReverseImageScreenState extends State<ReverseImageScreen> {
 }
 
 class _MatchTile extends StatelessWidget {
-  final SearchImage searchImage;
+  final TinEyeImageModel searchImage;
 
   const _MatchTile({required this.searchImage});
 
@@ -127,32 +129,53 @@ class _MatchTile extends StatelessWidget {
               showDialog(
                 context: context,
                 builder: (context) {
-                  return Dialog(
-                    child: Image.network(searchImage.imageUrl ?? ""),
-                  );
+                  return Dialog(child: Image.network(searchImage.imageUrl));
                 },
               );
             },
-            child: Image.network(
-              searchImage.imageUrl ?? "",
+            child: CachedNetworkImage(
+              imageUrl: searchImage.imageUrl,
               fit: BoxFit.cover,
               width: double.infinity,
               height: double.infinity,
-              errorBuilder: (context, error, stackTrace) {
+              placeholder: (context, url) {
+                return Shimmer.fromColors(
+                  baseColor: Colors.grey[300]!,
+                  highlightColor: Colors.grey[100]!,
+                  child: Container(
+                    height: 200,
+                    width: 200,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                );
+              },
+              errorWidget: (context, error, stackTrace) {
                 return const Icon(Icons.error);
               },
             ),
+            // child: Image.network(
+            //   searchImage.imageUrl,
+            //   fit: BoxFit.cover,
+            //   width: double.infinity,
+            //   height: double.infinity,
+            //   errorBuilder: (context, error, stackTrace) {
+            //     return const Icon(Icons.error);
+            //   },
+            // ),
           ),
           InkWell(
             onTap: () async {
-              await urlLauncher(searchImage.imageUrl ?? "");
+              await urlLauncher(searchImage.source);
             },
             child: Container(
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 6),
               color: Colors.white,
               child: Text(
-                searchImage.source ?? "",
+                searchImage.domain,
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   color: Colors.red,

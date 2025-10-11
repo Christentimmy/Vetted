@@ -100,6 +100,7 @@ flutter:
   #   - images/a_dot_ham.jpeg
 
   assets:
+    - assets/images/
     - assets/images/v_logo_1.png
     - assets/images/v_logo_2.png
     - assets/images/background_1.png

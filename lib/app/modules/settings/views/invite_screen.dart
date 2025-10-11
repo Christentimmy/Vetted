@@ -1,3 +1,5 @@
+
+
 import 'package:Vetted/app/controller/invite_controller.dart';
 import 'package:Vetted/app/controller/user_controller.dart';
 import 'package:Vetted/app/data/models/invite_model.dart';
@@ -93,7 +95,7 @@ class _InviteStatsScreenState extends State<InviteStatsScreen> {
   }
 
   Widget buildLoader() {
-    return Expanded(child: Center(child: Loader2()));
+    return Center(child: Loader2());
   }
 
   Widget buildContent() {
@@ -340,3 +342,5 @@ class _InviteStatsScreenState extends State<InviteStatsScreen> {
     );
   }
 }
+
+

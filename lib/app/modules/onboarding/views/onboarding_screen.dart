@@ -19,7 +19,7 @@ class OnboardingScreen extends StatelessWidget {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          Image.asset('assets/images/background_1.png', fit: BoxFit.cover),
+          Image.asset('assets/images/vetted-on.jpg', fit: BoxFit.cover),
           Container(color: Colors.black.withValues(alpha: 0.5)),
           SafeArea(
             child: Padding(

@@ -26,3 +26,29 @@ class SearchImage {
     );
   }
 }
+
+class TinEyeImageModel {
+  final num score;
+  final String imageUrl;
+  final String source;
+  final String overlay;
+  final String domain;
+
+  TinEyeImageModel({
+    required this.score,
+    required this.imageUrl,
+    required this.source,
+    required this.overlay,
+    required this.domain,
+  });
+
+  factory TinEyeImageModel.fromJson(Map<String, dynamic> json) {
+    return TinEyeImageModel(
+      score: num.tryParse(json['score'].toString()) ?? 0,
+      imageUrl: json['imageUrl'] ?? '',
+      source: json['source'] ?? '',
+      overlay: json['overlay'] ?? '',
+      domain: json['domain'] ?? '',
+    );
+  }
+}

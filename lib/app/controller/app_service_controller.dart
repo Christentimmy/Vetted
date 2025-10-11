@@ -23,6 +23,7 @@ class AppServiceController extends GetxController {
   final AppService appService = AppService();
   RxList<PersonModel> numberInfoList = <PersonModel>[].obs;
   RxList<SearchImage> images = <SearchImage>[].obs;
+  RxList<TinEyeImageModel> tinEyeImages = <TinEyeImageModel>[].obs;
   RxList<PersonModel> personsBackground = <PersonModel>[].obs;
 
   // final backgroundCheckList = <BackgroundCheckModel>[].obs;
@@ -41,10 +42,7 @@ class AppServiceController extends GetxController {
       final String? token = await storageController.getToken();
       if (token == null) return;
 
-      final stopWatch = Stopwatch()..start();
       final response = await appService.imageSearch(file: file, token: token);
-      stopWatch.stop();
-      debugPrint("Time taken: ${stopWatch.elapsed}");
       if (response == null) return;
 
       final data = json.decode(response.body);
@@ -58,18 +56,20 @@ class AppServiceController extends GetxController {
         CustomSnackbar.showErrorToast(message);
         return;
       }
-      List<dynamic> result = data["data"]?["similarImages"] ?? [];
+      List<dynamic> result = data["data"] ?? [];
       if (result.isEmpty) {
         CustomSnackbar.showErrorToast("No data found");
         return;
       }
-      List<SearchImage> images =
-          result.map((e) {
-            final url = Uri.parse(e.toString());
-            final host = url.host.replaceAll('www.', '');
-            return SearchImage(imageUrl: e.toString(), source: host);
-          }).toList();
-      this.images.value = images;
+      // List<SearchImage> images =
+      //     result.map((e) {
+      //       final url = Uri.parse(e.toString());
+      //       final host = url.host.replaceAll('www.', '');
+      //       return SearchImage(imageUrl: e.toString(), source: host);
+      //     }).toList();
+      // this.images.value = images;
+      // Get.toNamed(AppRoutes.reverseImageScreen);
+      tinEyeImages.value = result.map((e) => TinEyeImageModel.fromJson(e)).toList();
       Get.toNamed(AppRoutes.reverseImageScreen);
     } catch (e) {
       debugPrint(e.toString());
@@ -111,7 +111,7 @@ class AppServiceController extends GetxController {
         CustomSnackbar.showErrorToast(message);
         return;
       }
-      
+
       final eniformPhoneInfoModel = EniformPhoneInfoModel.fromJson(enifromData);
       this.eniformPhoneInfoModel.value = eniformPhoneInfoModel;
 

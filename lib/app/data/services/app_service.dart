@@ -14,7 +14,7 @@ class AppService {
     required String token,
   }) async {
     try {
-      final uri = Uri.parse("$baseUrl/services/google-image-search");
+      final uri = Uri.parse("$baseUrl/services/tineye-image-search");
       final request = http.MultipartRequest('POST', uri);
       request.files.add(
         await http.MultipartFile.fromPath(
