@@ -23,14 +23,22 @@ class _NotificationMenuScreenState extends State<NotificationMenuScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      userController.getUserDetails();
+    WidgetsBinding.instance.addPostFrameCallback((_)async  {
+      await userController.getUserDetails();
+      final user = userController.userModel.value;
+      if (user == null) return;
+      general = user.notificationSettings?.general ?? false;
+      trendingPost = user.notificationSettings?.trendingPost ?? false;
+      newComments = user.notificationSettings?.newComments ?? false;
+      alertForWomenNames =
+          user.notificationSettings?.alertForWomenNames ?? false;
+      reactions = user.notificationSettings?.reactions ?? false;
+      setState(() {});  
     });
   }
 
-
   @override
-  void dispose() { 
+  void dispose() {
     userController.changeNotificationSetting(
       general: general,
       trendingPost: trendingPost,
@@ -57,9 +65,7 @@ class _NotificationMenuScreenState extends State<NotificationMenuScreen> {
       ),
       body: Obx(() {
         if (userController.isloading.value) {
-          return const Center(
-            child: Loader2(),
-          );
+          return const Center(child: Loader2());
         }
         return buildContent();
       }),
@@ -67,14 +73,7 @@ class _NotificationMenuScreenState extends State<NotificationMenuScreen> {
   }
 
   Widget buildContent() {
-    final user = userController.userModel.value;
-    if (user == null) return const SizedBox.shrink();
-    general = user.notificationSettings?.general ?? false;
-    trendingPost = user.notificationSettings?.trendingPost ?? false;
-    newComments = user.notificationSettings?.newComments ??  false;
-    alertForWomenNames = user.notificationSettings?.alertForWomenNames ?? false;
-    reactions = user.notificationSettings?.reactions ?? false;
-    return Padding( 
+    return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -101,7 +100,9 @@ class _NotificationMenuScreenState extends State<NotificationMenuScreen> {
           _buildSwitchTile("New Comments", newComments, (val) {
             setState(() => newComments = val);
           }),
-          _buildSwitchTile("Alert for Women’s Names", alertForWomenNames, (val) {
+          _buildSwitchTile("Alert for Women’s Names", alertForWomenNames, (
+            val,
+          ) {
             setState(() => alertForWomenNames = val);
           }),
           _buildSwitchTile("Reactions", reactions, (val) {
