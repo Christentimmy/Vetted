@@ -129,10 +129,10 @@ class BackgroundCheckScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                   image: DecorationImage(
                     colorFilter: ColorFilter.mode(
-                      AppColors.primaryColor.withValues(alpha: 0.3),
+                      AppColors.primaryColor.withValues(alpha: 0.5),
                       BlendMode.darken,
                     ),
-                    image: AssetImage('assets/images/map_sample.png'),
+                    image: AssetImage('assets/images/mapa.jpg'),
                     fit: BoxFit.cover,
                   ),
                 ),

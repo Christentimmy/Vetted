@@ -23,19 +23,8 @@ class CriminalRecordSearchScreen extends StatelessWidget {
         padding: const EdgeInsets.all(20),
         child: ListView(
           children: [
-            const SizedBox(height: 10),
-            const Text(
-              "Check out more of her info.",
-              style: TextStyle(
-                color: Colors.red,
-                fontSize: 15,
-                fontWeight: FontWeight.w500,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 20),
-
-            /// First Name
+            SizedBox(height: Get.height * 0.1),
+            
             Form(
               key: formKey,
               child: Column(
@@ -78,7 +67,7 @@ class CriminalRecordSearchScreen extends StatelessWidget {
                           color: AppColors.primaryColor,
                           width: 2,
                         ),
-                      ),  
+                      ),
                     ),
                   ),
                   const SizedBox(height: 15),

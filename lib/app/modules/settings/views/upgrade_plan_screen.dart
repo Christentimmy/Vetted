@@ -16,7 +16,7 @@ class UpgradePlanScreen extends StatelessWidget {
       "Unlimited post search",
       "Access all nationwide post",
       "Filter post by location",
-      "Set alerts for men’s name",
+      "Set alerts for names",
       "No screenshots",
       "Background checks",
       "Criminal record search",
