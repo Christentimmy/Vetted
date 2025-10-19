@@ -1,8 +1,10 @@
+import 'package:Vetted/app/controller/auto_complete_controller.dart';
 import 'package:Vetted/app/controller/post_controller.dart';
 import 'package:Vetted/app/data/models/post_model.dart';
 import 'package:Vetted/app/modules/home/widget/header_drag_widget.dart';
 import 'package:Vetted/app/resources/colors.dart';
 import 'package:Vetted/app/routes/app_routes.dart';
+import 'package:Vetted/app/widgets/auto_complete_widget.dart';
 import 'package:Vetted/app/widgets/custom_button.dart';
 import 'package:Vetted/app/widgets/loaders.dart';
 import 'package:Vetted/app/widgets/staggered_column_animation.dart';
@@ -35,6 +37,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final locationAddressController = TextEditingController();
   final nameController = TextEditingController();
+
+  final _autoCompleteController = Get.put(AutoCompleteController());
 
   @override
   void initState() {
@@ -125,8 +129,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
         // Search bar with filter
         Container(
-          width: 160,
-          height: 36,
+          width: Get.width * 0.5,
+          height: 40,
           padding: const EdgeInsets.symmetric(horizontal: 8),
           decoration: BoxDecoration(
             color: Colors.grey.shade200,
@@ -170,291 +174,308 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Future<dynamic> buildFilterBottomSheet(BuildContext context) {
-    return showModalBottomSheet(
+  buildFilterBottomSheet(BuildContext context) {
+    return showBottomSheet(
       context: context,
       builder: (context) {
-        return Padding(
-          padding: EdgeInsets.only(
-            top: 24,
-            left: 24,
-            right: 24,
-            bottom: MediaQuery.of(context).viewInsets.bottom + 35,
-          ),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Text(
-                  "Filter posts",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 20),
-
-                TextField(
-                  controller: nameController,
-                  decoration: InputDecoration(
-                    hintText: 'Name',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
+        return SingleChildScrollView(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                "Filter posts",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 20),
+        
+              TextField(
+                controller: nameController,
+                decoration: InputDecoration(
+                  hintText: 'Name',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  contentPadding: const EdgeInsets.all(12),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(
+                      color: AppColors.primaryColor,
                     ),
-                    contentPadding: const EdgeInsets.all(12),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(
-                        color: AppColors.primaryColor,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              TextFormField(
+                // controller: locationAddressController,
+                controller: _autoCompleteController.searchFieldController,
+                onChanged: (value) {
+                  _autoCompleteController.searchText.value = value;
+                },
+                decoration: InputDecoration(
+                  hintText: 'Search location',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+        
+                  contentPadding: const EdgeInsets.all(12),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(
+                      color: AppColors.primaryColor,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              AutoCompleteList(
+                onTap: (v) {
+                  String destination = v["name"] ?? "";
+                  if (destination.isEmpty) return;
+                  // createPostController.selectedCity.value = destination;
+        
+                  _autoCompleteController.places.clear();
+                  _autoCompleteController.searchFieldController.clear();
+                  _autoCompleteController.searchFieldController.text =
+                      destination;
+                  _autoCompleteController.searchText.value = "";
+                },
+                autoCompleteController: _autoCompleteController,
+              ),
+              const SizedBox(height: 12),
+        
+              // AGE RANGE
+              const Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Age range",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                ),
+              ),
+              Obx(() {
+                return RangeSlider(
+                  activeColor: AppColors.primaryColor,
+                  values: ageRange.value,
+                  min: 18,
+                  max: 75,
+                  divisions: 57,
+                  labels: RangeLabels(
+                    "${ageRange.value.start.round()}",
+                    "${ageRange.value.end.round()}",
+                  ),
+                  onChanged: (values) {
+                    ageRange.value = values;
+                  },
+                );
+              }),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Obx(() {
+                  return Text(
+                    "From ${ageRange.value.start.round()} to ${ageRange.value.end.round()}",
+                    style: const TextStyle(color: Colors.black54),
+                  );
+                }),
+              ),
+        
+              const SizedBox(height: 20),
+        
+              // SORT BY
+              const Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Sort by",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                ),
+              ),
+              const SizedBox(height: 8),
+              Obx(() {
+                return Row(
+                  children: [
+                    Radio<String>(
+                      activeColor: AppColors.primaryColor,
+                      value: 'newest',
+                      groupValue: sortBy.value,
+                      onChanged: (value) => sortBy.value = value!,
+                    ),
+                    const Text('Newest'),
+                    Radio<String>(
+                      activeColor: AppColors.primaryColor,
+                      value: 'oldest',
+                      groupValue: sortBy.value,
+                      onChanged: (value) => sortBy.value = value!,
+                    ),
+                    const Text('Oldest'),
+                  ],
+                );
+              }),
+        
+              const SizedBox(height: 8),
+        
+              // RED & GREEN FLAG TOGGLES (Icon-Based)
+              Row(
+                children: [
+                  Expanded(
+                    child: InkWell(
+                      onTap: () => showRedFlag.value = !showRedFlag.value,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey.shade300),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Column(
+                          children: [
+                            const Text("Post has"),
+                            const SizedBox(height: 6),
+                            Obx(
+                              () => Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.flag,
+                                    size: 20,
+                                    color:
+                                        showRedFlag.value
+                                            ? Colors.red
+                                            : Colors.grey,
+                                  ),
+                                  const SizedBox(width: 6),
+                                  Icon(
+                                    Icons.flag,
+                                    size: 20,
+                                    color:
+                                        showRedFlag.value
+                                            ? Colors.red
+                                            : Colors.grey,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 12),
-                TextField(
-                  controller: locationAddressController,
-                  decoration: InputDecoration(
-                    hintText: 'Search location',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    contentPadding: const EdgeInsets.all(12),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(
-                        color: AppColors.primaryColor,
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: InkWell(
+                      onTap: () => showGreenFlag.value = !showGreenFlag.value,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey.shade300),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Column(
+                          children: [
+                            const Text("Post has"),
+                            const SizedBox(height: 6),
+                            Obx(
+                              () => Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.flag,
+                                    size: 20,
+                                    color:
+                                        showGreenFlag.value
+                                            ? Colors.green
+                                            : Colors.grey,
+                                  ),
+                                  const SizedBox(width: 6),
+                                  Icon(
+                                    Icons.flag,
+                                    size: 20,
+                                    color:
+                                        showGreenFlag.value
+                                            ? Colors.green
+                                            : Colors.grey,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 12),
-
-                // AGE RANGE
-                const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    "Age range",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                  ),
-                ),
-                Obx(() {
-                  return RangeSlider(
-                    activeColor: AppColors.primaryColor,
-                    values: ageRange.value,
-                    min: 18,
-                    max: 75,
-                    divisions: 57,
-                    labels: RangeLabels(
-                      "${ageRange.value.start.round()}",
-                      "${ageRange.value.end.round()}",
-                    ),
-                    onChanged: (values) {
-                      ageRange.value = values;
+                ],
+              ),
+        
+              const SizedBox(height: 24),
+        
+              // FILTER BUTTON
+              Row(
+                children: [
+                  CustomButton(
+                    width: Get.width * 0.25,
+                    ontap: () async {
+                      Get.back();
+                      nameController.clear();
+                      locationAddressController.clear();
+                      ageRange.value = const RangeValues(18, 75);
+                      sortBy.value = 'newest';
+                      showRedFlag.value = true;
+                      showGreenFlag.value = true;
+                      _autoCompleteController.searchFieldController.clear();
+                      await postController.getFeed();
                     },
-                  );
-                }),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Obx(() {
-                    return Text(
-                      "From ${ageRange.value.start.round()} to ${ageRange.value.end.round()}",
-                      style: const TextStyle(color: Colors.black54),
-                    );
-                  }),
-                ),
-
-                const SizedBox(height: 20),
-
-                // SORT BY
-                const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    "Sort by",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                    isLoading: false.obs,
+                    bgColor: Colors.transparent,
+                    border: Border.all(color: AppColors.primaryColor),
+                    child: Text(
+                      "Reset",
+                      style: GoogleFonts.poppins(
+                        color: AppColors.primaryColor,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ),
-                ),
-                const SizedBox(height: 8),
-                Obx(() {
-                  return Row(
-                    children: [
-                      Radio<String>(
-                        activeColor: AppColors.primaryColor,
-                        value: 'newest',
-                        groupValue: sortBy.value,
-                        onChanged: (value) => sortBy.value = value!,
-                      ),
-                      const Text('Newest'),
-                      Radio<String>(
-                        activeColor: AppColors.primaryColor,
-                        value: 'oldest',
-                        groupValue: sortBy.value,
-                        onChanged: (value) => sortBy.value = value!,
-                      ),
-                      const Text('Oldest'),
-                    ],
-                  );
-                }),
-
-                const SizedBox(height: 8),
-
-                // RED & GREEN FLAG TOGGLES (Icon-Based)
-                Row(
-                  children: [
-                    Expanded(
-                      child: InkWell(
-                        onTap: () => showRedFlag.value = !showRedFlag.value,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey.shade300),
+                  SizedBox(width: 10),
+                  Expanded(
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          Get.back();
+                          await postController.getFeed(
+                            type: "woman",
+                            personName: nameController.text,
+                            ageRange: [
+                              ageRange.value.start.round(),
+                              ageRange.value.end.round(),
+                            ],
+                            personLocation:
+                                _autoCompleteController
+                                    .searchFieldController
+                                    .text,
+                            sort: sortBy.value,
+                            onlyGreen: showGreenFlag.value,
+                            onlyRed: showRedFlag.value,
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primaryColor,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          child: Column(
-                            children: [
-                              const Text("Post has"),
-                              const SizedBox(height: 6),
-                              Obx(
-                                () => Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      Icons.flag,
-                                      size: 20,
-                                      color:
-                                          showRedFlag.value
-                                              ? Colors.red
-                                              : Colors.grey,
-                                    ),
-                                    const SizedBox(width: 6),
-                                    Icon(
-                                      Icons.flag,
-                                      size: 20,
-                                      color:
-                                          showRedFlag.value
-                                              ? Colors.red
-                                              : Colors.grey,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
+                        ),
+                        child: const Text(
+                          'Filter',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
                           ),
                         ),
                       ),
                     ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: InkWell(
-                        onTap: () => showGreenFlag.value = !showGreenFlag.value,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey.shade300),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Column(
-                            children: [
-                              const Text("Post has"),
-                              const SizedBox(height: 6),
-                              Obx(
-                                () => Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      Icons.flag,
-                                      size: 20,
-                                      color:
-                                          showGreenFlag.value
-                                              ? Colors.green
-                                              : Colors.grey,
-                                    ),
-                                    const SizedBox(width: 6),
-                                    Icon(
-                                      Icons.flag,
-                                      size: 20,
-                                      color:
-                                          showGreenFlag.value
-                                              ? Colors.green
-                                              : Colors.grey,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 24),
-
-                // FILTER BUTTON
-                Row(
-                  children: [
-                    CustomButton(
-                      width: Get.width * 0.25,
-                      ontap: () async {
-                        Get.back();
-                        nameController.clear();
-                        locationAddressController.clear();
-                        ageRange.value = const RangeValues(18, 75);
-                        sortBy.value = 'newest';
-                        showRedFlag.value = true;
-                        showGreenFlag.value = true;
-                        await postController.getFeed();
-                      },
-                      isLoading: false.obs,
-                      bgColor: Colors.transparent,
-                      border: Border.all(color: AppColors.primaryColor),
-                      child: Text(
-                        "Reset",
-                        style: GoogleFonts.poppins(
-                          color: AppColors.primaryColor,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 10),
-                    Expanded(
-                      child: SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            Get.back();
-                            await postController.getFeed(
-                              type: "woman",
-                              personName: nameController.text,
-                              ageRange: [
-                                ageRange.value.start.round(),
-                                ageRange.value.end.round(),
-                              ],
-                              personLocation: locationAddressController.text,
-                              sort: sortBy.value,
-                              onlyGreen: showGreenFlag.value,
-                              onlyRed: showRedFlag.value,
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.primaryColor,
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                          child: const Text(
-                            'Filter',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+                  ),
+                ],
+              ),
+            ],
           ),
         );
       },
