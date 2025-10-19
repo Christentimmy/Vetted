@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class BackgroundCheckScreen extends StatelessWidget {
   BackgroundCheckScreen({super.key});
@@ -123,17 +124,25 @@ class BackgroundCheckScreen extends StatelessWidget {
             const SizedBox(height: 12),
             GestureDetector(
               onTap: () => Get.toNamed(AppRoutes.sexOffendersMapScreen),
-              child: Container(
+              child: SizedBox(
                 height: 160,
-                decoration: BoxDecoration(
+                width: Get.width,
+                child: ClipRRect(
                   borderRadius: BorderRadius.circular(12),
-                  image: DecorationImage(
-                    colorFilter: ColorFilter.mode(
-                      AppColors.primaryColor.withValues(alpha: 0.5),
-                      BlendMode.darken,
+                  child: AbsorbPointer(
+                    child: GoogleMap(
+                      initialCameraPosition: const CameraPosition(
+                        target: LatLng(39.73915, -104.9847),
+                        zoom: 12,
+                      ),
+                      zoomControlsEnabled: false,
+                      zoomGesturesEnabled: false,
+                      scrollGesturesEnabled: false,
+                      rotateGesturesEnabled: false,
+                      tiltGesturesEnabled: false,
+                      myLocationButtonEnabled: false,
+                      mapToolbarEnabled: false,
                     ),
-                    image: AssetImage('assets/images/mapa.jpg'),
-                    fit: BoxFit.cover,
                   ),
                 ),
               ),

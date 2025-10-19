@@ -132,8 +132,11 @@ class SettingScreen extends StatelessWidget {
                 );
               },
             ),
-
-            // _menuItem(title: "Privacy policy", isBold: true),
+            _menuItem(
+              title: "Privacy policy",
+              isBold: true,
+              onTap: () => Get.toNamed(AppRoutes.privacyPolicy),
+            ),
             const SizedBox(height: 16),
             _menuItem(
               icon: Icons.logout,

@@ -51,4 +51,5 @@ class AppRoutes {
   static const String notificationMenuScreen = '/notificationMenuScreen';
   static const String termsAndConditionScreen = '/termsAndConditionScreen';
   static const String backgroundEachPersonResult = "/backgroundEachPersonResult";
+  static const String privacyPolicy = "/privacyPolicy";
 }

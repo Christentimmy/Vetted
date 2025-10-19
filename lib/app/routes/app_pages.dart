@@ -24,6 +24,7 @@ import 'package:Vetted/app/modules/notificaton/views/allow_notification_screen.d
 import 'package:Vetted/app/modules/onboarding/views/how_it_work_screen.dart';
 import 'package:Vetted/app/modules/onboarding/views/onboarding_screen.dart';
 import 'package:Vetted/app/modules/onboarding/views/our_safety_tools_screen.dart';
+import 'package:Vetted/app/modules/policy/privacy_policy_screen.dart';
 import 'package:Vetted/app/modules/policy/terms_and_condition_screen.dart';
 import 'package:Vetted/app/modules/post/views/create_post_screen.dart';
 import 'package:Vetted/app/modules/post/views/poll_post_screen.dart';
@@ -258,7 +259,6 @@ class AppPages {
       page: (){
         final arguments = Get.arguments ?? {};
         final justAScreen = arguments["justAScreen"] as bool;
-        print(justAScreen);
         return TermsAndConditionScreen(justAScreen: justAScreen);
       },
     ),
@@ -269,6 +269,7 @@ class AppPages {
         throw Exception("personName is required");
       }
       return BackgroundEachResultScreen(personName: personName);
-    })
+    }),
+    GetPage(name: AppRoutes.privacyPolicy, page: ()=> PrivacyPolicyScreen())
   ];
 }
