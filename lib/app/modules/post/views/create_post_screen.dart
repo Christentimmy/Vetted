@@ -62,6 +62,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: const [
+                      _RuleItem("No explicit content"),
                       _RuleItem("No last names"),
                       _RuleItem("No contact information"),
                       _RuleItem("No sensitive personal data"),
