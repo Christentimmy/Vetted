@@ -52,7 +52,9 @@ class _FloatingBottomNavigationWidgetState
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      resizeToAvoidBottomInset: false,
       body: Stack(
+        
         children: [
           // Main content
           Obx(() => items[currentIndex.value]),

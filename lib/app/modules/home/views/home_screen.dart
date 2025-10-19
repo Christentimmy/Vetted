@@ -37,7 +37,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final locationAddressController = TextEditingController();
   final nameController = TextEditingController();
-
   final _autoCompleteController = Get.put(AutoCompleteController());
 
   @override
@@ -140,7 +139,7 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               const Icon(Icons.search, size: 18, color: Colors.grey),
               const SizedBox(width: 6),
-              const Expanded(
+              Expanded(
                 child: TextField(
                   decoration: InputDecoration(
                     hintText: 'Search',
@@ -148,6 +147,18 @@ class _HomeScreenState extends State<HomeScreen> {
                     isCollapsed: true,
                   ),
                   style: TextStyle(fontSize: 14),
+                  onChanged: (value) {
+                    if (value.isEmpty) {
+                      postController.getFeed();
+                    }
+                  },
+                  onSubmitted: (value) {
+                    postController.getFeed(
+                      showLoader: true,
+                      type: "woman",
+                      personName: value,
+                    );
+                  },
                 ),
               ),
 
@@ -775,6 +786,7 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     });
   }
+
 }
 
 _getFlagColor({required String? leadingFlag}) {
