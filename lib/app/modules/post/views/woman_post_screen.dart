@@ -1,5 +1,7 @@
+import 'package:Vetted/app/controller/auto_complete_controller.dart';
 import 'package:Vetted/app/modules/post/controller/create_post_controller.dart';
 import 'package:Vetted/app/resources/colors.dart';
+import 'package:Vetted/app/widgets/auto_complete_widget.dart';
 import 'package:Vetted/app/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -10,6 +12,7 @@ class WomanPostScreen extends StatelessWidget {
 
   final formKey = GlobalKey<FormState>();
   final createPostController = Get.put(CreatePostController());
+  final _autoCompleteController = Get.put(AutoCompleteController());
 
   @override
   Widget build(BuildContext context) {
@@ -179,37 +182,56 @@ class WomanPostScreen extends StatelessWidget {
               return null;
             },
           ),
-
           const SizedBox(height: 12),
-
-          // City dropdown
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.black12),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: DropdownButtonHideUnderline(
-              child: Obx(() {
-                final value = createPostController.selectedCity.value;
-                return DropdownButton<String>(
-                  hint: const Text("State"),
-                  value: value.isEmpty ? null : value,
-                  isExpanded: true,
-                  items:
-                      createPostController.states.map((city) {
-                        return DropdownMenuItem(value: city, child: Text(city));
-                      }).toList(),
-                  onChanged: (value) {
-                    createPostController.selectedCity.value = value!;
-                  },
-                );
-              }),
-            ),
+          _buildTextField(
+            controller: _autoCompleteController.searchFieldController,
+            hint: "City",
+            validator: null,
+            onChanged: (value) {
+              _autoCompleteController.searchText.value = value;
+            },
           ),
 
           const SizedBox(height: 12),
 
+          // City dropdown
+          // Container(
+          //   padding: const EdgeInsets.symmetric(horizontal: 12),
+          //   decoration: BoxDecoration(
+          //     border: Border.all(color: Colors.black12),
+          //     borderRadius: BorderRadius.circular(12),
+          //   ),
+          //   child: DropdownButtonHideUnderline(
+          //     child: Obx(() {
+          //       final value = createPostController.selectedCity.value;
+          //       return DropdownButton<String>(
+          //         hint: const Text("State"),
+          //         value: value.isEmpty ? null : value,
+          //         isExpanded: true,
+          //         items:
+          //             createPostController.states.map((city) {
+          //               return DropdownMenuItem(value: city, child: Text(city));
+          //             }).toList(),
+          //         onChanged: (value) {
+          //           createPostController.selectedCity.value = value!;
+          //         },
+          //       );
+          //     }),
+          //   ),
+          // ),
+          AutoCompleteList(
+            onTap: (v) {
+              String destination = v["name"] ?? "";
+              if (destination.isEmpty) return;
+              createPostController.selectedCity.value = destination;
+
+              _autoCompleteController.places.clear();
+              _autoCompleteController.searchFieldController.clear();
+              _autoCompleteController.searchFieldController.text = destination;
+              _autoCompleteController.searchText.value = "";
+            },
+            autoCompleteController: _autoCompleteController,
+          ),
           // His age
           _buildTextField(
             controller: createPostController.ageController,
@@ -263,6 +285,7 @@ class WomanPostScreen extends StatelessWidget {
     required String hint,
     String? Function(String?)? validator,
     TextInputType? keyboardType,
+    Function(String)? onChanged,
   }) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -273,6 +296,7 @@ class WomanPostScreen extends StatelessWidget {
       child: TextFormField(
         keyboardType: keyboardType,
         cursorColor: AppColors.primaryColor,
+        onChanged: onChanged,
         validator:
             validator ??
             (value) {
