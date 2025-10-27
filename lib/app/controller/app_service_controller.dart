@@ -442,4 +442,13 @@ class AppServiceController extends GetxController {
       isloading.value = false;
     }
   }
+
+  void clean() {
+    isloading.value = false;
+    isloadingByName.value = false;
+    criminalList.value = [];
+    personsBackground.value = [];
+    reverseInfoList.value = [];
+    eniformPhoneInfoModel.value = null;
+  }
 }

@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:Vetted/app/controller/app_service_controller.dart';
+import 'package:Vetted/app/controller/message_controller.dart';
 import 'package:Vetted/app/controller/post_controller.dart';
 import 'package:Vetted/app/controller/socket_controller.dart';
 import 'package:Vetted/app/controller/storage_controller.dart';
@@ -130,6 +132,8 @@ class AuthController extends GetxController {
       Get.find<SocketController>().disconnectSocket();
       Get.find<UserController>().clean();
       Get.find<PostController>().clean();
+      Get.find<AppServiceController>().clean();
+      Get.find<MessageController>().clearChatHistory();
     } catch (e) {
       debugPrint(e.toString());
     }

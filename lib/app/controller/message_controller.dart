@@ -131,5 +131,6 @@ class MessageController extends GetxController {
     allChattedUserList.clear();
     chatHistoryAndLiveMessage.clear();
     savedChatToAvoidLoading.clear();
+    highlightedMessageId.value = null;
   }
 }
