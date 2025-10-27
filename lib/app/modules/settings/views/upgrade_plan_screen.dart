@@ -154,7 +154,7 @@ class UpgradePlanScreen extends StatelessWidget {
 
               const SizedBox(height: 24),
               const Text(
-                'Just \$99/month',
+                'Just \$9.99/month',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 16),
@@ -162,12 +162,11 @@ class UpgradePlanScreen extends StatelessWidget {
               // 🔓 Unlock Features Button
               SizedBox(
                 width: double.infinity,
-                // height: 55,
+                height: 55,
                 child: ElevatedButton(
                   onPressed: () async {
                     final userModel = userController.userModel.value;
                     final subscription = userModel?.subscription;
-
                     if (subscription?.status == "active" &&
                         subscription?.cancelAtPeriodEnd == true) {
                       await subscriptionController.resumeSubscription();
@@ -230,6 +229,82 @@ class UpgradePlanScreen extends StatelessWidget {
                   }),
                 ),
               ),
+
+              // SizedBox(height: 10),
+              // Obx(() {
+              //   final userModel = userController.userModel.value;
+              //   final subscription = userModel?.subscription;
+              //   if (subscription?.status != "active") {
+              //     return SizedBox.shrink();
+              //   }
+              //   return SizedBox(
+              //     width: double.infinity,
+              //     height: 55,
+              //     child: ElevatedButton(
+              //       onPressed: () async {
+              //         if (subscription?.status == "active" &&
+              //             subscription?.cancelAtPeriodEnd == true) {
+              //           await subscriptionController.resumeSubscription();
+              //         } else if (subscription?.status == "active" &&
+              //             subscription?.cancelAtPeriodEnd == false) {
+              //           await subscriptionController.cancelSubscription();
+              //         } else {
+              //           await subscriptionController.createSubscription();
+              //         }
+              //       },
+              //       style: ElevatedButton.styleFrom(
+              //         backgroundColor: Colors.red.shade700,
+              //         padding: const EdgeInsets.symmetric(vertical: 16),
+              //         shape: RoundedRectangleBorder(
+              //           borderRadius: BorderRadius.circular(12),
+              //         ),
+              //       ),
+              //       child: Obx(() {
+              //         String text = "";
+              //         final userModel = userController.userModel.value;
+              //         final subscription = userModel?.subscription;
+              //         if (subscription?.status == "active" &&
+              //             subscription?.cancelAtPeriodEnd == false) {
+              //           text = "Cancel Subscription";
+              //         } else if (subscription?.status == "active" &&
+              //             subscription?.cancelAtPeriodEnd == true) {
+              //           text = "Resume Subscription";
+              //         } else if (subscription?.status == "past_due") {
+              //           text = "Resume Subscription";
+              //         } else {
+              //           text = "Upgrade to Premium";
+              //         }
+              //         if (subscriptionController.isLoading.value) {
+              //           return const Center(
+              //             child: CircularProgressIndicator(color: Colors.white),
+              //           );
+              //         }
+              //         return Column(
+              //           children: [
+              //             Text(
+              //               text,
+              //               style: TextStyle(
+              //                 fontWeight: FontWeight.bold,
+              //                 fontSize: 16,
+              //                 color: Colors.white,
+              //               ),
+              //             ),
+              //             if (subscription?.status == "past_due")
+              //               Text(
+              //                 "Your subscription is past due",
+              //                 style: GoogleFonts.fredoka(
+              //                   fontWeight: FontWeight.bold,
+              //                   fontSize: 11,
+              //                   fontStyle: FontStyle.italic,
+              //                   color: Colors.white,
+              //                 ),
+              //               ),
+              //           ],
+              //         );
+              //       }),
+              //     ),
+              //   );
+              // }),
               const SizedBox(height: 8),
               const Text(
                 'Recurring billing? Cancel anytime.',
