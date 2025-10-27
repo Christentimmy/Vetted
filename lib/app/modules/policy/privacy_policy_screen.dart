@@ -386,7 +386,7 @@ If you choose not to authorize the above permissions, some of the functionality 
                     ),
                     Text(
                       """ 
-Cookies
+                      Cookies
 
 Like many other websites, we use cookies and other tracking technologies (such as pixels, APIs, tags, web beacons and other software) (collectively, "Cookies"). Cookies are small files of information that are stored by your web browser software on your computer hard drive, mobile or other devices (e.g., smartphones or tablets). These technologies are used by most website and app providers to let users navigate between pages efficiently, ensure security of the webpage or application, understand how their websites are used, remember user preferences and generally improve the user experience. 
 More information on cookies and their use can be found at www.aboutcookies.org or www.allaboutcookies.org. 
@@ -422,7 +422,7 @@ We may remove content, terminate and ban offending accounts, and, where appropri
 
 Children’s Privacy
 
-The Site, Apps and Services are not directed to persons under the age of 18, and we do not knowingly request or collect any information about persons under the age of 18. If you are under the age of 18, please do not provide any personal information or data through the Site, Apps or Services. If a user submitting personal information is suspected of being younger than 18 years of age, we will require the relevant user to stop, and will take steps to delete that individual’s information as soon as possible. If you are a parent or guardian of a person under the age of 18, and you become aware they have provided personal information or data to us, please contact us at [vetteddatingadvice@gmail.com] and you may request to exercise your applicable access, rectification, cancellation, and/or objection rights.
+The Site, Apps and Services are not directed to persons under the age of 18, and we do not knowingly request or collect any information about persons under the age of 18. If you are under the age of 18, please do not provide any personal information or data through the Site, Apps or Services. If a user submitting personal information is suspected of being younger than 18 years of age, we will require the relevant user to stop, and will take steps to delete that individual’s information as soon as possible. If you are a parent or guardian of a person under the age of 18, and you become aware they have provided personal information or data to us, please contact us at [support@vetteddatingadvice.com] and you may request to exercise your applicable access, rectification, cancellation, and/or objection rights.
 
 User Privacy Rights
 As a user of our Services, you may have certain rights regarding your personal information via state or other laws. We comply with applicable state privacy laws, but some may not be applicable due to our size and scope. Nonetheless, we are committed to transparency and user control, and you may:
@@ -430,12 +430,12 @@ Access Your Information: Request details about the personal information we colle
 Correct or Update: Request corrections or updates to your personal information to ensure its accuracy.
 Delete Your Information: Request the deletion of your personal information, subject to certain legal or operational limitations.
 Opt-Out of Marketing: Unsubscribe from marketing communications at any time by following the instructions in our emails or contacting us directly.
-To exercise these rights, please contact us at [vetteddatingadvice@gmail.com]. We will respond to your request promptly and in accordance with applicable laws.
-California's "Shine the Light" law permits California residents to request certain information regarding our disclosure of personal information to third parties for their own direct marketing purposes. However, we do not disclose personal information to third parties for their own direct marketing purposes. If you are a California resident, you may request information about our compliance with the Shine the Light law by contacting us at [vetteddatingadvice@gmail.com]. Any such request must include "California Shine the Light Request" in the first line of the description and include your name, street address, city, state, and ZIP code. Please note that we are only required to respond to one request per customer each calendar year.
+To exercise these rights, please contact us at [support@vetteddatingadvice.com]. We will respond to your request promptly and in accordance with applicable laws.
+California's "Shine the Light" law permits California residents to request certain information regarding our disclosure of personal information to third parties for their own direct marketing purposes. However, we do not disclose personal information to third parties for their own direct marketing purposes. If you are a California resident, you may request information about our compliance with the Shine the Light law by contacting us at [support@vetteddatingadvice.com]. Any such request must include "California Shine the Light Request" in the first line of the description and include your name, street address, city, state, and ZIP code. Please note that we are only required to respond to one request per customer each calendar year.
 ‍We may transfer personal information to countries other than the country in which the data was originally collected. These countries may not have the same data protection laws as the country in which you initially provided the personal information. When we transfer your personal information to other countries, we will protect that information as described in this Privacy Policy.
 Contact us
 
-If you have questions or concerns regarding this Privacy Policy, or if you want to exercise any of the rights mentioned herein, please contact us by email at [vetteddatingadvice@gmail.com] or by mail to:\n
+If you have questions or concerns regarding this Privacy Policy, or if you want to exercise any of the rights mentioned herein, please contact us by email at [support@vetteddatingadvice.com] or by mail to:
 ZenBusiness Inc.
 221 West Lake Lansing Road Suite 200
 East Lansing, MI 48823
