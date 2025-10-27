@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:Vetted/app/controller/storage_controller.dart';
+import 'package:Vetted/app/controller/subscription_controller.dart';
+import 'package:lottie/lottie.dart';
 // import 'package:Vetted/app/data/models/background_check_model.dart';
 import 'package:Vetted/app/data/models/criminal_record_model.dart';
 import 'package:Vetted/app/data/models/eniform_phone_info_model.dart';
@@ -8,10 +10,13 @@ import 'package:Vetted/app/data/models/person_model.dart';
 import 'package:Vetted/app/data/models/search_image_model.dart';
 import 'package:Vetted/app/data/models/sex_offender_model.dart';
 import 'package:Vetted/app/data/services/app_service.dart';
+import 'package:Vetted/app/resources/colors.dart';
 import 'package:Vetted/app/routes/app_routes.dart';
+import 'package:Vetted/app/widgets/custom_button.dart';
 import 'package:Vetted/app/widgets/snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AppServiceController extends GetxController {
   //TODO: Pesons, personsBackground, Delete
@@ -44,9 +49,12 @@ class AppServiceController extends GetxController {
 
       final response = await appService.imageSearch(file: file, token: token);
       if (response == null) return;
-
       final data = json.decode(response.body);
       String message = data["message"] ?? "";
+      if (response.statusCode == 402) {
+        displayTopUpDialog(message);
+        return;
+      }
       if (response.statusCode == 403) {
         CustomSnackbar.showErrorToast("You don't have access to this feature");
         Get.offNamed(AppRoutes.upgradePlanScreen);
@@ -69,13 +77,113 @@ class AppServiceController extends GetxController {
       //     }).toList();
       // this.images.value = images;
       // Get.toNamed(AppRoutes.reverseImageScreen);
-      tinEyeImages.value = result.map((e) => TinEyeImageModel.fromJson(e)).toList();
+      tinEyeImages.value =
+          result.map((e) => TinEyeImageModel.fromJson(e)).toList();
       Get.toNamed(AppRoutes.reverseImageScreen);
     } catch (e) {
       debugPrint(e.toString());
     } finally {
       isloadingImage.value = false;
     }
+  }
+
+  displayTopUpDialog(String message) {
+    final subscriptionController = Get.find<SubscriptionController>();
+    return showDialog(
+      context: Get.context!,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: Colors.transparent,
+          content: Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: AppColors.primaryColor, width: 0.8),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black26,
+                  blurRadius: 10,
+                  offset: const Offset(0, 5),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(height: 10),
+                Center(
+                  child: Lottie.asset(
+                    "assets/images/Wallet.json",
+                    height: 100,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                Text(
+                  "Sorry!!!",
+                  style: GoogleFonts.poppins(
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primaryColor,
+                  ),
+                ),
+                SizedBox(height: 5),
+                Text(
+                  message,
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.poppins(
+                    fontSize: 14,
+                    fontWeight: FontWeight.normal,
+                    color: Colors.grey,
+                  ),
+                ),
+                SizedBox(height: 10),
+                Row(
+                  children: [
+                    Expanded(
+                      child: CustomButton(
+                        ontap: () => Get.toNamed(AppRoutes.upgradePlanScreen),
+                        isLoading: false.obs,
+                        bgColor: Colors.white,
+                        border: Border.all(
+                          width: 2,
+                          color: AppColors.primaryColor,
+                        ),
+                        child: Text(
+                          "Subscribe",
+                          style: GoogleFonts.poppins(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.primaryColor,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: CustomButton(
+                        ontap: () async {
+                          subscriptionController.createTopUp();
+                        },
+                        isLoading: subscriptionController.isLoading,
+                        child: Text(
+                          "Pay \$2.99",
+                          style: GoogleFonts.poppins(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   Future<void> getNumberInfo({required String number}) async {
@@ -93,7 +201,10 @@ class AppServiceController extends GetxController {
 
       final responseBody = json.decode(response.body);
       String message = responseBody["message"] ?? "";
-
+      if (response.statusCode == 402) {
+        displayTopUpDialog(message);
+        return;
+      }
       if (response.statusCode == 403) {
         CustomSnackbar.showErrorToast("You don't have access to this feature");
         Get.toNamed(AppRoutes.upgradePlanScreen);
@@ -158,6 +269,10 @@ class AppServiceController extends GetxController {
       if (response == null) return;
       final data = json.decode(response.body);
       String message = data["message"] ?? "";
+      if (response.statusCode == 402) {
+        displayTopUpDialog(message);
+        return;
+      }
       if (response.statusCode == 403) {
         CustomSnackbar.showErrorToast("You don't have access to this feature");
         Get.offNamed(AppRoutes.upgradePlanScreen);
@@ -208,6 +323,10 @@ class AppServiceController extends GetxController {
 
       final data = json.decode(response.body);
       String message = data["message"] ?? "";
+      if (response.statusCode == 402) {
+        displayTopUpDialog(message);
+        return null;
+      }
       if (response.statusCode == 403) {
         CustomSnackbar.showErrorToast("You don't have access to this feature");
         Get.offNamed(AppRoutes.upgradePlanScreen);
@@ -253,6 +372,10 @@ class AppServiceController extends GetxController {
 
       final data = json.decode(response.body);
       String message = data["message"] ?? "";
+      if (response.statusCode == 402) {
+        displayTopUpDialog(message);
+        return null;
+      }
       if (response.statusCode != 200) {
         CustomSnackbar.showErrorToast(message);
         return null;
@@ -294,6 +417,10 @@ class AppServiceController extends GetxController {
 
       final data = json.decode(response.body);
       String message = data["message"] ?? "";
+      if (response.statusCode == 402) {
+        displayTopUpDialog(message);
+        return;
+      }
       if (response.statusCode != 200) {
         CustomSnackbar.showErrorToast(message);
         return;

@@ -33,7 +33,6 @@ class SubscriptionController extends GetxController {
       final url = decoded["checkoutUrl"] ?? "";
       if (url.isEmpty) return;
       await launchUrl(Uri.parse(url));
-      
     } catch (e) {
       debugPrint(e.toString());
     } finally {
@@ -91,5 +90,30 @@ class SubscriptionController extends GetxController {
     }
   }
 
+  Future<void> createTopUp() async {
+    isLoading.value = true;
+    try {
+      final storageController = Get.find<StorageController>();
+      final String? token = await storageController.getToken();
+      if (token == null) return;
+
+      final response = await _subscriptionService.createTopUp(token: token);
+      if (response == null) return;
+
+      final decoded = json.decode(response.body);
+      String message = decoded["message"] ?? "";
+      if (response.statusCode != 200) {
+        CustomSnackbar.showErrorToast(message);
+        return;
+      }
+      final url = decoded["checkoutUrl"] ?? "";
+      if (url.isEmpty) return;
+      await launchUrl(Uri.parse(url));
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      isLoading.value = false;
+    }
+  }
 
 }

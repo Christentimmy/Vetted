@@ -1,4 +1,5 @@
 import 'package:Vetted/app/controller/app_service_controller.dart';
+import 'package:Vetted/app/resources/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -145,6 +146,10 @@ class _BackgroundCheckSearchScreenState
         decoration: InputDecoration(
           hintText: hint,
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(6)),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(6),
+            borderSide: BorderSide(color: AppColors.primaryColor),
+          ),
           contentPadding: const EdgeInsets.symmetric(
             vertical: 14,
             horizontal: 12,
