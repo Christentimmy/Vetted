@@ -127,50 +127,7 @@ class _HomeScreenState extends State<HomeScreen> {
         const Spacer(),
 
         // Search bar with filter
-        Container(
-          width: Get.width * 0.5,
-          height: 40,
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          decoration: BoxDecoration(
-            color: Colors.grey.shade200,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Row(
-            children: [
-              const Icon(Icons.search, size: 18, color: Colors.grey),
-              const SizedBox(width: 6),
-              Expanded(
-                child: TextField(
-                  decoration: InputDecoration(
-                    hintText: 'Search',
-                    border: InputBorder.none,
-                    isCollapsed: true,
-                  ),
-                  style: TextStyle(fontSize: 14),
-                  onChanged: (value) {
-                    if (value.isEmpty) {
-                      postController.getFeed();
-                    }
-                  },
-                  onSubmitted: (value) {
-                    postController.getFeed(
-                      showLoader: true,
-                      type: "woman",
-                      personName: value,
-                    );
-                  },
-                ),
-              ),
-
-              IconButton(
-                onPressed: () {
-                  buildFilterBottomSheet(context);
-                },
-                icon: Icon(Icons.filter_list, size: 18, color: Colors.grey),
-              ),
-            ],
-          ),
-        ),
+        SlideToCreatePost(),
 
         const SizedBox(width: 12),
 
@@ -199,7 +156,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 20),
-        
+
               TextField(
                 controller: nameController,
                 decoration: InputDecoration(
@@ -210,9 +167,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   contentPadding: const EdgeInsets.all(12),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(
-                      color: AppColors.primaryColor,
-                    ),
+                    borderSide: const BorderSide(color: AppColors.primaryColor),
                   ),
                 ),
               ),
@@ -228,13 +183,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
-        
+
                   contentPadding: const EdgeInsets.all(12),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(
-                      color: AppColors.primaryColor,
-                    ),
+                    borderSide: const BorderSide(color: AppColors.primaryColor),
                   ),
                 ),
               ),
@@ -244,7 +197,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   String destination = v["name"] ?? "";
                   if (destination.isEmpty) return;
                   // createPostController.selectedCity.value = destination;
-        
+
                   _autoCompleteController.places.clear();
                   _autoCompleteController.searchFieldController.clear();
                   _autoCompleteController.searchFieldController.text =
@@ -254,7 +207,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 autoCompleteController: _autoCompleteController,
               ),
               const SizedBox(height: 12),
-        
+
               // AGE RANGE
               const Align(
                 alignment: Alignment.centerLeft,
@@ -288,9 +241,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   );
                 }),
               ),
-        
+
               const SizedBox(height: 20),
-        
+
               // SORT BY
               const Align(
                 alignment: Alignment.centerLeft,
@@ -320,9 +273,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 );
               }),
-        
+
               const SizedBox(height: 8),
-        
+
               // RED & GREEN FLAG TOGGLES (Icon-Based)
               Row(
                 children: [
@@ -413,9 +366,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ],
               ),
-        
+
               const SizedBox(height: 24),
-        
+
               // FILTER BUTTON
               Row(
                 children: [
@@ -735,8 +688,53 @@ class _HomeScreenState extends State<HomeScreen> {
   Row buildActionRow(BuildContext context) {
     return Row(
       children: [
-        SlideToCreatePost(),
-        const Spacer(),
+        Expanded(
+          child: Container(
+            // width: Get.width * 0.8,
+            // height: 40,
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            decoration: BoxDecoration(
+              color: Colors.grey.shade200,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Row(
+              children: [
+                const Icon(Icons.search, size: 18, color: Colors.grey),
+                const SizedBox(width: 6),
+                Expanded(
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: 'Search',
+                      border: InputBorder.none,
+                      isCollapsed: true,
+                    ),
+                    style: TextStyle(fontSize: 14),
+                    onChanged: (value) {
+                      if (value.isEmpty) {
+                        postController.getFeed();
+                      }
+                    },
+                    onSubmitted: (value) {
+                      postController.getFeed(
+                        showLoader: true,
+                        type: "woman",
+                        personName: value,
+                      );
+                    },
+                  ),
+                ),
+          
+                IconButton(
+                  onPressed: () {
+                    buildFilterBottomSheet(context);
+                  },
+                  icon: Icon(Icons.filter_list, size: 18, color: Colors.grey),
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(width: 12),
         GestureDetector(
           onTap: () {
             Get.toNamed(AppRoutes.chatList);
@@ -786,7 +784,6 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     });
   }
-
 }
 
 _getFlagColor({required String? leadingFlag}) {

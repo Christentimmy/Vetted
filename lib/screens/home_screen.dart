@@ -61,16 +61,16 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         const Icon(Icons.search, size: 18, color: Colors.grey),
                         const SizedBox(width: 6),
-                        const Expanded(
-                          child: TextField(
-                            decoration: InputDecoration(
-                              hintText: 'Search',
-                              border: InputBorder.none,
-                              isCollapsed: true,
-                            ),
-                            style: TextStyle(fontSize: 14),
-                          ),
-                        ),
+                        // const Expanded(
+                        //   child: TextField(
+                        //     decoration: InputDecoration(
+                        //       hintText: 'Search',
+                        //       border: InputBorder.none,
+                        //       isCollapsed: true,
+                        //     ),
+                        //     style: TextStyle(fontSize: 14),
+                        //   ),
+                        // ),
                         GestureDetector(
                           onTap: () => _showFilterPopup(context),
                           child: const Icon(
@@ -105,49 +105,7 @@ class _HomeScreenState extends State<HomeScreen> {
               // Action Row with Swipeable Create Post
               Row(
                 children: [
-                  GestureDetector(
-                    onHorizontalDragEnd: (details) {
-                      if (details.primaryVelocity != null &&
-                          details.primaryVelocity! > 0) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const CreatePostScreen(),
-                          ),
-                        );
-                      }
-                    },
-                    child: Container(
-                      height: 48,
-                      width: MediaQuery.of(context).size.width * 0.45,
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      decoration: BoxDecoration(
-                        color: Colors.red.shade700,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: const [
-                          Icon(Icons.edit, color: Colors.white, size: 20),
-                          Icon(
-                            Icons.arrow_forward_ios,
-                            color: Colors.white,
-                            size: 14,
-                          ),
-                          Icon(
-                            Icons.arrow_forward_ios,
-                            color: Colors.white70,
-                            size: 14,
-                          ),
-                          Icon(
-                            Icons.arrow_forward_ios,
-                            color: Colors.white38,
-                            size: 14,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                  buildSlideToPost(context),
                   const Spacer(),
 
                   // Send button
@@ -319,6 +277,37 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildSlideToPost(BuildContext context) {
+    return GestureDetector(
+      onHorizontalDragEnd: (details) {
+        if (details.primaryVelocity != null && details.primaryVelocity! > 0) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const CreatePostScreen()),
+          );
+        }
+      },
+      child: Container(
+        height: 48,
+        width: MediaQuery.of(context).size.width * 0.45,
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        decoration: BoxDecoration(
+          color: Colors.red.shade700,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: const [
+            Icon(Icons.edit, color: Colors.white, size: 20),
+            Icon(Icons.arrow_forward_ios, color: Colors.white, size: 14),
+            Icon(Icons.arrow_forward_ios, color: Colors.white70, size: 14),
+            Icon(Icons.arrow_forward_ios, color: Colors.white38, size: 14),
+          ],
         ),
       ),
     );
