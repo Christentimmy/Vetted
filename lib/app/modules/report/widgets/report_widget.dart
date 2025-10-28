@@ -47,7 +47,7 @@ class _ReportBottomSheetState extends State<ReportBottomSheet> {
     "Spam",
     "Image is fake",
     "Image is not public",
-    "Profile isDisliking fake, spam, or scammer",
+    "Profile is likely fake, spam, or scammer",
     "Inappropriate content",
     "Underage or minor",
     "Someone is in danger",
