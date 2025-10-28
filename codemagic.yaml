@@ -8,22 +8,23 @@ workflows:
       flutter: stable
       xcode: latest
       cocoapods: default
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.christen.vetted
 
     scripts:
-      - name: Install Flutter dependencies
+      - name: Get Flutter packages
         script: |
-          flutter clean
           flutter pub get
 
-      - name: Build iOS release
+      - name: Pre-warm iOS build files
         script: |
-          flutter build ipa --release --no-codesign
+          flutter build ios --debug --no-codesign
+
+      - name: Build iOS IPA
+        script: |
+          flutter build ipa --release
 
     artifacts:
       - build/ios/ipa/*.ipa
       - build/ios/archive/*.xcarchive
-
-    publishing:
-      email:
-        recipients:
-          - timmychris09@gmail.com
