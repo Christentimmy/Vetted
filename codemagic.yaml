@@ -17,6 +17,11 @@ workflows:
         script: |
           flutter pub get
 
+      - name: Bump iOS deployment target to 14
+        script: |
+          echo "Updating iOS deployment target to 14 in Generated.xcconfig..."
+          sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = 13.0/IPHONEOS_DEPLOYMENT_TARGET = 14.0/g' ios/Flutter/Generated.xcconfig
+
       - name: Pre-warm iOS build files
         script: |
           flutter build ios --debug --no-codesign
