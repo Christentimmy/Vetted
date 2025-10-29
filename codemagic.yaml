@@ -17,25 +17,35 @@ workflows:
         script: |
           flutter pub get
 
-      - name: Clean and update iOS deployment
+      - name: Update iOS deployment target to 14
         script: |
-          echo "Cleaning and updating iOS deployment target..."
+          echo "Updating iOS deployment target to 14.0"
           cd ios
-          # Clean previous installations
-          pod cache clean --all
-          # Update deployment target in multiple places
-          sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = 13.0/IPHONEOS_DEPLOYMENT_TARGET = 14.0/g' Flutter/Generated.xcconfig
-          sed -i '' 's/platform :ios, .*/platform :ios, '\''14.0'\''/g' Podfile || echo "Podfile updated"
-          /usr/libexec/PlistBuddy -c "Set :MinimumOSVersion 14.0" Runner/Info.plist
-          echo "Deployment target set to 14.0"
 
-      - name: Install pods with updated deployment target
+          # Update Podfile platform
+          if [ -f Podfile ]; then
+            sed -i '' 's/platform :ios, .*/platform :ios, '\''14.0'\''/' Podfile || echo "Podfile platform updated"
+          else
+            echo "Podfile not found"
+          fi
+
+          # Update Flutter Generated.xcconfig
+          if [ -f Flutter/Generated.xcconfig ]; then
+            sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = 13.0/IPHONEOS_DEPLOYMENT_TARGET = 14.0/g' Flutter/Generated.xcconfig
+          fi
+
+          # Update Info.plist minimum OS version
+          if [ -f Runner/Info.plist ]; then
+            /usr/libexec/PlistBuddy -c "Set :MinimumOSVersion 14.0" Runner/Info.plist || echo "Plist updated"
+          fi
+
+      - name: Install CocoaPods
         script: |
           cd ios
-          pod deintegrate
+          pod deintegrate || echo "No existing pods to deintegrate"
           pod install --repo-update
 
-      - name: Pre-warm iOS build files
+      - name: Pre-warm iOS build
         script: |
           flutter build ios --debug --no-codesign
 
