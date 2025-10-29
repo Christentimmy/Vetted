@@ -28,6 +28,18 @@
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
+	<key>NSCameraUsageDescription</key>
+	<string>We need camera access to let you take photos and videos</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>We need photo library access to let you select photos and videos</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>We need permission to save photos to your library</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>We need microphone access to record audio and videos</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>We need your location to show nearby content and services</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>We need your location to provide location-based services</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
@@ -45,5 +57,20 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>OneSignalAppId</key>
+	<string>2fa250e8-3569-45a5-9c27-db2be9b84c36</string>
+
+	<key>CFBundleURLTypes</key>
+	<array>
+	<dict>
+		<key>CFBundleURLSchemes</key>
+		<array>
+		<string>vetted</string>
+		</array>
+	</dict>
+	</array>
+	<key>GMSApiKey</key>
+	<string>AIzaSyAOVYRIgupAurZup5y1PRh8Ismb1A3lLao</string>
+	
 </dict>
 </plist>
