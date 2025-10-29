@@ -17,10 +17,23 @@ workflows:
         script: |
           flutter pub get
 
-      - name: Bump iOS deployment target to 14
+      - name: Clean and update iOS deployment
         script: |
-          echo "Updating iOS deployment target to 14 in Generated.xcconfig..."
-          sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = 13.0/IPHONEOS_DEPLOYMENT_TARGET = 14.0/g' ios/Flutter/Generated.xcconfig
+          echo "Cleaning and updating iOS deployment target..."
+          cd ios
+          # Clean previous installations
+          pod cache clean --all
+          # Update deployment target in multiple places
+          sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = 13.0/IPHONEOS_DEPLOYMENT_TARGET = 14.0/g' Flutter/Generated.xcconfig
+          sed -i '' 's/platform :ios, .*/platform :ios, '\''14.0'\''/g' Podfile || echo "Podfile updated"
+          /usr/libexec/PlistBuddy -c "Set :MinimumOSVersion 14.0" Runner/Info.plist
+          echo "Deployment target set to 14.0"
+
+      - name: Install pods with updated deployment target
+        script: |
+          cd ios
+          pod deintegrate
+          pod install --repo-update
 
       - name: Pre-warm iOS build files
         script: |
