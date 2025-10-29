@@ -1,4 +1,4 @@
-package com.example.vetted
+package com.christen.vetted
 
 import android.os.Bundle
 import android.view.WindowManager.LayoutParams
