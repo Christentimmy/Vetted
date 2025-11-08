@@ -33,6 +33,7 @@ class AuthController extends GetxController {
       }
       final googleAuth = googleUser.authentication;
       final String? idToken = googleAuth.idToken;
+
       if (idToken == null) return;
       tempToken.value = idToken;
       final response = await _userService.userExist(email: googleUser.email);

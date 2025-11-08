@@ -11,11 +11,10 @@ class AuthService {
   static final GoogleSignIn _googleSignIn = GoogleSignIn.instance;
 
   Future<void> _initializeSignIn() async {
-    final clientId =
-        "423296603409-hsm4l97oob8tdkrtk2avn77cal1d7cm3.apps.googleusercontent.com";
     final serverClientId =
-        "423296603409-lechplsgug2dtpsa9r6hrkptihsl6tdn.apps.googleusercontent.com";
-
+        "339208855443-0p22l7s1scbv7afbrfi66ajb0p08di5v.apps.googleusercontent.com";
+    final clientId =
+        "339208855443-p2mkvu4k3nfgnghvb2q1lv1kjhaqhefb.apps.googleusercontent.com";
     await _googleSignIn.initialize(
       clientId: clientId,
       serverClientId: serverClientId,
@@ -98,9 +97,7 @@ class AuthService {
     return null;
   }
 
-  Future<http.Response?> loginWithNumber({
-    required String phoneNumber,
-  }) async {
+  Future<http.Response?> loginWithNumber({required String phoneNumber}) async {
     try {
       final response = await http
           .post(
@@ -162,5 +159,4 @@ class AuthService {
     }
     return null;
   }
-
 }

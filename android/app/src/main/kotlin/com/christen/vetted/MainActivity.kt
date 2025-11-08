@@ -8,6 +8,6 @@ class MainActivity : FlutterActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // Prevent screenshots and screen recording
-        // window.addFlags(LayoutParams.FLAG_SECURE)
+        window.addFlags(LayoutParams.FLAG_SECURE)
     }
 }
