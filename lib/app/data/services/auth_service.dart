@@ -15,8 +15,10 @@ class AuthService {
         "339208855443-0p22l7s1scbv7afbrfi66ajb0p08di5v.apps.googleusercontent.com";
     final clientId =
         "339208855443-p2mkvu4k3nfgnghvb2q1lv1kjhaqhefb.apps.googleusercontent.com";
+    final iosClientId =
+        "339208855443-1i11hrdqnlanasjmhko1tel2ift9s75q.apps.googleusercontent.com";
     await _googleSignIn.initialize(
-      clientId: clientId,
+      clientId: Platform.isAndroid ? clientId : iosClientId,
       serverClientId: serverClientId,
     );
   }
