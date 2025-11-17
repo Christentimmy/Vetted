@@ -12,10 +12,11 @@ class SetLocationScreen extends StatelessWidget {
   final VoidCallback? whatNext;
   SetLocationScreen({super.key, this.whatNext});
 
-  final locationModel = Rx<LocationModel?>(null);
+  final locationModel = Rxn<LocationModel?>(null);
   final locationController = Get.find<LocationController>();
   final userController = Get.find<UserController>();
   final addressController = TextEditingController();
+  final RxBool readOnly = true.obs;
 
   @override
   Widget build(BuildContext context) {
@@ -37,11 +38,18 @@ class SetLocationScreen extends StatelessWidget {
               Obx(() {
                 return TextField(
                   controller: addressController,
-                  readOnly: true,
+                  readOnly: readOnly.value,
                   onTap: () async {
+                    if (locationModel.value != null) return;
                     locationModel.value =
                         await locationController.useMyCurrentLocation();
+                    if (locationModel.value == null) {
+                      CustomSnackbar.showErrorToast("Location not found");
+                      // readOnly.value = false;
+                      return;
+                    }
                     addressController.text = locationModel.value?.address ?? '';
+                    readOnly.value = false;
                   },
                   decoration: InputDecoration(
                     hintText:
@@ -66,8 +74,16 @@ class SetLocationScreen extends StatelessWidget {
                 ontap: () async {
                   if (locationModel.value == null) {
                     CustomSnackbar.showErrorToast("Select Location");
+                    readOnly.value = true;
                     return;
                   }
+                  if (addressController.text.isEmpty) {
+                    CustomSnackbar.showErrorToast("Select Location");
+                    readOnly.value = true;
+                    return;
+                  }
+
+                  locationModel.value!.address = addressController.text;
                   await userController.updateLocation(
                     location: locationModel.value!,
                   );

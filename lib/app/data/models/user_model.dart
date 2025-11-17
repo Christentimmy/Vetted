@@ -95,9 +95,9 @@ class UserModel {
 }
 
 class LocationModel {
-  final String? type;
-  final String? address;
-  final List<double>? coordinates;
+  String? type;
+  String? address;
+  List<double>? coordinates;
 
   LocationModel({this.type, this.address, this.coordinates});
 
