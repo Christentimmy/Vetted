@@ -18,7 +18,7 @@ dependencies:
   intl_phone_field: ^3.2.0
   pin_code_fields: ^8.0.0
   intl: ^0.18.1
-  flutter_launcher_icons: ^0.13.1
+  flutter_launcher_icons: ^0.14.4
   cached_network_image: ^3.4.1
   cherry_toast: ^1.13.0
   http: ^1.4.0
@@ -139,7 +139,10 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
-flutter_icons:
-  android: true
+
+
+flutter_launcher_icons:
+  android: "launcher_icon"
   ios: true
-  image_path: "assets/images/logo_black.png"
+  image_path: "assets/images/new-logo.png"
+  min_sdk_android: 21
