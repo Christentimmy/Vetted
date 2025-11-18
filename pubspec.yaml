@@ -3,7 +3,7 @@ description: "A new Flutter project."
 publish_to: 'none'
 
 
-version: 1.0.0+27
+version: 1.0.0+28
 
 environment:
   sdk: ^3.7.2
@@ -145,4 +145,4 @@ flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
   image_path: "assets/images/new-logo.png"
-  min_sdk_android: 21
+  min_sdk_android: 21b
