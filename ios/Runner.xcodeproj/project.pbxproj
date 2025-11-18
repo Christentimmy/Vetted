@@ -374,7 +374,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" embed_and_thin\n";
+			shellScript = "#!/bin/sh\n\nAPP_PATH=\"${TARGET_BUILD_DIR}/${WRAPPER_NAME}\"\n\n# Only thin frameworks in the app, ignore .appex extensions\nfind \"$APP_PATH/Frameworks\" -name '*.framework' -type d | while read -r FRAMEWORK\ndo\n    # Remove simulator slices from frameworks\n    for ARCH in i386 x86_64\n    do\n        lipo -remove $ARCH \"$FRAMEWORK/$FRAMEWORK\" -output \"$FRAMEWORK/$FRAMEWORK\" 2>/dev/null || true\n    done\ndone\n\necho \"Thin Binary completed (skipped app extensions)\"\n";
 		};
 		743B3AD3107F064D7B601731 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
