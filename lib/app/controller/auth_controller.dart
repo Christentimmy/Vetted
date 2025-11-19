@@ -23,6 +23,7 @@ class AuthController extends GetxController {
 
   //hold on idtoken
   final RxString tempToken = "".obs;
+  
 
   Future<void> googleLoginOrSignUp() async {
     isGoogleLoading.value = true;

@@ -10,6 +10,27 @@ class AuthService {
   http.Client client = http.Client();
   static final GoogleSignIn _googleSignIn = GoogleSignIn.instance;
 
+  Future<http.Response?> login({
+    required String email,
+    required String password,
+  }) async {
+    try {
+      final response = await http.post(
+        Uri.parse("$baseUrl/auth/login"),
+        headers: {"Content-Type": "application/json"},
+        body: json.encode({"email": email, "password": password}),
+      ).timeout(const Duration(seconds: 20));
+      return response;
+    } on SocketException catch (e) {
+      debugPrint("No internet connection $e");
+    } on TimeoutException {
+      debugPrint("Request timeout");
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
+
   Future<void> _initializeSignIn() async {
     final serverClientId =
         "339208855443-0p22l7s1scbv7afbrfi66ajb0p08di5v.apps.googleusercontent.com";

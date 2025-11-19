@@ -145,4 +145,4 @@ flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
   image_path: "assets/images/new-logo.png"
-  min_sdk_android: 21b
+  min_sdk_android: 21
