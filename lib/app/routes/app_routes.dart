@@ -53,5 +53,6 @@ class AppRoutes {
   static const String backgroundEachPersonResult = "/backgroundEachPersonResult";
   static const String privacyPolicy = "/privacyPolicy";
   static const String loginScreen = "/loginScreen";
+  static const String signupScreen = "/signupScreen";
   
 }

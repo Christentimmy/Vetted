@@ -96,11 +96,14 @@ class LoginScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text("Don't have an account? ", style: GoogleFonts.poppins()),
-              Text(
-                "Create Account",
-                style: GoogleFonts.poppins(
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.primaryColor,
+              InkWell(
+                onTap: ()=> Get.toNamed(AppRoutes.signupScreen),
+                child: Text(
+                  "Create Account",
+                  style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.primaryColor,
+                  ),
                 ),
               ),
             ],
