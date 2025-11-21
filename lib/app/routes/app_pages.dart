@@ -65,12 +65,12 @@ class AppPages {
     GetPage(
       name: AppRoutes.otp,
       page: () {
-        final phoneNumber = Get.arguments['phoneNumber'];
-        final onTap = Get.arguments['onTap'];
-        if (phoneNumber == null) {
-          throw Exception('Phone number is required');
+        final email = Get.arguments['email'];
+        final onTap = Get.arguments['onTap'] as VoidCallback;
+        if (email == null) {
+          throw Exception('Email is required');
         }
-        return OTPScreen(phoneNumber: phoneNumber, onTap: onTap);
+        return OTPScreen(email: email, onTap: onTap);
       },
     ),
     GetPage(

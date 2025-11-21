@@ -4,13 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
-import 'package:flutter/gestures.dart';
 
 class OTPScreen extends StatefulWidget {
-  final String phoneNumber;
+  final String email;
   final VoidCallback? onTap;
 
-  const OTPScreen({super.key, required this.phoneNumber, this.onTap});
+  const OTPScreen({super.key, required this.email, this.onTap});
 
   @override
   State<OTPScreen> createState() => _OTPScreenState();
@@ -53,26 +52,26 @@ class _OTPScreenState extends State<OTPScreen> {
                       text: 'Please enter the 6-digit code sent to\n',
                     ),
                     TextSpan(
-                      text: widget.phoneNumber,
+                      text: widget.email,
                       style: const TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     const TextSpan(text: '  '),
-                    TextSpan(
-                      text: 'edit',
-                      style: const TextStyle(
-                        decoration: TextDecoration.underline,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.blueAccent,
-                      ),
-                      recognizer:
-                          TapGestureRecognizer()
-                            ..onTap = () {
-                              Navigator.pop(context); // go back to phone input
-                            },
-                    ),
+                    // TextSpan(
+                    //   text: 'edit',
+                    //   style: const TextStyle(
+                    //     decoration: TextDecoration.underline,
+                    //     fontWeight: FontWeight.w500,
+                    //     color: Colors.blueAccent,
+                    //   ),
+                    //   recognizer:
+                    //       TapGestureRecognizer()
+                    //         ..onTap = () {
+                    //           Navigator.pop(context); // go back to phone input
+                    //         },
+                    // ),
                   ],
                 ),
               ),
@@ -87,11 +86,11 @@ class _OTPScreenState extends State<OTPScreen> {
                 keyboardType: TextInputType.number,
                 animationType: AnimationType.fade,
                 onCompleted: (v) {
-                  authController.verifyNumberOtp(
-                    phoneNumber: widget.phoneNumber,
-                    otp: v,
-                    whatNext: widget.onTap,
-                  );
+                  // authController.verifyNumberOtp(
+                  //   phoneNumber: widget.phoneNumber,
+                  //   otp: v,
+                  //   whatNext: widget.onTap,
+                  // );
                 },
                 pinTheme: PinTheme(
                   shape: PinCodeFieldShape.underline,
@@ -114,11 +113,11 @@ class _OTPScreenState extends State<OTPScreen> {
               CustomButton(
                 ontap: () async {
                   if (otpController.text.isEmpty) return;
-                  await authController.verifyNumberOtp(
-                    phoneNumber: widget.phoneNumber,
-                    otp: otpController.text,
-                    whatNext: widget.onTap,
-                  );
+                  // await authController.verifyNumberOtp(
+                  //   phoneNumber: widget.phoneNumber,
+                  //   otp: otpController.text,
+                  //   whatNext: widget.onTap,
+                  // );
                 },
                 isLoading: authController.isOtpVerifyLoading,
                 child: const Text(
