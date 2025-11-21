@@ -136,10 +136,11 @@ class SignupScreen extends StatelessWidget {
                               ..onTap =
                                   () => Get.toNamed(
                                     AppRoutes.termsAndConditionScreen,
+                                    arguments: {"justAScreen": false},
                                   ),
                         style: GoogleFonts.poppins(
                           fontSize: 10,
-                          fontWeight: FontWeight.normal,
+                          fontWeight: FontWeight.bold,
                           color: AppColors.primaryColor,
                         ),
                       ),
@@ -158,7 +159,7 @@ class SignupScreen extends StatelessWidget {
                                   () => Get.toNamed(AppRoutes.privacyPolicy),
                         style: GoogleFonts.poppins(
                           fontSize: 10,
-                          fontWeight: FontWeight.normal,
+                          fontWeight: FontWeight.bold,
                           color: AppColors.primaryColor,
                         ),
                       ),

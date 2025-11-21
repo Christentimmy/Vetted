@@ -16,6 +16,7 @@ import 'package:Vetted/app/modules/app_services/views/sex_offenders_map_screen.d
 import 'package:Vetted/app/modules/auth/views/login_screen.dart';
 import 'package:Vetted/app/modules/auth/views/otp_screen.dart';
 import 'package:Vetted/app/modules/auth/views/phone_number_screen.dart';
+import 'package:Vetted/app/modules/auth/views/reset_password_screen.dart';
 import 'package:Vetted/app/modules/auth/views/signup_screen.dart';
 import 'package:Vetted/app/modules/chat/views/chat_screen.dart';
 import 'package:Vetted/app/modules/chat/views/message_list_screen.dart';
@@ -275,5 +276,13 @@ class AppPages {
     GetPage(name: AppRoutes.privacyPolicy, page: ()=> PrivacyPolicyScreen()),
     GetPage(name: AppRoutes.loginScreen, page: ()=> LoginScreen()),
     GetPage(name: AppRoutes.signupScreen, page: ()=> SignupScreen()),
+    GetPage(name: AppRoutes.resetPasswordScreen, page: (){
+      final arguments = Get.arguments ?? {};
+      final email = arguments["email"];
+      if(email == null){
+        throw Exception("email is required");
+      }
+      return ResetPasswordScreen(email: email);
+    }),
   ];
 }
