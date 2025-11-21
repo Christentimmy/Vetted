@@ -1,3 +1,4 @@
+import 'package:Vetted/app/controller/auth_controller.dart';
 import 'package:Vetted/app/modules/post/widgets/custom_textfield.dart';
 import 'package:Vetted/app/resources/colors.dart';
 import 'package:Vetted/app/routes/app_routes.dart';
@@ -16,6 +17,8 @@ class SignupScreen extends StatelessWidget {
   final confirmPasswordController = TextEditingController();
 
   final RxBool isCheck = false.obs;
+  final formKey = GlobalKey<FormState>();
+  final authController = Get.find<AuthController>();
 
   @override
   Widget build(BuildContext context) {
@@ -45,51 +48,59 @@ class SignupScreen extends StatelessWidget {
             ),
           ),
           SizedBox(height: Get.height * 0.1),
-          Text(
-            "Email Address",
-            style: GoogleFonts.poppins(
-              fontSize: 14,
-              fontWeight: FontWeight.normal,
-            ),
-          ),
-          CustomTextField(
-            controller: emailController,
-            bgColor: Color.fromARGB(255, 243, 243, 243),
-          ),
-          SizedBox(height: 15),
-          Text(
-            "Password",
-            style: GoogleFonts.poppins(
-              fontSize: 14,
-              fontWeight: FontWeight.normal,
-            ),
-          ),
-          CustomTextField(
-            controller: passwordController,
-            bgColor: Color.fromARGB(255, 243, 243, 243),
-          ),
-          SizedBox(height: 15),
-          Text(
-            "Confirm Password",
-            style: GoogleFonts.poppins(
-              fontSize: 14,
-              fontWeight: FontWeight.normal,
-            ),
-          ),
-          SizedBox(height: 10),
+          Form(
+            key: formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Email Address",
+                  style: GoogleFonts.poppins(
+                    fontSize: 14,
+                    fontWeight: FontWeight.normal,
+                  ),
+                ),
+                CustomTextField(
+                  controller: emailController,
+                  bgColor: Color.fromARGB(255, 243, 243, 243),
+                ),
+                SizedBox(height: 15),
+                Text(
+                  "Password",
+                  style: GoogleFonts.poppins(
+                    fontSize: 14,
+                    fontWeight: FontWeight.normal,
+                  ),
+                ),
+                CustomTextField(
+                  controller: passwordController,
+                  bgColor: Color.fromARGB(255, 243, 243, 243),
+                ),
+                SizedBox(height: 15),
+                Text(
+                  "Confirm Password",
+                  style: GoogleFonts.poppins(
+                    fontSize: 14,
+                    fontWeight: FontWeight.normal,
+                  ),
+                ),
+                SizedBox(height: 10),
 
-          CustomTextField(
-            controller: confirmPasswordController,
-            bgColor: Color.fromARGB(255, 243, 243, 243),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return "Please enter your password";
-              }
-              if (value != passwordController.text) {
-                return "Passwords do not match";
-              }
-              return null;
-            },
+                CustomTextField(
+                  controller: confirmPasswordController,
+                  bgColor: Color.fromARGB(255, 243, 243, 243),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please enter your password";
+                    }
+                    if (value != passwordController.text) {
+                      return "Passwords do not match";
+                    }
+                    return null;
+                  },
+                ),
+              ],
+            ),
           ),
           SizedBox(height: 10),
           Row(
@@ -159,14 +170,21 @@ class SignupScreen extends StatelessWidget {
           ),
           SizedBox(height: Get.height * 0.15),
           CustomButton(
-            ontap: () {
+            ontap: () async {
+              if (!formKey.currentState!.validate()) return;
               if (!isCheck.value) {
-                CustomSnackbar.showErrorToast("Please accept the terms and conditions");
+                CustomSnackbar.showErrorToast(
+                  "Please accept the terms and conditions",
+                );
                 return;
               }
-              Get.toNamed(AppRoutes.otp, arguments: {"email": "Timmy"});
+              // Get.toNamed(AppRoutes.otp, arguments: {"email": "Timmy"});
+              await authController.registerUser(
+                email: emailController.text,
+                password: passwordController.text,
+              );
             },
-            isLoading: false.obs, 
+            isLoading: authController.isLoading,
             child: Text(
               "Create Account",
               style: GoogleFonts.poppins(

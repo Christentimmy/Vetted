@@ -82,7 +82,13 @@ class _OTPScreenState extends State<OTPScreen> {
                 child: Pinput(
                   length: 6,
                   controller: otpController,
-                  onCompleted: (value) async {},
+                  onCompleted: (value) async {
+                    await authController.verifyOtp(
+                      email: widget.email,
+                      otp: value,
+                      whatNext: widget.onTap,
+                    );
+                  },
                   defaultPinTheme: PinTheme(
                     width: 65,
                     height: 65,
@@ -106,11 +112,11 @@ class _OTPScreenState extends State<OTPScreen> {
               CustomButton(
                 ontap: () async {
                   if (otpController.text.isEmpty) return;
-                  // await authController.verifyNumberOtp(
-                  //   phoneNumber: widget.phoneNumber,
-                  //   otp: otpController.text,
-                  //   whatNext: widget.onTap,
-                  // );
+                  await authController.verifyOtp(
+                    email: widget.email,
+                    otp: otpController.text,
+                    whatNext: widget.onTap,
+                  );
                 },
                 isLoading: authController.isOtpVerifyLoading,
                 child: const Text(
@@ -132,10 +138,12 @@ class _OTPScreenState extends State<OTPScreen> {
                     () => InkWell(
                       onTap: () async {
                         if (resendOtpTimer.value > 0) return;
-                        // await authController.resendOtp(widget.phoneNumber);
+                        await authController.sendOtp(email: widget.email);
                       },
                       child: Text(
-                        resendOtpTimer.value > 0 ? "${resendOtpTimer.value}s" : "Resend",
+                        resendOtpTimer.value > 0
+                            ? "${resendOtpTimer.value}s"
+                            : "Resend",
                         style: GoogleFonts.poppins(
                           fontSize: 14,
                           color: AppColors.primaryColor,

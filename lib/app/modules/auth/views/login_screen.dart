@@ -1,3 +1,4 @@
+import 'package:Vetted/app/controller/auth_controller.dart';
 import 'package:Vetted/app/modules/post/widgets/custom_textfield.dart';
 import 'package:Vetted/app/resources/colors.dart';
 import 'package:Vetted/app/routes/app_routes.dart';
@@ -11,6 +12,9 @@ class LoginScreen extends StatelessWidget {
 
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+
+  final formKey = GlobalKey<FormState>();
+  final authController = Get.find<AuthController>();
 
   @override
   Widget build(BuildContext context) {
@@ -40,29 +44,38 @@ class LoginScreen extends StatelessWidget {
             ),
           ),
           SizedBox(height: Get.height * 0.1),
-          Text(
-            "Email Address",
-            style: GoogleFonts.poppins(
-              fontSize: 14,
-              fontWeight: FontWeight.normal,
+          Form(
+            key: formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Email Address",
+                  style: GoogleFonts.poppins(
+                    fontSize: 14,
+                    fontWeight: FontWeight.normal,
+                  ),
+                ),
+                CustomTextField(
+                  controller: emailController,
+                  bgColor: Color.fromARGB(255, 243, 243, 243),
+                ),
+                SizedBox(height: 15),
+                Text(
+                  "Password",
+                  style: GoogleFonts.poppins(
+                    fontSize: 14,
+                    fontWeight: FontWeight.normal,
+                  ),
+                ),
+                CustomTextField(
+                  controller: passwordController,
+                  bgColor: Color.fromARGB(255, 243, 243, 243),
+                ),
+              ],
             ),
           ),
-          CustomTextField(
-            controller: emailController,
-            bgColor: Color.fromARGB(255, 243, 243, 243),
-          ),
-          SizedBox(height: 15),
-          Text(
-            "Password",
-            style: GoogleFonts.poppins(
-              fontSize: 14,
-              fontWeight: FontWeight.normal,
-            ),
-          ),
-          CustomTextField(
-            controller: passwordController,
-            bgColor: Color.fromARGB(255, 243, 243, 243),
-          ),
+
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -78,10 +91,14 @@ class LoginScreen extends StatelessWidget {
           ),
           SizedBox(height: Get.height * 0.15),
           CustomButton(
-            ontap: () {
-              Get.toNamed(AppRoutes.otp, arguments: {"email": "Timmy"});
+            ontap: () async {
+              if (!formKey.currentState!.validate()) return;
+              await authController.login(
+                email: emailController.text,
+                password: passwordController.text,
+              );
             },
-            isLoading: false.obs,
+            isLoading: authController.isLoading,
             child: Text(
               "Login",
               style: GoogleFonts.poppins(
@@ -97,7 +114,7 @@ class LoginScreen extends StatelessWidget {
             children: [
               Text("Don't have an account? ", style: GoogleFonts.poppins()),
               InkWell(
-                onTap: ()=> Get.toNamed(AppRoutes.signupScreen),
+                onTap: () => Get.toNamed(AppRoutes.signupScreen),
                 child: Text(
                   "Create Account",
                   style: GoogleFonts.poppins(

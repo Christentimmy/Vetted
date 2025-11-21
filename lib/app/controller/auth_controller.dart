@@ -23,7 +23,6 @@ class AuthController extends GetxController {
 
   //hold on idtoken
   final RxString tempToken = "".obs;
-  
 
   Future<void> googleLoginOrSignUp() async {
     isGoogleLoading.value = true;
@@ -270,4 +269,126 @@ class AuthController extends GetxController {
       isOtpVerifyLoading.value = false;
     }
   }
+
+  Future<void> registerUser({
+    required String email,
+    required String password,
+  }) async {
+    isLoading.value = true;
+    try {
+      final response = await _authService.register(
+        email: email,
+        password: password,
+      );
+      if (response == null) return;
+
+      final decoded = json.decode(response.body);
+      String message = decoded["message"];
+      if (response.statusCode != 201) {
+        CustomSnackbar.showErrorToast(message);
+        return;
+      }
+      final storageController = Get.find<StorageController>();
+      final token = decoded["token"];
+      storageController.storeToken(token);
+
+      // Get.toNamed(AppRoutes.otpScreen, arguments: {"email": userModel.email});
+      final userController = Get.find<UserController>();
+      final socketController = Get.find<SocketController>();
+      socketController.initializeSocket();
+      await userController.getUserDetails();
+
+      Get.toNamed(AppRoutes.otp, arguments: {"email": email});
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> verifyOtp({
+    required String email,
+    required String otp,
+    VoidCallback? whatNext,
+  }) async {
+    isOtpVerifyLoading.value = true;
+    try {
+      final response = await _authService.verifyOtp(email: email, otp: otp);
+      if (response == null) return;
+
+      final decoded = json.decode(response.body);
+      String message = decoded["message"];
+      if (response.statusCode != 200) {
+        CustomSnackbar.showErrorToast(message);
+        return;
+      }
+
+      if (whatNext != null) {
+        whatNext();
+        return;
+      }
+
+      Get.toNamed(AppRoutes.howItWorksScreen);
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> login({required String email, required String password}) async {
+    isLoading.value = true;
+    try {
+      final response = await _authService.login(email: email, password: password);
+      if (response == null) return;
+
+      final decoded = json.decode(response.body);
+      String message = decoded["message"];
+      String token = decoded["token"] ?? "";
+      final storageController = Get.find<StorageController>();
+      await storageController.storeToken(token);
+
+      if (response.statusCode == 405) {
+        CustomSnackbar.showErrorToast(message);
+        Get.offAllNamed(AppRoutes.selfieDisclaimer);
+        return;
+      }
+
+      if (response.statusCode != 200) {
+        CustomSnackbar.showErrorToast(message);
+        return;
+      }
+
+      final userController = Get.find<UserController>();
+      await userController.getUserDetails();
+      final socketController = Get.find<SocketController>();
+      socketController.initializeSocket();
+      // Get.offAllNamed(AppRoutes.bottomNavigationWidget);
+      await Get.find<UserController>().getUserStatus();
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> sendOtp({required String email}) async {
+    isLoading.value = true;
+    try {
+      final response = await _authService.sendOtp(email: email);
+      if (response == null) return;
+
+      final decoded = json.decode(response.body);
+      String message = decoded["message"];
+      if (response.statusCode != 200) {
+        CustomSnackbar.showErrorToast(message);
+        return;
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
 }
