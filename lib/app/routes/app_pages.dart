@@ -13,6 +13,7 @@ import 'package:Vetted/app/modules/app_services/views/new_number_info_screen.dar
 import 'package:Vetted/app/modules/app_services/views/number_check_screen.dart';
 import 'package:Vetted/app/modules/app_services/views/reverse_image_screen.dart';
 import 'package:Vetted/app/modules/app_services/views/sex_offenders_map_screen.dart';
+import 'package:Vetted/app/modules/auth/views/login_screen.dart';
 import 'package:Vetted/app/modules/auth/views/otp_screen.dart';
 import 'package:Vetted/app/modules/auth/views/phone_number_screen.dart';
 import 'package:Vetted/app/modules/chat/views/chat_screen.dart';
@@ -270,6 +271,7 @@ class AppPages {
       }
       return BackgroundEachResultScreen(personName: personName);
     }),
-    GetPage(name: AppRoutes.privacyPolicy, page: ()=> PrivacyPolicyScreen())
+    GetPage(name: AppRoutes.privacyPolicy, page: ()=> PrivacyPolicyScreen()),
+    GetPage(name: AppRoutes.loginScreen, page: ()=> LoginScreen()),
   ];
 }

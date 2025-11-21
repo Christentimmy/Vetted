@@ -1,5 +1,6 @@
 import 'package:Vetted/app/controller/auth_controller.dart';
 import 'package:Vetted/app/resources/colors.dart';
+import 'package:Vetted/app/routes/app_routes.dart';
 import 'package:Vetted/app/widgets/custom_button.dart';
 import 'package:Vetted/app/widgets/staggered_column_animation.dart';
 import 'package:cherry_toast/cherry_toast.dart';
@@ -26,7 +27,7 @@ class OnboardingScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 24),
               child: StaggeredColumnAnimation(
                 children: [
-                  SizedBox(height: Get.height * 0.21),
+                  SizedBox(height: Get.height * 0.16),
 
                   // Logo + Title with white background
                   Row(
@@ -74,6 +75,27 @@ class OnboardingScreen extends StatelessWidget {
                   ),
 
                   SizedBox(height: Get.height * 0.1),
+                  CustomButton(
+                    ontap: () => Get.toNamed(AppRoutes.loginScreen),
+                    isLoading: authController.isGoogleLoading,
+                    bgColor: Colors.white,
+                    loaderColor: AppColors.primaryColor,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        FaIcon(FontAwesomeIcons.envelope),
+                        SizedBox(width: 5),
+                        Text(
+                          'Continue with Email',
+                          style: GoogleFonts.poppins(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 14),
 
                   CustomButton(
                     ontap: () async {

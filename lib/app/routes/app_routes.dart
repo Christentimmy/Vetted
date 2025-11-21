@@ -52,4 +52,5 @@ class AppRoutes {
   static const String termsAndConditionScreen = '/termsAndConditionScreen';
   static const String backgroundEachPersonResult = "/backgroundEachPersonResult";
   static const String privacyPolicy = "/privacyPolicy";
+  static const String loginScreen = "/loginScreen";
 }
