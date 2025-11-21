@@ -1,5 +1,6 @@
 import 'package:Vetted/app/modules/post/widgets/custom_textfield.dart';
 import 'package:Vetted/app/resources/colors.dart';
+import 'package:Vetted/app/routes/app_routes.dart';
 import 'package:Vetted/app/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -62,9 +63,24 @@ class LoginScreen extends StatelessWidget {
             controller: passwordController,
             bgColor: Color.fromARGB(255, 243, 243, 243),
           ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Text(
+                "Forgot Password?",
+                style: GoogleFonts.poppins(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.primaryColor,
+                ),
+              ),
+            ],
+          ),
           SizedBox(height: Get.height * 0.15),
           CustomButton(
-            ontap: () {},
+            ontap: () {
+              Get.toNamed(AppRoutes.otp, arguments: {"email": "Timmy"});
+            },
             isLoading: false.obs,
             child: Text(
               "Login",

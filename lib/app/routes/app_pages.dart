@@ -66,7 +66,7 @@ class AppPages {
       name: AppRoutes.otp,
       page: () {
         final email = Get.arguments['email'];
-        final onTap = Get.arguments['onTap'] as VoidCallback;
+        final onTap = Get.arguments['onTap'] as VoidCallback?;
         if (email == null) {
           throw Exception('Email is required');
         }
