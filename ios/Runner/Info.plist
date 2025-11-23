@@ -67,6 +67,10 @@
 	<string>Vetted needs your location to show nearby content and places on the map.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Vetted needs your location to show nearby content and places on the map.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Vetted needs your location to show nearby content and places on the map.</string>
+	<key>NSLocationUsageDescription</key>
+	<string>Vetted needs your location to show nearby content and places on the map.</string>
 	
 	<!-- Google Maps API Key -->
 	<key>GMSApiKey</key>
