@@ -332,7 +332,7 @@ class AuthController extends GetxController {
     } catch (e) {
       debugPrint(e.toString());
     } finally {
-      isLoading.value = false;
+      isOtpVerifyLoading.value = false;
     }
   }
 
