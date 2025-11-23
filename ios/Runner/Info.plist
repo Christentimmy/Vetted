@@ -45,5 +45,69 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	
+	<!-- Permission Descriptions (iOS requires user-facing descriptions) -->
+	
+	<!-- Camera Permission -->
+	<key>NSCameraUsageDescription</key>
+	<string>Vetted needs access to your camera to take photos and videos for your posts.</string>
+	
+	<!-- Microphone Permission -->
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Vetted needs access to your microphone to record audio for videos and voice messages.</string>
+	
+	<!-- Photo Library Permissions -->
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Vetted needs access to your photo library to share photos and videos.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Vetted needs access to save photos and videos to your library.</string>
+	
+	<!-- Location Permissions -->
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Vetted needs your location to show nearby content and places on the map.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Vetted needs your location to show nearby content and places on the map.</string>
+	
+	<!-- Google Maps API Key -->
+	<key>GMSApiKey</key>
+	<string>AIzaSyAOVYRIgupAurZup5y1PRh8Ismb1A3lLao</string>
+	
+	<!-- URL Schemes for Google Sign-In -->
+	<key>CFBundleURLTypes</key>
+	<array>
+		<!-- Google Sign-In URL Scheme -->
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<!-- This should be your REVERSED iOS Client ID -->
+				<string>com.googleusercontent.apps.339208855443-1i11hrdqnlanasjmhko1tel2ift9s75q</string>
+			</array>
+		</dict>
+		<!-- Deep Link URL Scheme for payment-success -->
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>vetted</string>
+			</array>
+		</dict>
+	</array>
+	
+	<!-- Allow arbitrary loads for HTTP (if needed, otherwise remove) -->
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
+	
+	<!-- Background Modes (if using location in background) -->
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>remote-notification</string>
+	</array>
 </dict>
 </plist>
