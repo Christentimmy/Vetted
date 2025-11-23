@@ -64,55 +64,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
-    - assets/images/v_logo_1.png
-    - assets/images/v_logo_2.png
-    - assets/images/background_1.png
-    - assets/images/otp_illustration.png
-    - assets/images/icons/anonymous.png  
-    - assets/images/icons/screenshot.png  
-    - assets/images/icons/verified.png  
-    - assets/images/icons/posts.png  
-    - assets/images/icons/search.png  
-    - assets/images/icons/alerts.png
-    - assets/images/icons/run_background.png
-    - assets/images/icons/check_criminal.png
-    - assets/images/icons/Search_1.png
-    - assets/images/icons/look_up.png
-    - assets/images/icons/search.png
-    - assets/images/icons/find_social.png
-    - assets/images/icons/name_popup.png
-    - assets/images/notifications_illustration.png
-    - assets/images/birthday_popup.png
-    - assets/images/map_mock.png
-    - assets/images/map_1.png
-    - assets/images/selfie_icon.png
-    - assets/images/user1.png
-    - assets/images/user2.png
-    - assets/images/user3.png
-    - assets/images/user4.png
-    - assets/images/user5.png
-    - assets/images/user6.png
-    - assets/images/logo_black.png
-    - assets/images/icons/edit.png
-    - assets/images/icons/arrow.png
-    - assets/images/icons/send.png
-    - assets/images/icons/nav_active.png
-    - assets/images/icons/nav_inactive1.png
-    - assets/images/icons/nav_inactive2.png
-    - assets/images/icons/nav_inactive3.png
-    - assets/images/icons/nav_inactive4.png
-    - assets/images/sample_post.png
-    - assets/images/icons/woman.png
-    - assets/images/icons/meme.png
-    - assets/images/icons/poll.png
-    - assets/images/icons/audio.png
-    - assets/images/map_sample.png
-    - assets/images/icons/nav_active1.png
-    - assets/images/icons/nav_active2.png
-    - assets/images/icons/nav_active3.png
-    - assets/images/record.png
-    - assets/images/invite_bg.png
-    - assets/images/invite_people.png
+    - assets/images/icons/
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
