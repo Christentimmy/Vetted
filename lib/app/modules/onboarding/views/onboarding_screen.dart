@@ -27,23 +27,19 @@ class OnboardingScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 24),
               child: StaggeredColumnAnimation(
                 children: [
-                  SizedBox(height: Get.height * 0.16),
+                  SizedBox(height: Get.height * 0.12),
 
                   // Logo + Title with white background
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Container(
-                        width: 36,
-                        height: 36,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          color: Colors.white, // <-- White background stays
-                        ),
+                      SizedBox(
+                        width: 50,
+                        height: 50,
                         child: Padding(
                           padding: const EdgeInsets.all(4),
                           child: Image.asset(
-                            'assets/images/v_logo_2.png',
+                            'assets/images/1b.v2.png',
                             fit: BoxFit.contain,
                           ),
                         ),
@@ -77,7 +73,7 @@ class OnboardingScreen extends StatelessWidget {
                   SizedBox(height: Get.height * 0.1),
                   CustomButton(
                     ontap: () => Get.toNamed(AppRoutes.loginScreen),
-                    isLoading: authController.isGoogleLoading,
+                    isLoading: false.obs,
                     bgColor: Colors.white,
                     loaderColor: AppColors.primaryColor,
                     child: Row(
@@ -96,6 +92,34 @@ class OnboardingScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 14),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Divider(
+                          color: Colors.white70,
+                          thickness: 1,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        child: Text(
+                          'or',
+                          style: TextStyle(
+                            color: Colors.white70,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Divider(
+                          color: Colors.white70,
+                          thickness: 1,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 14),
+
 
                   CustomButton(
                     ontap: () async {
