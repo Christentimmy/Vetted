@@ -195,20 +195,20 @@ class ChatController extends GetxController {
     HapticFeedback.lightImpact();
     FocusManager.instance.primaryFocus?.unfocus();
     mediaController.showMediaPreview.value = false;
-    audioController.showAudioPreview.value = false;
+    // audioController.showAudioPreview.value = false;
 
-    if (audioController.isPlaying.value) {
-      await audioController.pauseRecording();
-    }
-    if (audioController.isRecording.value) {
-      audioController.isRecording.value = false;
-      await audioController.pauseRecording();
-    }
+    // if (audioController.isPlaying.value) {
+    //   await audioController.pauseRecording();
+    // }
+    // if (audioController.isRecording.value) {
+    //   audioController.isRecording.value = false;
+    //   await audioController.pauseRecording();
+    // }
 
     final String messageText = textMessageController.text.trim();
     if (messageText.isEmpty &&
         mediaController.selectedFile.value == null &&
-        audioController.selectedFile.value == null &&
+        // audioController.selectedFile.value == null &&
         mediaController.multipleMediaSelected.isEmpty) {
       return;
     }
@@ -228,9 +228,10 @@ class ChatController extends GetxController {
     );
 
     final multipleIMages = mediaController.multipleMediaSelected;
-    dynamic selectedFile =
-        mediaController.selectedFile.value ??
-        audioController.selectedFile.value;
+    // dynamic selectedFile =
+    //     mediaController.selectedFile.value ??
+    //     audioController.selectedFile.value;
+    dynamic selectedFile = mediaController.selectedFile.value;
     if (multipleIMages.isNotEmpty && multipleIMages.length == 1) {
       selectedFile = multipleIMages[0];
       multipleIMages.clear();
@@ -238,10 +239,11 @@ class ChatController extends GetxController {
 
     if (selectedFile != null) {
       isUploading.value = true;
-      final messageType =
-          mediaController.getFileType(selectedFile.path) ??
-          audioController.getFileType(selectedFile.path) ??
-          "image";
+      // final messageType =
+      //     mediaController.getFileType(selectedFile.path) ??
+      //     audioController.getFileType(selectedFile.path) ??
+      //     "image";
+      final messageType = mediaController.getFileType(selectedFile.path) ?? "image";
 
       final tempMessage = MessageModel(
         receiverId: chatHead.userId ?? "",
@@ -256,7 +258,6 @@ class ChatController extends GetxController {
       messageController.chatHistoryAndLiveMessage.add(tempMessage);
 
       dynamic res = await MessageService().uploadMedia(selectedFile);
-      print(res);
       if (res == null) {
         isUploading.value = false;
         CustomSnackbar.showErrorToast("Error Uploading Media");
@@ -340,7 +341,7 @@ class ChatController extends GetxController {
     textMessageController.clear();
     wordsTyped.value = "";
     mediaController.resetState();
-    audioController.resetState();
+    // audioController.resetState();
   }
 
   void closeScreen() {

@@ -3,7 +3,7 @@ import 'package:Vetted/app/data/models/message_model.dart';
 import 'package:Vetted/app/modules/chat/controller/chat_controller.dart';
 import 'package:Vetted/app/modules/chat/controller/receiver_card_controller.dart';
 import 'package:Vetted/app/modules/chat/enums/message_enum_type.dart';
-import 'package:Vetted/app/modules/chat/widgets/media/receiver_audio_content_widget.dart';
+// import 'package:Vetted/app/modules/chat/widgets/media/receiver_audio_content_widget.dart';
 import 'package:Vetted/app/modules/chat/widgets/media/receiver_media_content_widget.dart';
 import 'package:Vetted/app/modules/chat/widgets/shared/chat_image_gallery.dart';
 import 'package:Vetted/app/modules/chat/widgets/shared/message_container_widget.dart';
@@ -136,10 +136,10 @@ class _ReceiverCardState extends State<ReceiverCard>
 
   Widget _buildContent(MessageType messageType) {
     if (messageType == MessageType.audio) {
-      return ReceiverAudioContentWidget(
-        messageModel: widget.messageModel,
-        controller: controller,
-      );
+      // return ReceiverAudioContentWidget(
+      //   messageModel: widget.messageModel,
+      //   controller: controller,
+      // );
     }
 
     if (messageType == MessageType.image || messageType == MessageType.video) {

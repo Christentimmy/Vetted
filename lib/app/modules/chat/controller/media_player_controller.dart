@@ -1,17 +1,15 @@
-
 import 'package:Vetted/app/widgets/snack_bar.dart';
 import 'package:flutter/material.dart';
+// import 'package:flutter_sound/flutter_sound.dart';
 import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
-import 'package:audio_waveforms/audio_waveforms.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
 
 class MediaPlayerController extends GetxController {
   VideoPlayerController? _videoController;
-  // PlayerController? _audioController;
-  final Rxn<PlayerController> _audioController = Rxn<PlayerController>(null);
+  // final Rxn<FlutterSoundPlayer> flutterPlayer = Rxn<FlutterSoundPlayer>(null);
 
   final RxBool isPlaying = false.obs;
   final RxBool isLoading = false.obs;
@@ -47,12 +45,13 @@ class MediaPlayerController extends GetxController {
     }
   }
 
-  //Audio Controller Management
+  // Audio Controller Management
   Future<void> initializeAudioController(String mediaUrl) async {
     if (isLoading.value && mediaUrl == _oldMediaUrl) return;
 
     // Reset _isCancelled at the start of initialization
     _isCancelled = false;
+    _oldMediaUrl = mediaUrl;
 
     isLoading.value = true;
     await _disposeAudioController();
@@ -65,13 +64,9 @@ class MediaPlayerController extends GetxController {
       }
 
       localPath.value = downloadedPath;
-      _audioController.value = PlayerController();
+      // flutterPlayer.value = FlutterSoundPlayer();
 
-      await _audioController.value!.preparePlayer(
-        path: downloadedPath,
-        shouldExtractWaveform: true,
-        noOfSamples: 100,
-      );
+      // await flutterPlayer.value!.openPlayer();
 
       if (_isCancelled) {
         await _disposeAudioController();
@@ -79,20 +74,24 @@ class MediaPlayerController extends GetxController {
         return;
       }
 
-      _audioController.value!.onPlayerStateChanged.listen((state) {
-        if (!_isCancelled) {
-          isPlaying.value = state == PlayerState.playing;
-        }
-      });
-
-      _audioController.value?.onCompletion.listen((_) async {
-        _audioController.value?.seekTo(0);
-        _audioController.value?.setRefresh(true);
-        waveFormKey = ValueKey(DateTime.now().microsecondsSinceEpoch);
-      });
+      // Listen to player state changes
+      // flutterPlayer.value!.onProgress!.listen((event) {
+      //   if (!_isCancelled) {
+      //     // Audio is playing if duration > 0 and position < duration
+      //     // bool playing = event.position.inMilliseconds > 0 && 
+      //     //               event.position < event.duration;
+          
+      //     // Check if playback finished
+      //     if (event.position >= event.duration && event.duration.inMilliseconds > 0) {
+      //       isPlaying.value = false;
+      //       waveFormKey = ValueKey(DateTime.now().microsecondsSinceEpoch);
+      //     }
+      //   }
+      // });
 
       hasInitialized.value = true;
     } catch (e) {
+      debugPrint("Error initializing audio: $e");
       CustomSnackbar.showErrorToast("Error initializing audio");
       await _disposeAudioController();
     } finally {
@@ -103,6 +102,7 @@ class MediaPlayerController extends GetxController {
   Future<String> _downloadAudio(String url) async {
     try {
       if (_isCancelled) return "";
+      
       final response = await http.get(Uri.parse(url));
       if (response.statusCode != 200 || _isCancelled) return "";
 
@@ -115,6 +115,7 @@ class MediaPlayerController extends GetxController {
       await saveFile.writeAsBytes(response.bodyBytes);
       return savePath;
     } catch (e) {
+      debugPrint("Failed to download audio: $e");
       CustomSnackbar.showErrorToast("Failed to download audio");
       return "";
     }
@@ -127,63 +128,95 @@ class MediaPlayerController extends GetxController {
         _isCancelled = false;
       }
 
-      final state = _audioController.value?.playerState;
+      // if (flutterPlayer.value == null) {
+      //   // Handle reinitialization if needed
+      //   if (localPath.value.isNotEmpty) {
+      //     awaitreinitializeAudioController();
+      //   }
+      //   return;
+      // }
 
-      switch (state) {
-        case PlayerState.playing:
-          await _audioController.value?.pausePlayer();
-          break;
-        case PlayerState.paused:
-        case PlayerState.initialized:
-          await _audioController.value?.startPlayer();
-          break;
-        case PlayerState.stopped:
-          await _reinitializeAudioController();
-          break;
-        default:
-          if (_audioController.value == null) {
-            // Handle reinitialization if needed
-          }
-      }
+      // final state = flutterPlayer.value!.playerState;
+
+      // switch (state) {
+      //   case PlayerState.isPlaying:
+      //     await flutterPlayer.value!.pausePlayer();
+      //     isPlaying.value = false;
+      //     break;
+          
+      //   case PlayerState.isPaused:
+      //     await flutterPlayer.value!.resumePlayer();
+      //     isPlaying.value = true;
+      //     break;
+          
+      //   case PlayerState.isStopped:
+      //     await reinitializeAudioController();
+      //     break;
+          
+      //   // default:
+      //   //   // Start from beginning
+      //   //   await flutterPlayer.value!.startPlayer(
+      //   //     fromURI: localPath.value,
+      //   //     codec: Codec.aacADTS,
+      //   //     whenFinished: () {
+      //   //       isPlaying.value = false;
+      //   //       waveFormKey = ValueKey(DateTime.now().microsecondsSinceEpoch);
+      //   //     },
+      //   //   );
+      //   //   isPlaying.value = true;
+      // }
     } catch (e) {
-      CustomSnackbar.showErrorToast("Error Playing audio");
+      debugPrint("Error playing audio: $e");
+      CustomSnackbar.showErrorToast("Error playing audio");
+      isPlaying.value = false;
     }
   }
 
-  Future<void> _reinitializeAudioController() async {
-    // Reset _isCancelled when reinitializing
-    _isCancelled = false;
+  Future<void> reinitializeAudioController() async {
+    // try {
+    //   // Reset _isCancelled when reinitializing
+    //   _isCancelled = false;
+      
+    //   await _disposeAudioController();
 
-    _audioController.value = null;
-    if (localPath.value.isNotEmpty) {
-      _audioController.value = PlayerController();
-      await _audioController.value!.preparePlayer(
-        path: localPath.value,
-        shouldExtractWaveform: true,
-        noOfSamples: 100,
-      );
+    //   if (localPath.value.isEmpty) return;
 
-      waveFormKey = ValueKey(DateTime.now().microsecondsSinceEpoch);
+    //   flutterPlayer.value = FlutterSoundPlayer();
+    //   await flutterPlayer.value!.openPlayer();
 
-      if (!_isCancelled) {
-        _audioController.value!.onPlayerStateChanged.listen((state) {
-          if (!_isCancelled) {
-            isPlaying.value = state == PlayerState.playing;
-          }
-        });
-        await _audioController.value?.startPlayer();
-      }
-    }
+    //   waveFormKey = ValueKey(DateTime.now().microsecondsSinceEpoch);
+
+    //   if (!_isCancelled) {
+    //     await flutterPlayer.value!.startPlayer(
+    //       fromURI: localPath.value,
+    //       codec: Codec.aacADTS,
+    //       whenFinished: () {
+    //         isPlaying.value = false;
+    //         waveFormKey = ValueKey(DateTime.now().microsecondsSinceEpoch);
+    //       },
+    //     );
+    //     isPlaying.value = true;
+    //   }
+    // } catch (e) {
+    //   debugPrint("Error reinitializing audio: $e");
+    //   isPlaying.value = false;
+    // }
   }
 
   Future<void> _disposeAudioController() async {
-    if (_audioController.value == null) return;
+    // if (flutterPlayer.value == null) return;
 
-    try {
-      await _audioController.value!.pausePlayer();
-      _audioController.value!.dispose();
-    } catch (_) {}
-    _audioController.value = null;
+    // try {
+    //   // Stop the player first to ensure clean disposal
+    //   if (flutterPlayer.value!.playerState == PlayerState.isPlaying) {
+    //     await flutterPlayer.value!.stopPlayer();
+    //   }
+    //   await flutterPlayer.value!.closePlayer();
+    // } catch (e) {
+    //   debugPrint("Error disposing audio controller: $e");
+    // }
+    // flutterPlayer.value = null;
+    // isPlaying.value = false;
   }
 
   void reset() {
@@ -192,10 +225,11 @@ class MediaPlayerController extends GetxController {
     isPlaying.value = false;
     isLoading.value = false;
     localPath.value = '';
+    _oldMediaUrl = null;
   }
 
   VideoPlayerController? get videoController => _videoController;
-  Rxn<PlayerController> get audioController => _audioController;
+  // Rxn<FlutterSoundPlayer> get flutterPlayerController => flutterPlayer;
 
   @override
   void onInit() {
@@ -206,12 +240,15 @@ class MediaPlayerController extends GetxController {
   @override
   void onClose() {
     _isCancelled = true;
-    if (_audioController.value != null) {
-      try {
-        _audioController.value!.pausePlayer();
-        _audioController.value!.dispose();
-      } catch (_) {}
-    }
+    
+    // if (flutterPlayer.value != null) {
+    //   try {
+    //     flutterPlayer.value!.stopPlayer();
+    //     flutterPlayer.value!.closePlayer();
+    //   } catch (e) {
+    //     debugPrint("Error closing player: $e");
+    //   }
+    // }
 
     _videoController?.dispose();
     super.onClose();

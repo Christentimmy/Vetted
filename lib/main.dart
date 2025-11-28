@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:Vetted/app/bindings/app_bindings.dart';
 import 'package:Vetted/app/controller/user_controller.dart';
 import 'package:Vetted/app/resources/colors.dart';
@@ -18,6 +17,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   OneSignal.initialize("2fa250e8-3569-45a5-9c27-db2be9b84c36");
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  
   FlutterError.onError = (errorDetails) {
     FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
   };

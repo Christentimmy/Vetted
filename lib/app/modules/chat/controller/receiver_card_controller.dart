@@ -25,7 +25,6 @@ class ReceiverCardController extends GetxController {
     await Future.delayed(const Duration(milliseconds: 100));
     scale.value = 1.0;
     HapticFeedback.lightImpact();
-    // TODO: Show reactions UI here in the future
   }
 
   Future<void> ensureControllerInitialized(MessageModel messageModel) async {

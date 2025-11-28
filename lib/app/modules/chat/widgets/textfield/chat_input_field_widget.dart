@@ -2,7 +2,7 @@ import 'package:Vetted/app/data/models/chat_list_model.dart';
 import 'package:Vetted/app/modules/chat/controller/chat_controller.dart';
 import 'package:Vetted/app/modules/chat/widgets/media/media_picker_bottom_sheet.dart';
 import 'package:Vetted/app/modules/chat/widgets/shared/reply_to_content_widget.dart';
-import 'package:Vetted/app/modules/chat/widgets/textfield/audio_input_widget.dart';
+// import 'package:Vetted/app/modules/chat/widgets/textfield/audio_input_widget.dart';
 import 'package:Vetted/app/modules/post/widgets/custom_textfield.dart';
 import 'package:Vetted/app/resources/colors.dart';
 import 'package:flutter/material.dart';
@@ -20,16 +20,17 @@ class NewChatInputFields extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      final isRecording = controller.audioController.isRecording.value;
-      return AnimatedSwitcher(
-        duration: const Duration(milliseconds: 300),
-        child:
-            isRecording
-                ? AudioInputPreview(controller: controller)
-                : _buildInputFieldRow(context),
-      );
-    });
+    return _buildInputFieldRow(context);
+    // return Obx(() {
+    //   final isRecording = controller.audioController.isRecording.value;
+    //   return AnimatedSwitcher(
+    //     duration: const Duration(milliseconds: 300),
+    //     child:
+    //         isRecording
+    //             ? AudioInputPreview(controller: controller)
+    //             : _buildInputFieldRow(context),
+    //   );
+    // });
   }
 
   Widget _buildInputFieldRow(BuildContext context) {
@@ -145,24 +146,36 @@ class NewChatInputFields extends StatelessWidget {
               final hasTextOrMedia =
                   controller.wordsTyped.value.isNotEmpty ||
                   controller.mediaController.selectedFile.value != null ||
-                  controller.audioController.selectedFile.value != null ||
+                  // controller.audioController.selectedFile.value != null ||
                   controller.mediaController.multipleMediaSelected.isNotEmpty;
 
               return Padding(
                 padding: const EdgeInsets.only(bottom: 2.0),
-                child: CircleAvatar(
-                  radius: 24,
-                  backgroundColor: AppColors.primaryColor,
-                  child: IconButton(
-                    icon: Icon(
-                      hasTextOrMedia ? Icons.send : Icons.mic,
-                      color: Colors.white,
-                      size: hasTextOrMedia ? 18 : null,
+                child: Opacity(
+                  opacity: hasTextOrMedia ? 1.0 : 0.5,
+                  child: CircleAvatar(
+                    radius: 24,
+                    backgroundColor: AppColors.primaryColor,
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.send,
+                        color: Colors.white,
+                        size: hasTextOrMedia ? 18 : null,
+                      ),
+                      onPressed:
+                          hasTextOrMedia ? controller.sendMessage : () {},
                     ),
-                    onPressed:
-                        hasTextOrMedia
-                            ? controller.sendMessage
-                            : controller.audioController.startRecording,
+                    // child: IconButton(
+                    //   icon: Icon(
+                    //     hasTextOrMedia ? Icons.send : Icons.mic,
+                    //     color: Colors.white,
+                    //     size: hasTextOrMedia ? 18 : null,
+                    //   ),
+                    //   onPressed:
+                    //       hasTextOrMedia
+                    //           ? controller.sendMessage
+                    //           : controller.audioController.startRecording,
+                    // ),
                   ),
                 ),
               );
@@ -174,37 +187,6 @@ class NewChatInputFields extends StatelessWidget {
       ],
     );
   }
-
-  // Obx buildEmojiPicker() {
-  //   return Obx(() => controller.showEmojiPicker.value
-  //       ? SizedBox(
-  //           height: Get.height * 0.35,
-  //           child: EmojiPicker(
-  //             onEmojiSelected: (category, emoji) {
-  //               final text = controller.textMessageController.text;
-  //               final selection = controller.textMessageController.selection;
-  //               final newText = text.replaceRange(
-  //                 selection.start,
-  //                 selection.end,
-  //                 emoji.emoji,
-  //               );
-  //               controller.textMessageController.value = TextEditingValue(
-  //                 text: newText,
-  //                 selection: TextSelection.collapsed(
-  //                   offset: selection.start + emoji.emoji.length,
-  //                 ),
-  //               );
-  //             },
-  //             config: Config(
-  //               bottomActionBarConfig: BottomActionBarConfig(
-  //                 backgroundColor: Get.theme.colorScheme.surface,
-  //                 buttonColor: Get.theme.scaffoldBackgroundColor,
-  //               ),
-  //             ),
-  //           ),
-  //         )
-  //       : const SizedBox());
-  // }
 
   void _showMediaPickerBottomSheet(BuildContext context) {
     showModalBottomSheet(
