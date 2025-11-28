@@ -3,7 +3,7 @@ description: "A new Flutter project."
 publish_to: 'none'
 
 
-version: 1.0.0+37
+version: 1.0.0+38
 
 environment:
   sdk: ^3.7.2
@@ -41,7 +41,7 @@ dependencies:
   socket_io_client: ^3.1.2
   scrollable_positioned_list: ^0.3.8
   chewie: ^1.13.0
-  audio_waveforms: ^1.0.5
+  audio_waveforms: ^2.0.0
   video_compress: ^3.1.4
   video_thumbnail: ^0.5.6
   visibility_detector: ^0.4.0+2
