@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "461771089714",
+    "project_id": "vetted-697dc",
+    "storage_bucket": "vetted-697dc.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:461771089714:android:988da8aaa6705b701f992b",
+        "android_client_info": {
+          "package_name": "com.christen.vetted"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCpmLWlRcnXJpW2NVBJsoxN1qbpHzu9vhM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
