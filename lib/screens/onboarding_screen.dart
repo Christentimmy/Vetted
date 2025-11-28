@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_signin_button/flutter_signin_button.dart';
+// import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'phone_number_screen.dart';
 import 'phone_number_login_screen.dart';
@@ -130,7 +130,7 @@ class OnboardingScreen extends StatelessWidget {
                   const SizedBox(height: 20),
 
                   // Apple Button
-                  _buildWideSignInButton(Buttons.AppleDark, onPressed: () {}),
+                  // _buildWideSignInButton(Buttons.AppleDark, onPressed: () {}),
 
                   const SizedBox(height: 14),
 
@@ -147,7 +147,7 @@ class OnboardingScreen extends StatelessWidget {
                   const SizedBox(height: 14),
 
                   // Google Button
-                  _buildWideSignInButton(Buttons.Google, onPressed: () {}),
+                  // _buildWideSignInButton(Buttons.Google, onPressed: () {}),
 
                   const SizedBox(height: 40),
                 ],
@@ -190,21 +190,21 @@ class OnboardingScreen extends StatelessWidget {
   }
 
   // Google / Apple
-  static Widget _buildWideSignInButton(
-    Buttons type, {
-    required VoidCallback onPressed,
-  }) {
-    return SizedBox(
-      width: double.infinity,
-      height: 54,
-      child: SignInButton(
-        type,
-        onPressed: onPressed,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        padding: const EdgeInsets.symmetric(vertical: 4),
-      ),
-    );
-  }
+  // static Widget _buildWideSignInButton(
+  //   Buttons type, {
+  //   required VoidCallback onPressed,
+  // }) {
+  //   return SizedBox(
+  //     width: double.infinity,
+  //     height: 54,
+  //     child: SignInButton(
+  //       type,
+  //       onPressed: onPressed,
+  //       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+  //       padding: const EdgeInsets.symmetric(vertical: 4),
+  //     ),
+  //   );
+  // }
 
   // Instagram Custom Icon Button
   static Widget _buildWideIconButton({
